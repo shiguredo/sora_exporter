@@ -1,32 +1,46 @@
-# Sora Exporter
+# Sora exporter
 
-[![ci](https://github.com/johejo/sora_exporter/workflows/ci/badge.svg?branch=main)](https://github.com/johejo/sora_exporter/actions?query=workflow%3Aci)
-[![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/johejo/sora_exporter?style?flag-square)](https://github.com/johejo/sora_exporter/releases)
+[![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/shiguredo/sora_exporter.svg)](https://github.com/shiguredo/sora_exporter)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Actions Status](https://github.com/shiguredo/sora_exporter/workflows/ci/badge.svg)](https://github.com/shiguredo/sora_exporter/actions)
 
-Prometheus exporter for WebRTC SFU Sora metrics.
+## About Shiguredo's open source software
 
-https://sora.shiguredo.jp/
+We will not respond to PRs or issues that have not been discussed on Discord. Also, Discord is only available in Japanese.
 
-https://sora-doc.shiguredo.jp/api#id28
+Please read https://github.com/shiguredo/oss/blob/master/README.en.md before use.
 
-## Important Notes
+## 時雨堂のオープンソースソフトウェアについて
 
-Author is not an employee of shiguredo.
+利用前に https://github.com/shiguredo/oss をお読みください。
 
-There is no support available when you contact shiguredo.
+## Sora exporter について
 
-## Install
+このリポジトリは @johejo の https://github.com/johejo/sora_exporter フォークです。
 
-Download pre-built binary from [release page](https://github.com/johejo/sora_exporter/releases) or use `go install github.com/johejo/sora_exporter`.
+## ライセンス
 
-## Docker Image
+```
+MIT License
 
-[GitHub Packages](https://github.com/johejo?tab=packages&repo_name=sora_exporter)
+Copyright (c) 2021 Mitsuo Heijo
+Copyright (c) 2022 Shiguredo Inc.
 
-## License
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-MIT
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-## Author
-
-Mitsuo Heijo
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
