@@ -16,7 +16,15 @@ Please read https://github.com/shiguredo/oss/blob/master/README.en.md before use
 
 ## Sora exporter について
 
-このリポジトリは @johejo の https://github.com/johejo/sora_exporter フォークです。
+このリポジトリは [@johejo](https://github.com/johejo/) の https://github.com/johejo/sora_exporter フォークです。
+
+時雨堂が管理し、メンテしています。
+
+## Discord
+
+最新の状況などは Discord で共有しています。質問や相談も Discord でのみ受け付けています。
+
+https://discord.gg/shiguredo
 
 ## ライセンス
 
