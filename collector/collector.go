@@ -7,8 +7,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/log/level"
+	"github.com/go-kit/log"
+	"github.com/go-kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -129,6 +129,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	ch <- newCounter(c.totalConnectionUpdated, float64(report.TotalConnectionUpdated))
 	ch <- newCounter(c.totalConnectionDestroyed, float64(report.TotalConnectionDestroyed))
 	ch <- newCounter(c.totalSuccessfulConnections, float64(report.TotalSuccessfulConnections))
+	// TODO(v): これは newGauge へ変更する
 	ch <- newCounter(c.totalOngoingConnections, float64(report.TotalOngoingConnections))
 	ch <- newCounter(c.totalFailedConnections, float64(report.TotalFailedConnections))
 	ch <- newCounter(c.totalDurationSec, float64(report.TotalDurationSec))
