@@ -13,11 +13,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/log/level"
-	"github.com/johejo/sora_exporter/collector"
+	"github.com/go-kit/log"
+	"github.com/go-kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/shiguredo/sora_exporter/collector"
 )
 
 var (
