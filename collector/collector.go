@@ -129,8 +129,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	ch <- newCounter(c.totalConnectionUpdated, float64(report.TotalConnectionUpdated))
 	ch <- newCounter(c.totalConnectionDestroyed, float64(report.TotalConnectionDestroyed))
 	ch <- newCounter(c.totalSuccessfulConnections, float64(report.TotalSuccessfulConnections))
-	// TODO(v): これは newGauge へ変更する
-	ch <- newCounter(c.totalOngoingConnections, float64(report.TotalOngoingConnections))
+	ch <- newGauge(c.totalOngoingConnections, float64(report.TotalOngoingConnections))
 	ch <- newCounter(c.totalFailedConnections, float64(report.TotalFailedConnections))
 	ch <- newCounter(c.totalDurationSec, float64(report.TotalDurationSec))
 	ch <- newCounter(c.totalTurnUdpConnections, float64(report.TotalTurnUdpConnections))

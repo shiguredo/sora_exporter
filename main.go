@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
+	"github.com/shiguredo/sora_exporter/collector"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -25,8 +26,31 @@ import (
 )
 
 var (
-	soraURL      string
-	printVersion bool
+	listenAddress = kingpin.Flag(
+		"web.listen-address",
+		"Address on which to expose metrics and web interface.",
+	).Default(":9490").String()
+	metricsPath = kingpin.Flag(
+		"web.telemetry-path",
+		"Path under which to expose metrics.",
+	).Default("/metrics").String()
+	soraGetStatsReportURL = kingpin.Flag(
+		"sora.get-stats-report-url",
+		"URL on which to scrape Sora GetStatsReport API",
+	).Default("http://127.0.0.1:3000/").String()
+	soraTimeout = kingpin.Flag(
+		"sora.timeout",
+		"Timeout for trying to get stats from Sora GetStatsReport API URL",
+	).Default("5s").Duration()
+	// sora_client や erlang_vm をフィルターで切るようにする
+	disableExporterMetrics = kingpin.Flag(
+		"web.disable-exporter-metrics",
+		"Exclude metrics about the exporter itself (promhttp_*, process_*, go_*).",
+	).Bool()
+	maxRequests = kingpin.Flag(
+		"web.max-requests",
+		"Maximum number of parallel scrape requests. Use 0 to disable.",
+	).Default("40").Int()
 )
 
 type handler struct {
@@ -84,6 +108,7 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (h *handler) innerHandler(filters ...string) (http.Handler, error) {
 	r := prometheus.NewRegistry()
 	r.MustRegister(version.NewCollector("sora_exporter"))
+	r.MustRegister(collector.New(collector.WithLogger(h.logger), collector.WithTimeout(*soraTimeout), collector.WithSoraURL(*soraGetStatsReportURL)))
 	handler := promhttp.HandlerFor(
 		prometheus.Gatherers{h.exporterMetricsRegistry, r},
 		promhttp.HandlerOpts{
@@ -104,27 +129,6 @@ func (h *handler) innerHandler(filters ...string) (http.Handler, error) {
 }
 
 func main() {
-	// lg := log.NewJSONLogger(os.Stderr)
-	var (
-		listenAddress = kingpin.Flag(
-			"web.listen-address",
-			"Address on which to expose metrics and web interface.",
-		).Default(":9490").String()
-		metricsPath = kingpin.Flag(
-			"web.telemetry-path",
-			"Path under which to expose metrics.",
-		).Default("/metrics").String()
-		// sora_client や erlang_vm をフィルターで切るようにする
-		// disableExporterMetrics = kingpin.Flag(
-		// 	"web.disable-exporter-metrics",
-		// 	"Exclude metrics about the exporter itself (promhttp_*, process_*, go_*).",
-		// ).Bool()
-		// maxRequests = kingpin.Flag(
-		// 	"web.max-requests",
-		// 	"Maximum number of parallel scrape requests. Use 0 to disable.",
-		// ).Default("40").Int()
-	)
-
 	promlogConfig := &promlog.Config{}
 	flag.AddFlags(kingpin.CommandLine, promlogConfig)
 	kingpin.Version(version.Print("sora_exporter"))
@@ -135,18 +139,6 @@ func main() {
 
 	level.Info(logger).Log("msg", "Starting sora_exporter", "version", version.Info())
 	level.Info(logger).Log("msg", "Build context", "build_context", version.BuildContext())
-
-	// 外だししたほうがいい
-	// reg := prometheus.NewRegistry()
-	// reg.MustRegister(
-	// 	prometheus.NewBuildInfoCollector(),
-	// 	prometheus.NewGoCollector(),
-	// 	collector.New(collector.WithLogger(lg), collector.WithTimeout(timeout), collector.WithSoraURL(soraURL)),
-	// )
-
-	// 外だししたほうがいい
-	// mux := http.NewServeMux()
-	// mux.Handle(metricsPath, promhttp.InstrumentMetricHandler(reg, promhttp.HandlerFor(reg, promhttp.HandlerOpts{})))
 
 	// root 権限で起動してたら warning を出す
 	if user, err := user.Current(); err == nil && user.Uid == "0" {
@@ -162,6 +154,7 @@ func main() {
 			</body>
 			</html>`))
 	})
+	http.Handle(*metricsPath, newHandler(!*disableExporterMetrics, *maxRequests, logger))
 
 	level.Info(logger).Log("msg", "Listening on", "address", *listenAddress)
 	server := &http.Server{Addr: *listenAddress}
