@@ -34,7 +34,9 @@ type HTTPClient interface {
 	Do(*http.Request) (*http.Response, error)
 }
 
-func New(uri string, timeout time.Duration, logger log.Logger, enableSoraClientMetrics bool, enableSoraErrorMetrics bool, enableErlangVmMetrics bool, skipSslVerify bool) *Collector {
+func New(
+	uri string, skipSslVerify bool, timeout time.Duration, logger log.Logger,
+	enableSoraClientMetrics bool, enableSoraErrorMetrics bool, enableErlangVmMetrics bool) *Collector {
 	return &Collector{
 		URI:           uri,
 		timeout:       timeout,

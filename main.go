@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"os/user"
+	"time"
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
@@ -75,14 +76,30 @@ type handler struct {
 	includeExporterMetrics  bool
 	maxRequests             int
 	logger                  log.Logger
+	soraGetStatsReportURL   string
+	soraSkipSslVeirfy       bool
+	soraTimeout             time.Duration
+	enableSoraClientMetrics bool
+	enableSoraErrorMetrics  bool
+	enableErlangVmMetrics   bool
 }
 
-func newHandler(includeExporterMetrics bool, maxRequests int, logger log.Logger) *handler {
+func newHandler(
+	includeExporterMetrics bool, maxRequests int, logger log.Logger,
+	soraGetStatsReportURL string, soraSkipSslVeirfy bool, soraTimeout time.Duration,
+	enableSoraClientMetrics bool, enableSoraErrorMetrics bool, enableErlangVmMetrics bool) *handler {
+
 	h := &handler{
 		exporterMetricsRegistry: prometheus.NewRegistry(),
 		includeExporterMetrics:  includeExporterMetrics,
 		maxRequests:             maxRequests,
 		logger:                  logger,
+		soraGetStatsReportURL:   soraGetStatsReportURL,
+		soraSkipSslVeirfy:       soraSkipSslVeirfy,
+		soraTimeout:             soraTimeout,
+		enableSoraClientMetrics: enableSoraClientMetrics,
+		enableSoraErrorMetrics:  enableSoraErrorMetrics,
+		enableErlangVmMetrics:   enableErlangVmMetrics,
 	}
 	if h.includeExporterMetrics {
 		h.exporterMetricsRegistry.MustRegister(
@@ -99,17 +116,17 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	h.soraMetricsHandler.ServeHTTP(w, r)
 }
 
-func (h *handler) innerHandler(filters ...string) http.Handler {
+func (h *handler) innerHandler() http.Handler {
 	r := prometheus.NewRegistry()
 	r.MustRegister(version.NewCollector("sora_exporter"))
 	r.MustRegister(collector.New(
-		*soraGetStatsReportURL,
-		*soraTimeout,
+		h.soraGetStatsReportURL,
+		h.soraSkipSslVeirfy,
+		h.soraTimeout,
 		h.logger,
-		*enableSoraClientMetrics,
-		*enableSoraErrorMetrics,
-		*enableErlangVmMetrics,
-		*soraSkipSslVeirfy))
+		h.enableSoraClientMetrics,
+		h.enableSoraErrorMetrics,
+		h.enableErlangVmMetrics))
 	handler := promhttp.HandlerFor(
 		prometheus.Gatherers{h.exporterMetricsRegistry, r},
 		promhttp.HandlerOpts{
@@ -155,7 +172,11 @@ func main() {
 			</body>
 			</html>`))
 	})
-	http.Handle(*metricsPath, newHandler(!*disableExporterMetrics, *maxRequests, logger))
+	soraHandler := newHandler(
+		!*disableExporterMetrics, *maxRequests, logger,
+		*soraGetStatsReportURL, *soraSkipSslVeirfy, *soraTimeout,
+		*enableSoraClientMetrics, *enableSoraErrorMetrics, *enableErlangVmMetrics)
+	http.Handle(*metricsPath, soraHandler)
 
 	level.Info(logger).Log("msg", "Listening on", "address", *listenAddress)
 	server := &http.Server{Addr: *listenAddress}
