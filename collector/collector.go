@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/go-kit/log"
@@ -13,7 +12,13 @@ import (
 )
 
 type Collector struct {
-	*config
+	httpClient              HTTPClient
+	logger                  log.Logger
+	timeout                 time.Duration
+	URI                     string
+	enableSoraClientMetrics bool
+	enableSoraErrorMetrics  bool
+	enableErlangVmMetrics   bool
 
 	soraVersionInfo *prometheus.Desc
 
@@ -83,63 +88,35 @@ type Collector struct {
 	// erlangVmRunQueueLengthsAll                          *prometheus.Desc
 }
 
-type config struct {
-	httpClient HTTPClient
-	logger     log.Logger
-	timeout    time.Duration
-	soraURL    string
-}
-
-type Option func(cfg *config)
-
 type HTTPClient interface {
 	Do(*http.Request) (*http.Response, error)
 }
 
-func WithHTTPClient(cli HTTPClient) Option {
-	return func(cfg *config) {
-		cfg.httpClient = cli
-	}
-}
-
-func WithLogger(logger log.Logger) Option {
-	return func(cfg *config) {
-		cfg.logger = logger
-	}
-}
-
-func WithTimeout(timeout time.Duration) Option {
-	return func(cfg *config) {
-		cfg.timeout = timeout
-	}
-}
-
-func WithSoraURL(url string) Option {
-	return func(cfg *config) {
-		cfg.soraURL = url
-	}
-}
-
-func New(opts ...Option) *Collector {
-	cfg := new(config)
-	for _, opt := range append(defaults(), opts...) {
-		opt(cfg)
-	}
-
+func New(uri string, timeout time.Duration, logger log.Logger, enableSoraClientMetrics bool, enableSoraErrorMetrics bool, enableErlangVmMetrics bool) *Collector {
 	return &Collector{
-		config:                                              cfg,
-		soraVersionInfo:                                     newDescWithLabel("sora_version_info", "sora version info.", []string{"version"}),
-		totalConnectionCreated:                              newDesc("connections_created_total", "The total number of connections created."),
-		totalConnectionUpdated:                              newDesc("connections_updated_total", "The total number of connections updated."),
-		totalConnectionDestroyed:                            newDesc("connections_destroyed_total", "The total number of connections destryed."),
-		totalSuccessfulConnections:                          newDesc("successfull_connections_total", "The total number of successfull connections."),
-		totalOngoingConnections:                             newDesc("ongoing_connections_total", "The total number of ongoing connections."),
-		totalFailedConnections:                              newDesc("failed_connections_total", "The total number of failed connections."),
-		totalDurationSec:                                    newDesc("duration_seconds_total", "The total duration of connections."),
-		totalTurnUdpConnections:                             newDesc("turn_udp_connections_total", "The total number of connections with TURN-UDP."),
-		totalTurnTcpConnections:                             newDesc("turn_tcp_connections_total", "The total number of connections with TURN-TCP."),
-		averageDurationSec:                                  newDesc("average_duration_seconds", "The average connection duration in seconds."),
-		averageSetupTimeSec:                                 newDesc("average_setup_time_seconds", "The average setup time in seconds."),
+		httpClient: http.DefaultClient,
+		URI:        uri,
+		timeout:    timeout,
+		logger:     logger,
+
+		enableSoraClientMetrics: enableSoraClientMetrics,
+		enableSoraErrorMetrics:  enableSoraErrorMetrics,
+		enableErlangVmMetrics:   enableErlangVmMetrics,
+
+		soraVersionInfo: newDescWithLabel("sora_version_info", "sora version info.", []string{"version"}),
+
+		totalConnectionCreated:     newDesc("connections_created_total", "The total number of connections created."),
+		totalConnectionUpdated:     newDesc("connections_updated_total", "The total number of connections updated."),
+		totalConnectionDestroyed:   newDesc("connections_destroyed_total", "The total number of connections destryed."),
+		totalSuccessfulConnections: newDesc("successfull_connections_total", "The total number of successfull connections."),
+		totalOngoingConnections:    newDesc("ongoing_connections_total", "The total number of ongoing connections."),
+		totalFailedConnections:     newDesc("failed_connections_total", "The total number of failed connections."),
+		totalDurationSec:           newDesc("duration_seconds_total", "The total duration of connections."),
+		totalTurnUdpConnections:    newDesc("turn_udp_connections_total", "The total number of connections with TURN-UDP."),
+		totalTurnTcpConnections:    newDesc("turn_tcp_connections_total", "The total number of connections with TURN-TCP."),
+		averageDurationSec:         newDesc("average_duration_seconds", "The average connection duration in seconds."),
+		averageSetupTimeSec:        newDesc("average_setup_time_seconds", "The average setup time in seconds."),
+
 		totalFailedSoraClientTypeSoraAndroidSdk:             newDesc("sora_client_type_sora_android_sdk_failed_total", "The total number of failed connections for Sora Android SDK."),
 		totalFailedSoraClientTypeSoraIosSdk:                 newDesc("sora_client_type_sora_ios_sdk_failed_total", "The total number of failed connections for Sora IOS SDK."),
 		totalFailedSoraClientTypeSoraJsSdk:                  newDesc("sora_client_type_sora_js_sdk_failed_total", "The total number of failed connections for Sora JavaScript SDK."),
@@ -152,8 +129,10 @@ func New(opts ...Option) *Collector {
 		totalSuccessfulSoraClientTypeSoraUnitySdk:           newDesc("sora_client_type_sora_unity_sdk_successful_total", "The total number of successful connections for Sora Unity SDK."),
 		totalSuccessfulSoraClientTypeUnknown:                newDesc("sora_client_type_known_successful_total", "The total number of successful connections for unknown client"),
 		totalSuccessfulSoraClientTypeWebrtcNativeClientMomo: newDesc("sora_client_type_webrtc_native_client_momo_successful_total", "The total number of successful connections for WebRTC native client Momo."),
-		sdpGenerationError:                                  newDesc("sdp_generation_error_total", "The total number of SDP genration error."),
-		signalingError:                                      newDesc("signaling_error_total", "The total number of signaling error."),
+
+		sdpGenerationError: newDesc("sdp_generation_error_total", "The total number of SDP genration error."),
+		signalingError:     newDesc("signaling_error_total", "The total number of signaling error."),
+
 		erlangVmMemoryTotal:                                 newDesc("erlang_vm_memory_total", "The total amount of memory currently allocated. This is the same as the sum of the memory size for processes and system."),
 		erlangVmMemoryProcesses:                             newDesc("erlang_vm_memory_processes", "The total amount of memory currently allocated for the Erlang processes."),
 		erlangVmMemoryProcessesUsed:                         newDesc("erlang_vm_memory_processes_used", "The total amount of memory currently used by the Erlang processes. This is part of the memory presented as processes memory."),
@@ -196,22 +175,26 @@ func newDescWithLabel(name, help string, labels []string) *prometheus.Desc {
 	return prometheus.NewDesc(prometheus.BuildFQName("sora", "exporter", name), help, labels, nil)
 }
 
-func defaults() []Option {
-	return []Option{
-		WithHTTPClient(http.DefaultClient),
-		WithLogger(log.NewJSONLogger(os.Stderr)),
-		WithTimeout(1 * time.Second),
-		WithSoraURL("http://127.0.0.1:3000/"),
-	}
+func newGauge(d *prometheus.Desc, v float64) prometheus.Metric {
+	return prometheus.MustNewConstMetric(d, prometheus.GaugeValue, v)
 }
 
+func newCounter(d *prometheus.Desc, v float64) prometheus.Metric {
+	return prometheus.MustNewConstMetric(d, prometheus.CounterValue, v)
+}
+
+func newInfo(d *prometheus.Desc, labelValues ...string) prometheus.Metric {
+	return prometheus.MustNewConstMetric(d, prometheus.GaugeValue, 1, labelValues...)
+}
+
+// TODO(tnamao): 不要？
 var _ prometheus.Collector = (*Collector)(nil)
 
 func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
 	defer cancel()
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.soraURL, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
 	if err != nil {
 		level.Error(c.logger).Log("msg", "failed to create request to sora", "err", err)
 		return
@@ -244,65 +227,59 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	ch <- newGauge(c.averageDurationSec, float64(report.AverageDurationSec))
 	ch <- newGauge(c.averageSetupTimeSec, float64(report.AverageSetupTimeMsec/1000))
 
-	ch <- newCounter(c.totalFailedSoraClientTypeSoraAndroidSdk, float64(report.TotalFailedSoraClientTypeSoraAndroidSdk))
-	ch <- newCounter(c.totalFailedSoraClientTypeSoraIosSdk, float64(report.TotalFailedSoraClientTypeSoraIosSdk))
-	ch <- newCounter(c.totalFailedSoraClientTypeSoraJsSdk, float64(report.TotalFailedSoraClientTypeSoraJsSdk))
-	ch <- newCounter(c.totalFailedSoraClientTypeSoraUnitySdk, float64(report.TotalFailedSoraClientTypeSoraUnitySdk))
-	ch <- newCounter(c.totalFailedSoraClientTypeUnknown, float64(report.TotalFailedSoraClientTypeUnknown))
-	ch <- newCounter(c.totalFailedSoraClientTypeWebrtcNativeClientMomo, float64(report.TotalFailedSoraClientTypeWebrtcNativeClientMomo))
-	ch <- newCounter(c.totalSuccessfulSoraClientTypeSoraAndroidSdk, float64(report.TotalSuccessfulSoraClientTypeSoraAndroidSdk))
-	ch <- newCounter(c.totalSuccessfulSoraClientTypeSoraIosSdk, float64(report.TotalSuccessfulSoraClientTypeSoraIosSdk))
-	ch <- newCounter(c.totalSuccessfulSoraClientTypeSoraJsSdk, float64(report.TotalSuccessfulSoraClientTypeSoraJsSdk))
-	ch <- newCounter(c.totalSuccessfulSoraClientTypeSoraUnitySdk, float64(report.TotalSuccessfulSoraClientTypeSoraUnitySdk))
-	ch <- newCounter(c.totalSuccessfulSoraClientTypeUnknown, float64(report.TotalSuccessfulSoraClientTypeUnknown))
-	ch <- newCounter(c.totalSuccessfulSoraClientTypeWebrtcNativeClientMomo, float64(report.TotalSuccessfulSoraClientTypeWebrtcNativeClientMomo))
+	if c.enableSoraClientMetrics {
+		ch <- newCounter(c.totalFailedSoraClientTypeSoraAndroidSdk, float64(report.TotalFailedSoraClientTypeSoraAndroidSdk))
+		ch <- newCounter(c.totalFailedSoraClientTypeSoraIosSdk, float64(report.TotalFailedSoraClientTypeSoraIosSdk))
+		ch <- newCounter(c.totalFailedSoraClientTypeSoraJsSdk, float64(report.TotalFailedSoraClientTypeSoraJsSdk))
+		ch <- newCounter(c.totalFailedSoraClientTypeSoraUnitySdk, float64(report.TotalFailedSoraClientTypeSoraUnitySdk))
+		ch <- newCounter(c.totalFailedSoraClientTypeUnknown, float64(report.TotalFailedSoraClientTypeUnknown))
+		ch <- newCounter(c.totalFailedSoraClientTypeWebrtcNativeClientMomo, float64(report.TotalFailedSoraClientTypeWebrtcNativeClientMomo))
+		ch <- newCounter(c.totalSuccessfulSoraClientTypeSoraAndroidSdk, float64(report.TotalSuccessfulSoraClientTypeSoraAndroidSdk))
+		ch <- newCounter(c.totalSuccessfulSoraClientTypeSoraIosSdk, float64(report.TotalSuccessfulSoraClientTypeSoraIosSdk))
+		ch <- newCounter(c.totalSuccessfulSoraClientTypeSoraJsSdk, float64(report.TotalSuccessfulSoraClientTypeSoraJsSdk))
+		ch <- newCounter(c.totalSuccessfulSoraClientTypeSoraUnitySdk, float64(report.TotalSuccessfulSoraClientTypeSoraUnitySdk))
+		ch <- newCounter(c.totalSuccessfulSoraClientTypeUnknown, float64(report.TotalSuccessfulSoraClientTypeUnknown))
+		ch <- newCounter(c.totalSuccessfulSoraClientTypeWebrtcNativeClientMomo, float64(report.TotalSuccessfulSoraClientTypeWebrtcNativeClientMomo))
+	}
 
-	ch <- newCounter(c.sdpGenerationError, float64(report.SdpGenerationError))
-	ch <- newCounter(c.signalingError, float64(report.SignalingError))
+	if c.enableSoraErrorMetrics {
+		ch <- newCounter(c.sdpGenerationError, float64(report.SdpGenerationError))
+		ch <- newCounter(c.signalingError, float64(report.SignalingError))
+	}
 
-	ch <- newGauge(c.erlangVmMemoryTotal, float64(report.ErlangVmMemoryTotal))
-	ch <- newGauge(c.erlangVmMemoryProcesses, float64(report.ErlangVmMemoryProcesses))
-	ch <- newGauge(c.erlangVmMemoryProcessesUsed, float64(report.ErlangVmMemoryProcessesUsed))
-	ch <- newGauge(c.erlangVmMemorySystem, float64(report.ErlangVmMemorySystem))
-	ch <- newGauge(c.erlangVmMemoryAtom, float64(report.ErlangVmMemoryAtom))
-	ch <- newGauge(c.erlangVmMemoryAtomUsed, float64(report.ErlangVmMemoryAtomUsed))
-	ch <- newGauge(c.erlangVmMemoryBinary, float64(report.ErlangVmMemoryBinary))
-	ch <- newGauge(c.erlangVmMemoryCode, float64(report.ErlangVmMemoryCode))
-	ch <- newGauge(c.erlangVmMemoryEts, float64(report.ErlangVmMemoryEts))
-	ch <- newGauge(c.erlangVmContextSwitches, float64(report.ErlangVmContextSwitches))
-	ch <- newGauge(c.erlangVmExactReductionsExactReductionsSinceLastCall, float64(report.ErlangVmExactReductionsExactReductionsSinceLastCall))
-	ch <- newGauge(c.erlangVmExactReductionsTotalExactReductions, float64(report.ErlangVmExactReductionsTotalExactReductions))
-	ch <- newGauge(c.erlangVmGarbageCollectionNumberOfGcs, float64(report.ErlangVmGarbageCollectionNumberOfGcs))
-	ch <- newGauge(c.erlangVmGarbageCollectionWordsReclaimed, float64(report.ErlangVmGarbageCollectionWordsReclaimed))
-	ch <- newGauge(c.erlangVmIoInput, float64(report.ErlangVmIoInput))
-	ch <- newGauge(c.erlangVmIoOutput, float64(report.ErlangVmIoOutput))
-	ch <- newGauge(c.erlangVmReductionsReductionsSinceLastCall, float64(report.ErlangVmReductionsReductionsSinceLastCall))
-	ch <- newGauge(c.erlangVmReductionsTotalReductions, float64(report.ErlangVmReductionsTotalReductions))
-	ch <- newGauge(c.erlangVmRunQueue, float64(report.ErlangVmRunQueue))
-	ch <- newGauge(c.erlangVmRuntimeTimeSinceLastCall, float64(report.ErlangVmRuntimeTimeSinceLastCall))
-	ch <- newGauge(c.erlangVmRuntimeTotalRunTime, float64(report.ErlangVmRuntimeTotalRunTime))
-	ch <- newGauge(c.erlangVmTotalActiveTasks, float64(report.ErlangVmTotalActiveTasks))
-	ch <- newGauge(c.erlangVmTotalActiveTasksAll, float64(report.ErlangVmTotalActiveTasksAll))
-	ch <- newGauge(c.erlangVmTotalRunQueueLengths, float64(report.ErlangVmTotalRunQueueLengths))
-	ch <- newGauge(c.erlangVmTotalRunQueueLengthsAll, float64(report.ErlangVmTotalRunQueueLengthsAll))
-	ch <- newGauge(c.erlangVmWallClockTotalWallclockTime, float64(report.ErlangVmWallClockTotalWallclockTime))
-	ch <- newGauge(c.erlangVmWallClockWallclockTimeSinceLastCall, float64(report.ErlangVmWallClockWallclockTimeSinceLastCall))
-	// ch <- newGauge(c.erlangVmActiveTasks, float64(report.ErlangVmActiveTasks))
-	// ch <- newGauge(c.erlangVmActiveTasksAll, float64(report.ErlangVmActiveTasksAll))
-	// ch <- newGauge(c.erlangVmRunQueueLengths, float64(report.ErlangVmRunQueueLengths))
-	// ch <- newGauge(c.erlangVmRunQueueLengthsAll, float64(report.ErlangVmRunQueueLengthsAll))
-}
-
-func newGauge(d *prometheus.Desc, v float64) prometheus.Metric {
-	return prometheus.MustNewConstMetric(d, prometheus.GaugeValue, v)
-}
-
-func newCounter(d *prometheus.Desc, v float64) prometheus.Metric {
-	return prometheus.MustNewConstMetric(d, prometheus.CounterValue, v)
-}
-
-func newInfo(d *prometheus.Desc, labelValues ...string) prometheus.Metric {
-	return prometheus.MustNewConstMetric(d, prometheus.GaugeValue, 1, labelValues...)
+	if c.enableErlangVmMetrics {
+		ch <- newGauge(c.erlangVmMemoryTotal, float64(report.ErlangVmMemoryTotal))
+		ch <- newGauge(c.erlangVmMemoryProcesses, float64(report.ErlangVmMemoryProcesses))
+		ch <- newGauge(c.erlangVmMemoryProcessesUsed, float64(report.ErlangVmMemoryProcessesUsed))
+		ch <- newGauge(c.erlangVmMemorySystem, float64(report.ErlangVmMemorySystem))
+		ch <- newGauge(c.erlangVmMemoryAtom, float64(report.ErlangVmMemoryAtom))
+		ch <- newGauge(c.erlangVmMemoryAtomUsed, float64(report.ErlangVmMemoryAtomUsed))
+		ch <- newGauge(c.erlangVmMemoryBinary, float64(report.ErlangVmMemoryBinary))
+		ch <- newGauge(c.erlangVmMemoryCode, float64(report.ErlangVmMemoryCode))
+		ch <- newGauge(c.erlangVmMemoryEts, float64(report.ErlangVmMemoryEts))
+		ch <- newGauge(c.erlangVmContextSwitches, float64(report.ErlangVmContextSwitches))
+		ch <- newGauge(c.erlangVmExactReductionsExactReductionsSinceLastCall, float64(report.ErlangVmExactReductionsExactReductionsSinceLastCall))
+		ch <- newGauge(c.erlangVmExactReductionsTotalExactReductions, float64(report.ErlangVmExactReductionsTotalExactReductions))
+		ch <- newGauge(c.erlangVmGarbageCollectionNumberOfGcs, float64(report.ErlangVmGarbageCollectionNumberOfGcs))
+		ch <- newGauge(c.erlangVmGarbageCollectionWordsReclaimed, float64(report.ErlangVmGarbageCollectionWordsReclaimed))
+		ch <- newGauge(c.erlangVmIoInput, float64(report.ErlangVmIoInput))
+		ch <- newGauge(c.erlangVmIoOutput, float64(report.ErlangVmIoOutput))
+		ch <- newGauge(c.erlangVmReductionsReductionsSinceLastCall, float64(report.ErlangVmReductionsReductionsSinceLastCall))
+		ch <- newGauge(c.erlangVmReductionsTotalReductions, float64(report.ErlangVmReductionsTotalReductions))
+		ch <- newGauge(c.erlangVmRunQueue, float64(report.ErlangVmRunQueue))
+		ch <- newGauge(c.erlangVmRuntimeTimeSinceLastCall, float64(report.ErlangVmRuntimeTimeSinceLastCall))
+		ch <- newGauge(c.erlangVmRuntimeTotalRunTime, float64(report.ErlangVmRuntimeTotalRunTime))
+		ch <- newGauge(c.erlangVmTotalActiveTasks, float64(report.ErlangVmTotalActiveTasks))
+		ch <- newGauge(c.erlangVmTotalActiveTasksAll, float64(report.ErlangVmTotalActiveTasksAll))
+		ch <- newGauge(c.erlangVmTotalRunQueueLengths, float64(report.ErlangVmTotalRunQueueLengths))
+		ch <- newGauge(c.erlangVmTotalRunQueueLengthsAll, float64(report.ErlangVmTotalRunQueueLengthsAll))
+		ch <- newGauge(c.erlangVmWallClockTotalWallclockTime, float64(report.ErlangVmWallClockTotalWallclockTime))
+		ch <- newGauge(c.erlangVmWallClockWallclockTimeSinceLastCall, float64(report.ErlangVmWallClockWallclockTimeSinceLastCall))
+		// ch <- newGauge(c.erlangVmActiveTasks, float64(report.ErlangVmActiveTasks))
+		// ch <- newGauge(c.erlangVmActiveTasksAll, float64(report.ErlangVmActiveTasksAll))
+		// ch <- newGauge(c.erlangVmRunQueueLengths, float64(report.ErlangVmRunQueueLengths))
+		// ch <- newGauge(c.erlangVmRunQueueLengthsAll, float64(report.ErlangVmRunQueueLengthsAll))
+	}
 }
 
 func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
@@ -318,54 +295,64 @@ func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.totalTurnTcpConnections
 	ch <- c.averageDurationSec
 	ch <- c.averageSetupTimeSec
-	ch <- c.totalFailedSoraClientTypeSoraAndroidSdk
-	ch <- c.totalFailedSoraClientTypeSoraIosSdk
-	ch <- c.totalFailedSoraClientTypeSoraJsSdk
-	ch <- c.totalFailedSoraClientTypeSoraUnitySdk
-	ch <- c.totalFailedSoraClientTypeUnknown
-	ch <- c.totalFailedSoraClientTypeWebrtcNativeClientMomo
-	ch <- c.totalSuccessfulSoraClientTypeSoraAndroidSdk
-	ch <- c.totalSuccessfulSoraClientTypeSoraIosSdk
-	ch <- c.totalSuccessfulSoraClientTypeSoraJsSdk
-	ch <- c.totalSuccessfulSoraClientTypeSoraUnitySdk
-	ch <- c.totalSuccessfulSoraClientTypeUnknown
-	ch <- c.totalSuccessfulSoraClientTypeWebrtcNativeClientMomo
-	ch <- c.sdpGenerationError
-	ch <- c.signalingError
-	ch <- c.erlangVmMemoryTotal
-	ch <- c.erlangVmMemoryProcesses
-	ch <- c.erlangVmMemoryProcessesUsed
-	ch <- c.erlangVmMemorySystem
-	ch <- c.erlangVmMemoryAtom
-	ch <- c.erlangVmMemoryAtomUsed
-	ch <- c.erlangVmMemoryBinary
-	ch <- c.erlangVmMemoryCode
-	ch <- c.erlangVmMemoryEts
-	ch <- c.erlangVmContextSwitches
-	ch <- c.erlangVmExactReductionsExactReductionsSinceLastCall
-	ch <- c.erlangVmExactReductionsTotalExactReductions
-	ch <- c.erlangVmGarbageCollectionNumberOfGcs
-	ch <- c.erlangVmGarbageCollectionWordsReclaimed
-	ch <- c.erlangVmIoInput
-	ch <- c.erlangVmIoOutput
-	ch <- c.erlangVmReductionsReductionsSinceLastCall
-	ch <- c.erlangVmReductionsTotalReductions
-	ch <- c.erlangVmRunQueue
-	ch <- c.erlangVmRuntimeTimeSinceLastCall
-	ch <- c.erlangVmRuntimeTotalRunTime
-	ch <- c.erlangVmTotalActiveTasks
-	ch <- c.erlangVmTotalActiveTasksAll
-	ch <- c.erlangVmTotalRunQueueLengths
-	ch <- c.erlangVmTotalRunQueueLengthsAll
-	ch <- c.erlangVmWallClockTotalWallclockTime
-	ch <- c.erlangVmWallClockWallclockTimeSinceLastCall
-	// ch <- c.erlangVmActiveTasks
-	// ch <- c.erlangVmActiveTasksAll
-	// ch <- c.erlangVmRunQueueLengths
-	// ch <- c.erlangVmRunQueueLengthsAll
+
+	if c.enableSoraClientMetrics {
+		ch <- c.totalFailedSoraClientTypeSoraAndroidSdk
+		ch <- c.totalFailedSoraClientTypeSoraIosSdk
+		ch <- c.totalFailedSoraClientTypeSoraJsSdk
+		ch <- c.totalFailedSoraClientTypeSoraUnitySdk
+		ch <- c.totalFailedSoraClientTypeUnknown
+		ch <- c.totalFailedSoraClientTypeWebrtcNativeClientMomo
+		ch <- c.totalSuccessfulSoraClientTypeSoraAndroidSdk
+		ch <- c.totalSuccessfulSoraClientTypeSoraIosSdk
+		ch <- c.totalSuccessfulSoraClientTypeSoraJsSdk
+		ch <- c.totalSuccessfulSoraClientTypeSoraUnitySdk
+		ch <- c.totalSuccessfulSoraClientTypeUnknown
+		ch <- c.totalSuccessfulSoraClientTypeWebrtcNativeClientMomo
+	}
+
+	if c.enableSoraErrorMetrics {
+		ch <- c.sdpGenerationError
+		ch <- c.signalingError
+	}
+
+	if c.enableErlangVmMetrics {
+		ch <- c.erlangVmMemoryTotal
+		ch <- c.erlangVmMemoryProcesses
+		ch <- c.erlangVmMemoryProcessesUsed
+		ch <- c.erlangVmMemorySystem
+		ch <- c.erlangVmMemoryAtom
+		ch <- c.erlangVmMemoryAtomUsed
+		ch <- c.erlangVmMemoryBinary
+		ch <- c.erlangVmMemoryCode
+		ch <- c.erlangVmMemoryEts
+		ch <- c.erlangVmContextSwitches
+		ch <- c.erlangVmExactReductionsExactReductionsSinceLastCall
+		ch <- c.erlangVmExactReductionsTotalExactReductions
+		ch <- c.erlangVmGarbageCollectionNumberOfGcs
+		ch <- c.erlangVmGarbageCollectionWordsReclaimed
+		ch <- c.erlangVmIoInput
+		ch <- c.erlangVmIoOutput
+		ch <- c.erlangVmReductionsReductionsSinceLastCall
+		ch <- c.erlangVmReductionsTotalReductions
+		ch <- c.erlangVmRunQueue
+		ch <- c.erlangVmRuntimeTimeSinceLastCall
+		ch <- c.erlangVmRuntimeTotalRunTime
+		ch <- c.erlangVmTotalActiveTasks
+		ch <- c.erlangVmTotalActiveTasksAll
+		ch <- c.erlangVmTotalRunQueueLengths
+		ch <- c.erlangVmTotalRunQueueLengthsAll
+		ch <- c.erlangVmWallClockTotalWallclockTime
+		ch <- c.erlangVmWallClockWallclockTimeSinceLastCall
+		// ch <- c.erlangVmActiveTasks
+		// ch <- c.erlangVmActiveTasksAll
+		// ch <- c.erlangVmRunQueueLengths
+		// ch <- c.erlangVmRunQueueLengthsAll
+	}
 }
 
 type soraGetStatsReport struct {
+	SoraVersion string `json:"version"`
 	soraConnectionReport
 	soraClientReport
 	soraErrorReport
@@ -373,18 +360,17 @@ type soraGetStatsReport struct {
 }
 
 type soraConnectionReport struct {
-	SoraVersion                string `json:"version"`
-	TotalConnectionCreated     int64  `json:"total_connection_created"`
-	TotalConnectionUpdated     int64  `json:"total_connection_updated"`
-	TotalConnectionDestroyed   int64  `json:"total_connection_destroyed"`
-	TotalSuccessfulConnections int64  `json:"total_successful_connections"`
-	TotalOngoingConnections    int64  `json:"total_ongoing_connections"`
-	TotalFailedConnections     int64  `json:"total_failed_connections"`
-	TotalDurationSec           int64  `json:"total_duration_sec"`
-	TotalTurnUdpConnections    int64  `json:"total_turn_udp_connections"`
-	TotalTurnTcpConnections    int64  `json:"total_turn_tcp_connections"`
-	AverageDurationSec         int64  `json:"average_duration_sec"`
-	AverageSetupTimeMsec       int64  `json:"average_setup_time_msec"`
+	TotalConnectionCreated     int64 `json:"total_connection_created"`
+	TotalConnectionUpdated     int64 `json:"total_connection_updated"`
+	TotalConnectionDestroyed   int64 `json:"total_connection_destroyed"`
+	TotalSuccessfulConnections int64 `json:"total_successful_connections"`
+	TotalOngoingConnections    int64 `json:"total_ongoing_connections"`
+	TotalFailedConnections     int64 `json:"total_failed_connections"`
+	TotalDurationSec           int64 `json:"total_duration_sec"`
+	TotalTurnUdpConnections    int64 `json:"total_turn_udp_connections"`
+	TotalTurnTcpConnections    int64 `json:"total_turn_tcp_connections"`
+	AverageDurationSec         int64 `json:"average_duration_sec"`
+	AverageSetupTimeMsec       int64 `json:"average_setup_time_msec"`
 }
 
 type soraClientReport struct {

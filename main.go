@@ -42,10 +42,21 @@ var (
 		"sora.timeout",
 		"Timeout for trying to get stats from Sora GetStatsReport API URL",
 	).Default("5s").Duration()
-	// sora_client や erlang_vm をフィルターで切るようにする
 	disableExporterMetrics = kingpin.Flag(
 		"web.disable-exporter-metrics",
 		"Exclude metrics about the exporter itself (promhttp_*, process_*, go_*).",
+	).Bool()
+	enableSoraClientMetrics = kingpin.Flag(
+		"sora.client_metrics",
+		"Include metrics about Sora client connection stats.",
+	).Bool()
+	enableSoraErrorMetrics = kingpin.Flag(
+		"sora.error_metrics",
+		"Include metrics about Sora connect error stats.",
+	).Bool()
+	enableErlangVmMetrics = kingpin.Flag(
+		"sora.erlang_vm_metrics",
+		"Include metrics about Erlang VM stats.",
 	).Bool()
 	maxRequests = kingpin.Flag(
 		"web.max-requests",
@@ -108,7 +119,13 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (h *handler) innerHandler(filters ...string) (http.Handler, error) {
 	r := prometheus.NewRegistry()
 	r.MustRegister(version.NewCollector("sora_exporter"))
-	r.MustRegister(collector.New(collector.WithLogger(h.logger), collector.WithTimeout(*soraTimeout), collector.WithSoraURL(*soraGetStatsReportURL)))
+	r.MustRegister(collector.New(
+		*soraGetStatsReportURL,
+		*soraTimeout,
+		h.logger,
+		*enableSoraClientMetrics,
+		*enableSoraErrorMetrics,
+		*enableErlangVmMetrics))
 	handler := promhttp.HandlerFor(
 		prometheus.Gatherers{h.exporterMetricsRegistry, r},
 		promhttp.HandlerOpts{
