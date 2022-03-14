@@ -58,6 +58,10 @@ var (
 		"sora.erlang-vm-metrics",
 		"Include metrics about Erlang VM stats.",
 	).Bool()
+	soraSkipSslVeirfy = kingpin.Flag(
+		"sora.skip-ssl-verify",
+		"Flag that enables SSL certificate verification for the Sora GetStatsReport URL",
+	).Bool()
 	maxRequests = kingpin.Flag(
 		"web.max-requests",
 		"Maximum number of parallel scrape requests. Use 0 to disable.",
@@ -125,7 +129,8 @@ func (h *handler) innerHandler(filters ...string) (http.Handler, error) {
 		h.logger,
 		*enableSoraClientMetrics,
 		*enableSoraErrorMetrics,
-		*enableErlangVmMetrics))
+		*enableErlangVmMetrics,
+		*soraSkipSslVeirfy))
 	handler := promhttp.HandlerFor(
 		prometheus.Gatherers{h.exporterMetricsRegistry, r},
 		promhttp.HandlerOpts{

@@ -2,6 +2,7 @@ package collector
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"net/http"
 	"sync"
@@ -14,10 +15,10 @@ import (
 
 type Collector struct {
 	mutex                   sync.RWMutex
-	httpClient              HTTPClient
 	logger                  log.Logger
 	timeout                 time.Duration
 	URI                     string
+	skipSslVerify           bool
 	enableSoraClientMetrics bool
 	enableSoraErrorMetrics  bool
 	enableErlangVmMetrics   bool
@@ -206,7 +207,13 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	}
 	req.Header.Set("x-sora-target", "Sora_20171010.GetStatsReport")
 
-	resp, err := c.httpClient.Do(req)
+	tr := &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: c.skipSslVerify}}
+	client := http.Client{
+		Timeout:   c.timeout,
+		Transport: tr,
+	}
+
+	resp, err := client.Do(req)
 	if err != nil {
 		level.Error(c.logger).Log("msg", "failed to request to sora", "err", err)
 		return
