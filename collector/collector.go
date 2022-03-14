@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/go-kit/log"
@@ -12,6 +13,7 @@ import (
 )
 
 type Collector struct {
+	mutex                   sync.RWMutex
 	httpClient              HTTPClient
 	logger                  log.Logger
 	timeout                 time.Duration
@@ -191,6 +193,9 @@ func newInfo(d *prometheus.Desc, labelValues ...string) prometheus.Metric {
 var _ prometheus.Collector = (*Collector)(nil)
 
 func (c *Collector) Collect(ch chan<- prometheus.Metric) {
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+
 	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
 	defer cancel()
 
