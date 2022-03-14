@@ -47,15 +47,15 @@ var (
 		"Exclude metrics about the exporter itself (promhttp_*, process_*, go_*).",
 	).Bool()
 	enableSoraClientMetrics = kingpin.Flag(
-		"sora.client_metrics",
+		"sora.client-metrics",
 		"Include metrics about Sora client connection stats.",
 	).Bool()
 	enableSoraErrorMetrics = kingpin.Flag(
-		"sora.error_metrics",
+		"sora.error-metrics",
 		"Include metrics about Sora connect error stats.",
 	).Bool()
 	enableErlangVmMetrics = kingpin.Flag(
-		"sora.erlang_vm_metrics",
+		"sora.erlang-vm-metrics",
 		"Include metrics about Erlang VM stats.",
 	).Bool()
 	maxRequests = kingpin.Flag(
