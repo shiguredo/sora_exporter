@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	stdlog "log"
 	"net/http"
 	"os"
@@ -69,7 +68,7 @@ var (
 )
 
 type handler struct {
-	unfilteredHandler http.Handler
+	soraMetricsHandler http.Handler
 	// exporterMetricsRegistry is a separate registry for the metrics about
 	// the exporter itself.
 	exporterMetricsRegistry *prometheus.Registry
@@ -91,36 +90,16 @@ func newHandler(includeExporterMetrics bool, maxRequests int, logger log.Logger)
 			promcollectors.NewGoCollector(),
 		)
 	}
-	if innerHandler, err := h.innerHandler(); err != nil {
-		panic(fmt.Sprintf("Couldn't create metrics handler: %s", err))
-	} else {
-		h.unfilteredHandler = innerHandler
-	}
+	h.soraMetricsHandler = h.innerHandler()
 	return h
 }
 
 // ServeHTTP implements http.Handler.
 func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	filters := r.URL.Query()["collect[]"]
-	level.Debug(h.logger).Log("msg", "collect query:", "filters", filters)
-
-	if len(filters) == 0 {
-		// No filters, use the prepared unfiltered handler.
-		h.unfilteredHandler.ServeHTTP(w, r)
-		return
-	}
-	// To serve filtered metrics, we create a filtering handler on the fly.
-	filteredHandler, err := h.innerHandler(filters...)
-	if err != nil {
-		level.Warn(h.logger).Log("msg", "Couldn't create filtered metrics handler:", "err", err)
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(fmt.Sprintf("Couldn't create filtered metrics handler: %s", err)))
-		return
-	}
-	filteredHandler.ServeHTTP(w, r)
+	h.soraMetricsHandler.ServeHTTP(w, r)
 }
 
-func (h *handler) innerHandler(filters ...string) (http.Handler, error) {
+func (h *handler) innerHandler(filters ...string) http.Handler {
 	r := prometheus.NewRegistry()
 	r.MustRegister(version.NewCollector("sora_exporter"))
 	r.MustRegister(collector.New(
@@ -147,7 +126,7 @@ func (h *handler) innerHandler(filters ...string) (http.Handler, error) {
 			h.exporterMetricsRegistry, handler,
 		)
 	}
-	return handler, nil
+	return handler
 }
 
 func main() {
