@@ -15,6 +15,8 @@ import (
 type Collector struct {
 	*config
 
+	soraVersionInfo *prometheus.Desc
+
 	// Sora Connection stats
 	totalConnectionCreated     *prometheus.Desc
 	totalConnectionUpdated     *prometheus.Desc
@@ -126,6 +128,7 @@ func New(opts ...Option) *Collector {
 
 	return &Collector{
 		config:                                              cfg,
+		soraVersionInfo:                                     newDescWithLabel("sora_version_info", "sora version info.", []string{"version"}),
 		totalConnectionCreated:                              newDesc("connections_created_total", "The total number of connections created."),
 		totalConnectionUpdated:                              newDesc("connections_updated_total", "The total number of connections updated."),
 		totalConnectionDestroyed:                            newDesc("connections_destroyed_total", "The total number of connections destryed."),
@@ -189,6 +192,10 @@ func newDesc(name, help string) *prometheus.Desc {
 	return prometheus.NewDesc(prometheus.BuildFQName("sora", "exporter", name), help, nil, nil)
 }
 
+func newDescWithLabel(name, help string, labels []string) *prometheus.Desc {
+	return prometheus.NewDesc(prometheus.BuildFQName("sora", "exporter", name), help, labels, nil)
+}
+
 func defaults() []Option {
 	return []Option{
 		WithHTTPClient(http.DefaultClient),
@@ -224,6 +231,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		return
 	}
 
+	ch <- newInfo(c.soraVersionInfo, report.SoraVersion)
 	ch <- newCounter(c.totalConnectionCreated, float64(report.TotalConnectionCreated))
 	ch <- newCounter(c.totalConnectionUpdated, float64(report.TotalConnectionUpdated))
 	ch <- newCounter(c.totalConnectionDestroyed, float64(report.TotalConnectionDestroyed))
@@ -293,7 +301,12 @@ func newCounter(d *prometheus.Desc, v float64) prometheus.Metric {
 	return prometheus.MustNewConstMetric(d, prometheus.CounterValue, v)
 }
 
+func newInfo(d *prometheus.Desc, labelValues ...string) prometheus.Metric {
+	return prometheus.MustNewConstMetric(d, prometheus.GaugeValue, 1, labelValues...)
+}
+
 func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
+	ch <- c.soraVersionInfo
 	ch <- c.totalConnectionCreated
 	ch <- c.totalConnectionUpdated
 	ch <- c.totalConnectionUpdated
@@ -360,17 +373,18 @@ type soraGetStatsReport struct {
 }
 
 type soraConnectionReport struct {
-	TotalConnectionCreated     int64 `json:"total_connection_created"`
-	TotalConnectionUpdated     int64 `json:"total_connection_updated"`
-	TotalConnectionDestroyed   int64 `json:"total_connection_destroyed"`
-	TotalSuccessfulConnections int64 `json:"total_successful_connections"`
-	TotalOngoingConnections    int64 `json:"total_ongoing_connections"`
-	TotalFailedConnections     int64 `json:"total_failed_connections"`
-	TotalDurationSec           int64 `json:"total_duration_sec"`
-	TotalTurnUdpConnections    int64 `json:"total_turn_udp_connections"`
-	TotalTurnTcpConnections    int64 `json:"total_turn_tcp_connections"`
-	AverageDurationSec         int64 `json:"average_duration_sec"`
-	AverageSetupTimeMsec       int64 `json:"average_setup_time_msec"`
+	SoraVersion                string `json:"version"`
+	TotalConnectionCreated     int64  `json:"total_connection_created"`
+	TotalConnectionUpdated     int64  `json:"total_connection_updated"`
+	TotalConnectionDestroyed   int64  `json:"total_connection_destroyed"`
+	TotalSuccessfulConnections int64  `json:"total_successful_connections"`
+	TotalOngoingConnections    int64  `json:"total_ongoing_connections"`
+	TotalFailedConnections     int64  `json:"total_failed_connections"`
+	TotalDurationSec           int64  `json:"total_duration_sec"`
+	TotalTurnUdpConnections    int64  `json:"total_turn_udp_connections"`
+	TotalTurnTcpConnections    int64  `json:"total_turn_tcp_connections"`
+	AverageDurationSec         int64  `json:"average_duration_sec"`
+	AverageSetupTimeMsec       int64  `json:"average_setup_time_msec"`
 }
 
 type soraClientReport struct {
