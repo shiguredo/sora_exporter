@@ -1,0 +1,30 @@
+name: Release Build
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: '^1.17.7'
+
+    - run: go install github.com/tcnksm/ghr@latest
+
+    - name: Build
+      run: |
+        GOOS=linux GOARCH=amd64 go build -o dist/sora_exporter_amd64 main.go
+        GOOS=linux GOARCH=arm64 go build -o dist/sora_exporter_arm64 main.go
+        gzip dist/*
+    - name: Release
+      run: |
+        ghr -t "${{ secrets.GITHUB_TOKEN }}" -u "${{ github.repository_owner }}" -r "sora_exporter" --replace "${GITHUB_REF##*/}" dist/
