@@ -14,7 +14,7 @@ type ErrorMetrics struct {
 	signalingError     *prometheus.Desc
 }
 
-func (m *ErrorMetrics) Desc(ch chan<- *prometheus.Desc) {
+func (m *ErrorMetrics) Describe(ch chan<- *prometheus.Desc) {
 	ch <- m.sdpGenerationError
 	ch <- m.signalingError
 }

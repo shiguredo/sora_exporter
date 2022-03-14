@@ -53,9 +53,6 @@ func New(uri string, timeout time.Duration, logger log.Logger, enableSoraClientM
 	}
 }
 
-// TODO(tnamao): 不要？
-var _ prometheus.Collector = (*Collector)(nil)
-
 func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
@@ -105,15 +102,15 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.soraVersionInfo
-	c.ConnectionMetrics.Desc(ch)
+	c.ConnectionMetrics.Describe(ch)
 
 	if c.enableSoraClientMetrics {
-		c.ClientMetrics.Desc(ch)
+		c.ClientMetrics.Describe(ch)
 	}
 	if c.enableSoraErrorMetrics {
-		c.ErrorMetrics.Desc(ch)
+		c.ErrorMetrics.Describe(ch)
 	}
 	if c.enableErlangVmMetrics {
-		c.ErlangVmMetrics.Desc(ch)
+		c.ErlangVmMetrics.Describe(ch)
 	}
 }

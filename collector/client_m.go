@@ -34,7 +34,7 @@ type ClientMetrics struct {
 	totalSuccessfulSoraClientTypeWebrtcNativeClientMomo *prometheus.Desc
 }
 
-func (m *ClientMetrics) Desc(ch chan<- *prometheus.Desc) {
+func (m *ClientMetrics) Describe(ch chan<- *prometheus.Desc) {
 	ch <- m.totalFailedSoraClientTypeSoraAndroidSdk
 	ch <- m.totalFailedSoraClientTypeSoraIosSdk
 	ch <- m.totalFailedSoraClientTypeSoraJsSdk

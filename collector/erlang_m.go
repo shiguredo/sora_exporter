@@ -73,7 +73,7 @@ type ErlangVmMetrics struct {
 	// erlangVmRunQueueLengthsAll                          *prometheus.Desc
 }
 
-func (m *ErlangVmMetrics) Desc(ch chan<- *prometheus.Desc) {
+func (m *ErlangVmMetrics) Describe(ch chan<- *prometheus.Desc) {
 	ch <- m.erlangVmMemoryTotal
 	ch <- m.erlangVmMemoryProcesses
 	ch <- m.erlangVmMemoryProcessesUsed

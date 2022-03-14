@@ -32,7 +32,7 @@ type ConnectionMetrics struct {
 	averageSetupTimeSec        *prometheus.Desc
 }
 
-func (m *ConnectionMetrics) Desc(ch chan<- *prometheus.Desc) {
+func (m *ConnectionMetrics) Describe(ch chan<- *prometheus.Desc) {
 	ch <- m.totalConnectionCreated
 	ch <- m.totalConnectionUpdated
 	ch <- m.totalConnectionUpdated
