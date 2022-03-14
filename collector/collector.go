@@ -45,6 +45,40 @@ type Collector struct {
 	// Sora Connect error stats
 	sdpGenerationError *prometheus.Desc
 	signalingError     *prometheus.Desc
+
+	// Erlang VM stats
+	// XXX(tnamao): Sora GetStatsReport API が array を返す値は未対応です。
+	erlangVmMemoryTotal                                 *prometheus.Desc
+	erlangVmMemoryProcesses                             *prometheus.Desc
+	erlangVmMemoryProcessesUsed                         *prometheus.Desc
+	erlangVmMemorySystem                                *prometheus.Desc
+	erlangVmMemoryAtom                                  *prometheus.Desc
+	erlangVmMemoryAtomUsed                              *prometheus.Desc
+	erlangVmMemoryBinary                                *prometheus.Desc
+	erlangVmMemoryCode                                  *prometheus.Desc
+	erlangVmMemoryEts                                   *prometheus.Desc
+	erlangVmContextSwitches                             *prometheus.Desc
+	erlangVmExactReductionsExactReductionsSinceLastCall *prometheus.Desc
+	erlangVmExactReductionsTotalExactReductions         *prometheus.Desc
+	erlangVmGarbageCollectionNumberOfGcs                *prometheus.Desc
+	erlangVmGarbageCollectionWordsReclaimed             *prometheus.Desc
+	erlangVmIoInput                                     *prometheus.Desc
+	erlangVmIoOutput                                    *prometheus.Desc
+	erlangVmReductionsReductionsSinceLastCall           *prometheus.Desc
+	erlangVmReductionsTotalReductions                   *prometheus.Desc
+	erlangVmRunQueue                                    *prometheus.Desc
+	erlangVmRuntimeTimeSinceLastCall                    *prometheus.Desc
+	erlangVmRuntimeTotalRunTime                         *prometheus.Desc
+	erlangVmTotalActiveTasks                            *prometheus.Desc
+	erlangVmTotalActiveTasksAll                         *prometheus.Desc
+	erlangVmTotalRunQueueLengths                        *prometheus.Desc
+	erlangVmTotalRunQueueLengthsAll                     *prometheus.Desc
+	erlangVmWallClockTotalWallclockTime                 *prometheus.Desc
+	erlangVmWallClockWallclockTimeSinceLastCall         *prometheus.Desc
+	// erlangVmActiveTasks                                 *prometheus.Desc
+	// erlangVmActiveTasksAll                              *prometheus.Desc
+	// erlangVmRunQueueLengths                             *prometheus.Desc
+	// erlangVmRunQueueLengthsAll                          *prometheus.Desc
 }
 
 type config struct {
@@ -103,20 +137,51 @@ func New(opts ...Option) *Collector {
 		totalTurnTcpConnections:                             newDesc("turn_tcp_connections_total", "The total number of connections with TURN-TCP."),
 		averageDurationSec:                                  newDesc("average_duration_seconds", "The average connection duration in seconds."),
 		averageSetupTimeSec:                                 newDesc("average_setup_time_seconds", "The average setup time in seconds."),
-		totalFailedSoraClientTypeSoraAndroidSdk:             newDesc("sora_client_type_sora_android_sdk_failed_total", ""),
-		totalFailedSoraClientTypeSoraIosSdk:                 newDesc("sora_client_type_sora_ios_sdk_failed_total", ""),
-		totalFailedSoraClientTypeSoraJsSdk:                  newDesc("sora_client_type_sora_js_sdk_failed_total", ""),
-		totalFailedSoraClientTypeSoraUnitySdk:               newDesc("sora_client_type_sora_unity_sdk_failed_total", ""),
-		totalFailedSoraClientTypeUnknown:                    newDesc("sora_client_type_unknown_failed_total", ""),
-		totalFailedSoraClientTypeWebrtcNativeClientMomo:     newDesc("sora_client_type_webrtc_native_client_monmo_failed_total", ""),
-		totalSuccessfulSoraClientTypeSoraAndroidSdk:         newDesc("sora_client_type_sora_android_sdk_successful_total", ""),
-		totalSuccessfulSoraClientTypeSoraIosSdk:             newDesc("sora_client_type_sora_ios_sdk_successful_total", ""),
-		totalSuccessfulSoraClientTypeSoraJsSdk:              newDesc("sora_client_type_sora_js_sdk_successful_total", ""),
-		totalSuccessfulSoraClientTypeSoraUnitySdk:           newDesc("sora_client_type_sora_unity_sdk_successful_total", ""),
-		totalSuccessfulSoraClientTypeUnknown:                newDesc("sora_client_type_known_successful_total", ""),
-		totalSuccessfulSoraClientTypeWebrtcNativeClientMomo: newDesc("sora_client_type_webrtc_native_client_momo_successful_total", ""),
-		sdpGenerationError:                                  newDesc("sdp_generation_error_total", ""),
-		signalingError:                                      newDesc("signaling_error_total", ""),
+		totalFailedSoraClientTypeSoraAndroidSdk:             newDesc("sora_client_type_sora_android_sdk_failed_total", "The total number of failed connections for Sora Android SDK."),
+		totalFailedSoraClientTypeSoraIosSdk:                 newDesc("sora_client_type_sora_ios_sdk_failed_total", "The total number of failed connections for Sora IOS SDK."),
+		totalFailedSoraClientTypeSoraJsSdk:                  newDesc("sora_client_type_sora_js_sdk_failed_total", "The total number of failed connections for Sora JavaScript SDK."),
+		totalFailedSoraClientTypeSoraUnitySdk:               newDesc("sora_client_type_sora_unity_sdk_failed_total", "The total number of failed connections for Sora Unity SDK."),
+		totalFailedSoraClientTypeUnknown:                    newDesc("sora_client_type_unknown_failed_total", "The total number of failed connections for WebRTC native client Momo."),
+		totalFailedSoraClientTypeWebrtcNativeClientMomo:     newDesc("sora_client_type_webrtc_native_client_monmo_failed_total", "The total number of failed connections for WebRTC native client Momo."),
+		totalSuccessfulSoraClientTypeSoraAndroidSdk:         newDesc("sora_client_type_sora_android_sdk_successful_total", "The total number of successful connections for Sora Android SDK."),
+		totalSuccessfulSoraClientTypeSoraIosSdk:             newDesc("sora_client_type_sora_ios_sdk_successful_total", "The total number of successful connections for Sora IOS SDK."),
+		totalSuccessfulSoraClientTypeSoraJsSdk:              newDesc("sora_client_type_sora_js_sdk_successful_total", "The total number of successful connections for Sora JavaScript SDK."),
+		totalSuccessfulSoraClientTypeSoraUnitySdk:           newDesc("sora_client_type_sora_unity_sdk_successful_total", "The total number of successful connections for Sora Unity SDK."),
+		totalSuccessfulSoraClientTypeUnknown:                newDesc("sora_client_type_known_successful_total", "The total number of successful connections for unknown client"),
+		totalSuccessfulSoraClientTypeWebrtcNativeClientMomo: newDesc("sora_client_type_webrtc_native_client_momo_successful_total", "The total number of successful connections for WebRTC native client Momo."),
+		sdpGenerationError:                                  newDesc("sdp_generation_error_total", "The total number of SDP genration error."),
+		signalingError:                                      newDesc("signaling_error_total", "The total number of signaling error."),
+		erlangVmMemoryTotal:                                 newDesc("erlang_vm_memory_total", "The total amount of memory currently allocated. This is the same as the sum of the memory size for processes and system."),
+		erlangVmMemoryProcesses:                             newDesc("erlang_vm_memory_processes", "The total amount of memory currently allocated for the Erlang processes."),
+		erlangVmMemoryProcessesUsed:                         newDesc("erlang_vm_memory_processes_used", "The total amount of memory currently used by the Erlang processes. This is part of the memory presented as processes memory."),
+		erlangVmMemorySystem:                                newDesc("erlang_vm_memory_system", "The total amount of memory currently allocated for the emulator that is not directly related to any Erlang process. Memory presented as processes is not included in this memory. instrument(3) can be used to get a more detailed breakdown of what memory is part of this type."),
+		erlangVmMemoryAtom:                                  newDesc("erlang_vm_memory_atom", "The total amount of memory currently allocated for atoms. This memory is part of the memory presented as system memory."),
+		erlangVmMemoryAtomUsed:                              newDesc("erlang_vm_memory_atom_used", "The total amount of memory currently used for atoms. This memory is part of the memory presented as atom memory."),
+		erlangVmMemoryBinary:                                newDesc("erlang_vm_memory_binary", "The total amount of memory currently allocated for binaries. This memory is part of the memory presented as system memory."),
+		erlangVmMemoryCode:                                  newDesc("erlang_vm_memory_code", "The total amount of memory currently allocated for Erlang code. This memory is part of the memory presented as system memory."),
+		erlangVmMemoryEts:                                   newDesc("erlang_vm_memory_ets", "The total amount of memory currently allocated for ETS tables. This memory is part of the memory presented as system memory."),
+		erlangVmContextSwitches:                             newDesc("erlang_vm_context_switches", "The total number of context switches since the system started."),
+		erlangVmExactReductionsExactReductionsSinceLastCall: newDesc("erlang_vm_exact_reductions_exact_reductions_since_last_call", "The number of exact reductions since last call."),
+		erlangVmExactReductionsTotalExactReductions:         newDesc("erlang_vm_exact_reductions_total_exact_reductions", "The total number of exact reductions."),
+		erlangVmGarbageCollectionNumberOfGcs:                newDesc("erlang_vm_garbage_collection_number_of_gcs", "The number of information about garbage collection."),
+		erlangVmGarbageCollectionWordsReclaimed:             newDesc("erlang_vm_garbage_collection_words_reclaimed", "The number of information about garbage collection word reclaimed."),
+		erlangVmIoInput:                                     newDesc("erlang_vm_io_input", ""),
+		erlangVmIoOutput:                                    newDesc("erlang_vm_io_output", ""),
+		erlangVmReductionsReductionsSinceLastCall:           newDesc("erlang_vm_reductions_reductions_since_last_call", "The number of information about reductions."),
+		erlangVmReductionsTotalReductions:                   newDesc("erlang_vm_reductions_total_reductions", "The total number of information about reductions."),
+		erlangVmRunQueue:                                    newDesc("erlang_vm_run_queue", "The total length of all normal and dirty CPU run queues."),
+		erlangVmRuntimeTimeSinceLastCall:                    newDesc("erlang_vm_runtime_time_since_last_call", "The number of information about runtime since last call, in milliseconds."),
+		erlangVmRuntimeTotalRunTime:                         newDesc("erlang_vm_runtime_total_run_time", "The number of information about runtime, in milliseconds."),
+		erlangVmTotalActiveTasks:                            newDesc("erlang_vm_total_active_tasks", "The number of active processes and ports on each run queue and its associated schedulers. (only tasks that are expected to be CPU bound are part of the result.)"),
+		erlangVmTotalActiveTasksAll:                         newDesc("erlang_vm_total_active_tasks_all", "The number of active processes and ports on each run queue and its associated schedulers."),
+		erlangVmTotalRunQueueLengths:                        newDesc("erlang_vm_total_run_queue_lengths", "The number of processes and ports ready to run for each run queue. (only run queues with work that is expected to be CPU bound is part of the result.)"),
+		erlangVmTotalRunQueueLengthsAll:                     newDesc("erlang_vm_total_run_queue_lengths_all", "The number of processes and ports ready to run for each run queue."),
+		erlangVmWallClockTotalWallclockTime:                 newDesc("erlang_vm_wall_clock_total_wallclock_time", "The number of information about wall clock."),
+		erlangVmWallClockWallclockTimeSinceLastCall:         newDesc("erlang_vm_wall_clock_wallclock_time_since_last_call", "The number of information about wall clock since last call."),
+		// erlangVmActiveTasks:                                 newDesc("erlang_vm_active_tasks", ""),
+		// erlangVmActiveTasksAll:                              newDesc("erlang_vm_active_tasks_all", ""),
+		// erlangVmRunQueueLengths:                             newDesc("erlang_vm_run_queue_lengths", ""),
+		// erlangVmRunQueueLengthsAll:                          newDesc("erlang_vm_run_queue_lengths_all", ""),
 	}
 }
 
@@ -186,6 +251,38 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	ch <- newCounter(c.sdpGenerationError, float64(report.SdpGenerationError))
 	ch <- newCounter(c.signalingError, float64(report.SignalingError))
+
+	ch <- newGauge(c.erlangVmMemoryTotal, float64(report.ErlangVmMemoryTotal))
+	ch <- newGauge(c.erlangVmMemoryProcesses, float64(report.ErlangVmMemoryProcesses))
+	ch <- newGauge(c.erlangVmMemoryProcessesUsed, float64(report.ErlangVmMemoryProcessesUsed))
+	ch <- newGauge(c.erlangVmMemorySystem, float64(report.ErlangVmMemorySystem))
+	ch <- newGauge(c.erlangVmMemoryAtom, float64(report.ErlangVmMemoryAtom))
+	ch <- newGauge(c.erlangVmMemoryAtomUsed, float64(report.ErlangVmMemoryAtomUsed))
+	ch <- newGauge(c.erlangVmMemoryBinary, float64(report.ErlangVmMemoryBinary))
+	ch <- newGauge(c.erlangVmMemoryCode, float64(report.ErlangVmMemoryCode))
+	ch <- newGauge(c.erlangVmMemoryEts, float64(report.ErlangVmMemoryEts))
+	ch <- newGauge(c.erlangVmContextSwitches, float64(report.ErlangVmContextSwitches))
+	ch <- newGauge(c.erlangVmExactReductionsExactReductionsSinceLastCall, float64(report.ErlangVmExactReductionsExactReductionsSinceLastCall))
+	ch <- newGauge(c.erlangVmExactReductionsTotalExactReductions, float64(report.ErlangVmExactReductionsTotalExactReductions))
+	ch <- newGauge(c.erlangVmGarbageCollectionNumberOfGcs, float64(report.ErlangVmGarbageCollectionNumberOfGcs))
+	ch <- newGauge(c.erlangVmGarbageCollectionWordsReclaimed, float64(report.ErlangVmGarbageCollectionWordsReclaimed))
+	ch <- newGauge(c.erlangVmIoInput, float64(report.ErlangVmIoInput))
+	ch <- newGauge(c.erlangVmIoOutput, float64(report.ErlangVmIoOutput))
+	ch <- newGauge(c.erlangVmReductionsReductionsSinceLastCall, float64(report.ErlangVmReductionsReductionsSinceLastCall))
+	ch <- newGauge(c.erlangVmReductionsTotalReductions, float64(report.ErlangVmReductionsTotalReductions))
+	ch <- newGauge(c.erlangVmRunQueue, float64(report.ErlangVmRunQueue))
+	ch <- newGauge(c.erlangVmRuntimeTimeSinceLastCall, float64(report.ErlangVmRuntimeTimeSinceLastCall))
+	ch <- newGauge(c.erlangVmRuntimeTotalRunTime, float64(report.ErlangVmRuntimeTotalRunTime))
+	ch <- newGauge(c.erlangVmTotalActiveTasks, float64(report.ErlangVmTotalActiveTasks))
+	ch <- newGauge(c.erlangVmTotalActiveTasksAll, float64(report.ErlangVmTotalActiveTasksAll))
+	ch <- newGauge(c.erlangVmTotalRunQueueLengths, float64(report.ErlangVmTotalRunQueueLengths))
+	ch <- newGauge(c.erlangVmTotalRunQueueLengthsAll, float64(report.ErlangVmTotalRunQueueLengthsAll))
+	ch <- newGauge(c.erlangVmWallClockTotalWallclockTime, float64(report.ErlangVmWallClockTotalWallclockTime))
+	ch <- newGauge(c.erlangVmWallClockWallclockTimeSinceLastCall, float64(report.ErlangVmWallClockWallclockTimeSinceLastCall))
+	// ch <- newGauge(c.erlangVmActiveTasks, float64(report.ErlangVmActiveTasks))
+	// ch <- newGauge(c.erlangVmActiveTasksAll, float64(report.ErlangVmActiveTasksAll))
+	// ch <- newGauge(c.erlangVmRunQueueLengths, float64(report.ErlangVmRunQueueLengths))
+	// ch <- newGauge(c.erlangVmRunQueueLengthsAll, float64(report.ErlangVmRunQueueLengthsAll))
 }
 
 func newGauge(d *prometheus.Desc, v float64) prometheus.Metric {
@@ -222,12 +319,44 @@ func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.totalSuccessfulSoraClientTypeWebrtcNativeClientMomo
 	ch <- c.sdpGenerationError
 	ch <- c.signalingError
+	ch <- c.erlangVmMemoryTotal
+	ch <- c.erlangVmMemoryProcesses
+	ch <- c.erlangVmMemoryProcessesUsed
+	ch <- c.erlangVmMemorySystem
+	ch <- c.erlangVmMemoryAtom
+	ch <- c.erlangVmMemoryAtomUsed
+	ch <- c.erlangVmMemoryBinary
+	ch <- c.erlangVmMemoryCode
+	ch <- c.erlangVmMemoryEts
+	ch <- c.erlangVmContextSwitches
+	ch <- c.erlangVmExactReductionsExactReductionsSinceLastCall
+	ch <- c.erlangVmExactReductionsTotalExactReductions
+	ch <- c.erlangVmGarbageCollectionNumberOfGcs
+	ch <- c.erlangVmGarbageCollectionWordsReclaimed
+	ch <- c.erlangVmIoInput
+	ch <- c.erlangVmIoOutput
+	ch <- c.erlangVmReductionsReductionsSinceLastCall
+	ch <- c.erlangVmReductionsTotalReductions
+	ch <- c.erlangVmRunQueue
+	ch <- c.erlangVmRuntimeTimeSinceLastCall
+	ch <- c.erlangVmRuntimeTotalRunTime
+	ch <- c.erlangVmTotalActiveTasks
+	ch <- c.erlangVmTotalActiveTasksAll
+	ch <- c.erlangVmTotalRunQueueLengths
+	ch <- c.erlangVmTotalRunQueueLengthsAll
+	ch <- c.erlangVmWallClockTotalWallclockTime
+	ch <- c.erlangVmWallClockWallclockTimeSinceLastCall
+	// ch <- c.erlangVmActiveTasks
+	// ch <- c.erlangVmActiveTasksAll
+	// ch <- c.erlangVmRunQueueLengths
+	// ch <- c.erlangVmRunQueueLengthsAll
 }
 
 type soraGetStatsReport struct {
 	soraConnectionReport
 	soraClientReport
 	soraErrorReport
+	erlangVmReport
 }
 
 type soraConnectionReport struct {
@@ -262,4 +391,38 @@ type soraClientReport struct {
 type soraErrorReport struct {
 	SdpGenerationError int64 `json:"error.sdp_generation_error"`
 	SignalingError     int64 `json:"error.signaling_error"`
+}
+
+type erlangVmReport struct {
+	ErlangVmMemoryTotal                                 int64 `json:"erlang_vm.memory.total"`
+	ErlangVmMemoryProcesses                             int64 `json:"erlang_vm.memory.processes"`
+	ErlangVmMemoryProcessesUsed                         int64 `json:"erlang_vm.memory.processes_used"`
+	ErlangVmMemorySystem                                int64 `json:"erlang_vm.memory.system"`
+	ErlangVmMemoryAtom                                  int64 `json:"erlang_vm.memory.atom"`
+	ErlangVmMemoryAtomUsed                              int64 `json:"erlang_vm.memory.atom_used"`
+	ErlangVmMemoryBinary                                int64 `json:"erlang_vm.memory.binary"`
+	ErlangVmMemoryCode                                  int64 `json:"erlang_vm.memory.code"`
+	ErlangVmMemoryEts                                   int64 `json:"erlang_vm.memory.ets"`
+	ErlangVmContextSwitches                             int64 `json:"erlang_vm.statistics.context_switches"`
+	ErlangVmExactReductionsExactReductionsSinceLastCall int64 `json:"erlang_vm.statistics.exact_reductions.exact_reductions_since_last_call"`
+	ErlangVmExactReductionsTotalExactReductions         int64 `json:"erlang_vm.statistics.exact_reductions.total_exact_reductions"`
+	ErlangVmGarbageCollectionNumberOfGcs                int64 `json:"erlang_vm.statistics.garbage_collection.number_of_gcs"`
+	ErlangVmGarbageCollectionWordsReclaimed             int64 `json:"erlang_vm.statistics.garbage_collection.words_reclaimed"`
+	ErlangVmIoInput                                     int64 `json:"erlang_vm.statistics.io.input"`
+	ErlangVmIoOutput                                    int64 `json:"erlang_vm.statistics.io.output"`
+	ErlangVmReductionsReductionsSinceLastCall           int64 `json:"erlang_vm.statistics.reductions.reductions_since_last_call"`
+	ErlangVmReductionsTotalReductions                   int64 `json:"erlang_vm.statistics.reductions.total_reductions"`
+	ErlangVmRunQueue                                    int64 `json:"erlang_vm.statistics.run_queue"`
+	ErlangVmRuntimeTimeSinceLastCall                    int64 `json:"erlang_vm.statistics.runtime.time_since_last_call"`
+	ErlangVmRuntimeTotalRunTime                         int64 `json:"erlang_vm.statistics.runtime.total_run_time"`
+	ErlangVmTotalActiveTasks                            int64 `json:"erlang_vm.statistics.total_active_tasks"`
+	ErlangVmTotalActiveTasksAll                         int64 `json:"erlang_vm.statistics.total_active_tasks_all"`
+	ErlangVmTotalRunQueueLengths                        int64 `json:"erlang_vm.statistics.total_run_queue_lengths"`
+	ErlangVmTotalRunQueueLengthsAll                     int64 `json:"erlang_vm.statistics.total_run_queue_lengths_all"`
+	ErlangVmWallClockTotalWallclockTime                 int64 `json:"erlang_vm.statistics.wall_clock.total_wallclock_time"`
+	ErlangVmWallClockWallclockTimeSinceLastCall         int64 `json:"erlang_vm.statistics.wall_clock.wallclock_time_since_last_call"`
+	// ErlangVmActiveTasks                                 []int64 `json:"erlang_vm.statistics.active_tasks"`
+	// ErlangVmActiveTasksAll                              []int64 `json:"erlang_vm.statistics.active_tasks_all"`
+	// ErlangVmRunQueueLengths                             []int64 `json:"erlang_vm.statistics.run_queue_lengths"`
+	// ErlangVmRunQueueLengthsAll                          []int64 `json:"erlang_vm.statistics.run_queue_lengths_all"`
 }
