@@ -1,4 +1,4 @@
-package collector
+package main
 
 import (
 	"context"
@@ -34,7 +34,7 @@ type HTTPClient interface {
 	Do(*http.Request) (*http.Response, error)
 }
 
-func New(
+func NewCollector(
 	uri string, skipSslVerify bool, timeout time.Duration, logger log.Logger,
 	enableSoraClientMetrics bool, enableSoraErrorMetrics bool, enableErlangVmMetrics bool) *Collector {
 	return &Collector{

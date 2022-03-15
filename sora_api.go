@@ -1,4 +1,4 @@
-package collector
+package main
 
 type soraGetStatsReport struct {
 	SoraVersion string `json:"version"`
