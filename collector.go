@@ -30,22 +30,30 @@ type Collector struct {
 	ErlangVmMetrics
 }
 
+type CollectorOptions struct {
+	uri                     string
+	skipSslVerify           bool
+	timeout                 time.Duration
+	logger                  log.Logger
+	enableSoraClientMetrics bool
+	enableSoraErrorMetrics  bool
+	enableErlangVmMetrics   bool
+}
+
 type HTTPClient interface {
 	Do(*http.Request) (*http.Response, error)
 }
 
-func NewCollector(
-	uri string, skipSslVerify bool, timeout time.Duration, logger log.Logger,
-	enableSoraClientMetrics bool, enableSoraErrorMetrics bool, enableErlangVmMetrics bool) *Collector {
+func NewCollector(options *CollectorOptions) *Collector {
 	return &Collector{
-		URI:           uri,
-		timeout:       timeout,
-		skipSslVerify: skipSslVerify,
-		logger:        logger,
+		URI:           options.uri,
+		timeout:       options.timeout,
+		skipSslVerify: options.skipSslVerify,
+		logger:        options.logger,
 
-		enableSoraClientMetrics: enableSoraClientMetrics,
-		enableSoraErrorMetrics:  enableSoraErrorMetrics,
-		enableErlangVmMetrics:   enableErlangVmMetrics,
+		enableSoraClientMetrics: options.enableSoraClientMetrics,
+		enableSoraErrorMetrics:  options.enableSoraErrorMetrics,
+		enableErlangVmMetrics:   options.enableErlangVmMetrics,
 
 		soraVersionInfo:   newDescWithLabel("sora_version_info", "sora version info.", []string{"version"}),
 		ConnectionMetrics: connectionMetrics,

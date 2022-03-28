@@ -118,14 +118,15 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (h *handler) innerHandler() http.Handler {
 	r := prometheus.NewRegistry()
 	r.MustRegister(version.NewCollector("sora_exporter"))
-	r.MustRegister(NewCollector(
-		h.soraGetStatsReportURL,
-		h.soraSkipSslVeirfy,
-		h.soraTimeout,
-		h.logger,
-		h.enableSoraClientMetrics,
-		h.enableSoraErrorMetrics,
-		h.enableErlangVmMetrics))
+	r.MustRegister(NewCollector(&CollectorOptions{
+		uri:                     h.soraGetStatsReportURL,
+		skipSslVerify:           h.soraSkipSslVeirfy,
+		timeout:                 h.soraTimeout,
+		logger:                  h.logger,
+		enableSoraClientMetrics: h.enableSoraClientMetrics,
+		enableSoraErrorMetrics:  h.enableSoraErrorMetrics,
+		enableErlangVmMetrics:   h.enableErlangVmMetrics,
+	}))
 	handler := promhttp.HandlerFor(
 		prometheus.Gatherers{h.exporterMetricsRegistry, r},
 		promhttp.HandlerOpts{
