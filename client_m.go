@@ -50,16 +50,16 @@ func (m *ClientMetrics) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (m *ClientMetrics) Collect(ch chan<- prometheus.Metric, report soraClientReport) {
-	ch <- newCounter(m.totalFailedSoraClientTypeSoraAndroidSdk, float64(report.TotalFailedSoraClientTypeSoraAndroidSdk))
-	ch <- newCounter(m.totalFailedSoraClientTypeSoraIosSdk, float64(report.TotalFailedSoraClientTypeSoraIosSdk))
-	ch <- newCounter(m.totalFailedSoraClientTypeSoraJsSdk, float64(report.TotalFailedSoraClientTypeSoraJsSdk))
-	ch <- newCounter(m.totalFailedSoraClientTypeSoraUnitySdk, float64(report.TotalFailedSoraClientTypeSoraUnitySdk))
-	ch <- newCounter(m.totalFailedSoraClientTypeUnknown, float64(report.TotalFailedSoraClientTypeUnknown))
-	ch <- newCounter(m.totalFailedSoraClientTypeWebrtcNativeClientMomo, float64(report.TotalFailedSoraClientTypeWebrtcNativeClientMomo))
-	ch <- newCounter(m.totalSuccessfulSoraClientTypeSoraAndroidSdk, float64(report.TotalSuccessfulSoraClientTypeSoraAndroidSdk))
-	ch <- newCounter(m.totalSuccessfulSoraClientTypeSoraIosSdk, float64(report.TotalSuccessfulSoraClientTypeSoraIosSdk))
-	ch <- newCounter(m.totalSuccessfulSoraClientTypeSoraJsSdk, float64(report.TotalSuccessfulSoraClientTypeSoraJsSdk))
-	ch <- newCounter(m.totalSuccessfulSoraClientTypeSoraUnitySdk, float64(report.TotalSuccessfulSoraClientTypeSoraUnitySdk))
-	ch <- newCounter(m.totalSuccessfulSoraClientTypeUnknown, float64(report.TotalSuccessfulSoraClientTypeUnknown))
-	ch <- newCounter(m.totalSuccessfulSoraClientTypeWebrtcNativeClientMomo, float64(report.TotalSuccessfulSoraClientTypeWebrtcNativeClientMomo))
+	ch <- newCounter(m.totalFailedSoraClientTypeSoraAndroidSdk, float64(report.TotalFailedSoraClientType.SoraAndroidSdk))
+	ch <- newCounter(m.totalFailedSoraClientTypeSoraIosSdk, float64(report.TotalFailedSoraClientType.SoraIosSdk))
+	ch <- newCounter(m.totalFailedSoraClientTypeSoraJsSdk, float64(report.TotalFailedSoraClientType.SoraJsSdk))
+	ch <- newCounter(m.totalFailedSoraClientTypeSoraUnitySdk, float64(report.TotalFailedSoraClientType.SoraUnitySdk))
+	ch <- newCounter(m.totalFailedSoraClientTypeUnknown, float64(report.TotalFailedSoraClientType.Unknown))
+	ch <- newCounter(m.totalFailedSoraClientTypeWebrtcNativeClientMomo, float64(report.TotalFailedSoraClientType.WebrtcNativeClientMomo))
+	ch <- newCounter(m.totalSuccessfulSoraClientTypeSoraAndroidSdk, float64(report.TotalSuccessfulSoraClientType.SoraAndroidSdk))
+	ch <- newCounter(m.totalSuccessfulSoraClientTypeSoraIosSdk, float64(report.TotalSuccessfulSoraClientType.SoraIosSdk))
+	ch <- newCounter(m.totalSuccessfulSoraClientTypeSoraJsSdk, float64(report.TotalSuccessfulSoraClientType.SoraJsSdk))
+	ch <- newCounter(m.totalSuccessfulSoraClientTypeSoraUnitySdk, float64(report.TotalSuccessfulSoraClientType.SoraUnitySdk))
+	ch <- newCounter(m.totalSuccessfulSoraClientTypeUnknown, float64(report.TotalSuccessfulSoraClientType.Unknown))
+	ch <- newCounter(m.totalSuccessfulSoraClientTypeWebrtcNativeClientMomo, float64(report.TotalSuccessfulSoraClientType.WebrtcNativeClientMomo))
 }

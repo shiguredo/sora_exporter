@@ -3,9 +3,9 @@ package main
 type soraGetStatsReport struct {
 	SoraVersion string `json:"version"`
 	soraConnectionReport
-	soraClientReport
-	soraErrorReport
-	erlangVmReport
+	SoraClientReport soraClientReport `json:"sora_client,omitempty"`
+	SoraErrorReport  soraErrorReport  `json:"error,omitempty"`
+	ErlangVmReport   erlangVmReport   `json:"erlang_vm,omitempty"`
 }
 
 type soraConnectionReport struct {
@@ -22,56 +22,87 @@ type soraConnectionReport struct {
 	AverageSetupTimeMsec       int64 `json:"average_setup_time_msec"`
 }
 
+type soraClientStatistics struct {
+	SoraAndroidSdk         int64 `json:"sora_android_sdk"`
+	SoraIosSdk             int64 `json:"sora_ios_sdk"`
+	SoraJsSdk              int64 `json:"sora_js_sdk"`
+	SoraUnitySdk           int64 `json:"sora_unity_sdk"`
+	Unknown                int64 `json:"unknown"`
+	WebrtcNativeClientMomo int64 `json:"webrtc_native_client_momo"`
+}
+
 type soraClientReport struct {
-	TotalFailedSoraClientTypeSoraAndroidSdk             int64 `json:"sora_client.total_failed_sora_client_type.sora_android_sdk"`
-	TotalFailedSoraClientTypeSoraIosSdk                 int64 `json:"sora_client.total_failed_sora_client_type.sora_ios_sdk"`
-	TotalFailedSoraClientTypeSoraJsSdk                  int64 `json:"sora_client.total_failed_sora_client_type.sora_js_sdk"`
-	TotalFailedSoraClientTypeSoraUnitySdk               int64 `json:"sora_client.total_failed_sora_client_type.sora_unity_sdk"`
-	TotalFailedSoraClientTypeUnknown                    int64 `json:"sora_client.total_failed_sora_client_type.unknown"`
-	TotalFailedSoraClientTypeWebrtcNativeClientMomo     int64 `json:"sora_client.total_failed_sora_client_type.webrtc_native_client_momo"`
-	TotalSuccessfulSoraClientTypeSoraAndroidSdk         int64 `json:"sora_client.total_successful_sora_client_type.sora_android_sdk"`
-	TotalSuccessfulSoraClientTypeSoraIosSdk             int64 `json:"sora_client.total_successful_sora_client_type.sora_ios_sdk"`
-	TotalSuccessfulSoraClientTypeSoraJsSdk              int64 `json:"sora_client.total_successful_sora_client_type.sora_js_sdk"`
-	TotalSuccessfulSoraClientTypeSoraUnitySdk           int64 `json:"sora_client.total_successful_sora_client_type.sora_unity_sdk"`
-	TotalSuccessfulSoraClientTypeUnknown                int64 `json:"sora_client.total_successful_sora_client_type.unknown"`
-	TotalSuccessfulSoraClientTypeWebrtcNativeClientMomo int64 `json:"sora_client.total_successful_sora_client_type.webrtc_native_client_momo"`
+	TotalFailedSoraClientType     soraClientStatistics `json:"total_failed_sora_client_type"`
+	TotalSuccessfulSoraClientType soraClientStatistics `json:"total_successful_sora_client_type"`
 }
 
 type soraErrorReport struct {
-	SdpGenerationError int64 `json:"error.sdp_generation_error"`
-	SignalingError     int64 `json:"error.signaling_error"`
+	SdpGenerationError int64 `json:"sdp_generation_error"`
+	SignalingError     int64 `json:"signaling_error"`
+}
+
+type erlangVmMemory struct {
+	Total         int64 `json:"total"`
+	Processes     int64 `json:"processes"`
+	ProcessesUsed int64 `json:"processes_used"`
+	System        int64 `json:"system"`
+	Atom          int64 `json:"atom"`
+	AtomUsed      int64 `json:"atom_used"`
+	Binary        int64 `json:"binary"`
+	Code          int64 `json:"code"`
+	Ets           int64 `json:"ets"`
+}
+
+type exatReducations struct {
+	ExactReductionsSinceLastCall int64 `json:"exact_reductions_since_last_call"`
+	TotalExactReductions         int64 `json:"total_exact_reductions"`
+}
+
+type garbageCollection struct {
+	NumberOfGcs    int64 `json:"number_of_gcs"`
+	WordsReclaimed int64 `json:"words_reclaimed"`
+}
+
+type erlangIO struct {
+	Input  int64 `json:"input"`
+	Output int64 `json:"output"`
+}
+
+type reductions struct {
+	ReductionsSinceLastCall int64 `json:"reductions_since_last_call"`
+	TotalReductions         int64 `json:"total_reductions"`
+}
+
+type runtime struct {
+	TimeSinceLastCall int64 `json:"time_since_last_call"`
+	TotalRunTime      int64 `json:"total_run_time"`
+}
+
+type wallClock struct {
+	TotalWallclockTime         int64 `json:"total_wallclock_time"`
+	WallclockTimeSinceLastCall int64 `json:"wallclock_time_since_last_call"`
+}
+
+type erlangVmStatistics struct {
+	ContextSwitches         int64             `json:"context_switches"`
+	ExactReductions         exatReducations   `json:"exact_reductions"`
+	GarbageCollection       garbageCollection `json:"garbage_collection"`
+	Io                      erlangIO          `json:"io"`
+	Reductions              reductions        `json:"reductions"`
+	RunQueue                int64             `json:"run_queue"`
+	Runtime                 runtime           `json:"runtime"`
+	TotalActiveTasks        int64             `json:"total_active_tasks"`
+	TotalActiveTasksAll     int64             `json:"total_active_tasks_all"`
+	TotalRunQueueLengths    int64             `json:"total_run_queue_lengths"`
+	TotalRunQueueLengthsAll int64             `json:"total_run_queue_lengths_all"`
+	WallClock               wallClock         `json:"wall_clock"`
+	// ErlangVmActiveTasks                                 []int64 `json:"active_tasks"`
+	// ErlangVmActiveTasksAll                              []int64 `json:"active_tasks_all"`
+	// ErlangVmRunQueueLengths                             []int64 `json:"run_queue_lengths"`
+	// ErlangVmRunQueueLengthsAll                          []int64 `json:"run_queue_lengths_all"`
 }
 
 type erlangVmReport struct {
-	ErlangVmMemoryTotal                                 int64 `json:"erlang_vm.memory.total"`
-	ErlangVmMemoryProcesses                             int64 `json:"erlang_vm.memory.processes"`
-	ErlangVmMemoryProcessesUsed                         int64 `json:"erlang_vm.memory.processes_used"`
-	ErlangVmMemorySystem                                int64 `json:"erlang_vm.memory.system"`
-	ErlangVmMemoryAtom                                  int64 `json:"erlang_vm.memory.atom"`
-	ErlangVmMemoryAtomUsed                              int64 `json:"erlang_vm.memory.atom_used"`
-	ErlangVmMemoryBinary                                int64 `json:"erlang_vm.memory.binary"`
-	ErlangVmMemoryCode                                  int64 `json:"erlang_vm.memory.code"`
-	ErlangVmMemoryEts                                   int64 `json:"erlang_vm.memory.ets"`
-	ErlangVmContextSwitches                             int64 `json:"erlang_vm.statistics.context_switches"`
-	ErlangVmExactReductionsExactReductionsSinceLastCall int64 `json:"erlang_vm.statistics.exact_reductions.exact_reductions_since_last_call"`
-	ErlangVmExactReductionsTotalExactReductions         int64 `json:"erlang_vm.statistics.exact_reductions.total_exact_reductions"`
-	ErlangVmGarbageCollectionNumberOfGcs                int64 `json:"erlang_vm.statistics.garbage_collection.number_of_gcs"`
-	ErlangVmGarbageCollectionWordsReclaimed             int64 `json:"erlang_vm.statistics.garbage_collection.words_reclaimed"`
-	ErlangVmIoInput                                     int64 `json:"erlang_vm.statistics.io.input"`
-	ErlangVmIoOutput                                    int64 `json:"erlang_vm.statistics.io.output"`
-	ErlangVmReductionsReductionsSinceLastCall           int64 `json:"erlang_vm.statistics.reductions.reductions_since_last_call"`
-	ErlangVmReductionsTotalReductions                   int64 `json:"erlang_vm.statistics.reductions.total_reductions"`
-	ErlangVmRunQueue                                    int64 `json:"erlang_vm.statistics.run_queue"`
-	ErlangVmRuntimeTimeSinceLastCall                    int64 `json:"erlang_vm.statistics.runtime.time_since_last_call"`
-	ErlangVmRuntimeTotalRunTime                         int64 `json:"erlang_vm.statistics.runtime.total_run_time"`
-	ErlangVmTotalActiveTasks                            int64 `json:"erlang_vm.statistics.total_active_tasks"`
-	ErlangVmTotalActiveTasksAll                         int64 `json:"erlang_vm.statistics.total_active_tasks_all"`
-	ErlangVmTotalRunQueueLengths                        int64 `json:"erlang_vm.statistics.total_run_queue_lengths"`
-	ErlangVmTotalRunQueueLengthsAll                     int64 `json:"erlang_vm.statistics.total_run_queue_lengths_all"`
-	ErlangVmWallClockTotalWallclockTime                 int64 `json:"erlang_vm.statistics.wall_clock.total_wallclock_time"`
-	ErlangVmWallClockWallclockTimeSinceLastCall         int64 `json:"erlang_vm.statistics.wall_clock.wallclock_time_since_last_call"`
-	// ErlangVmActiveTasks                                 []int64 `json:"erlang_vm.statistics.active_tasks"`
-	// ErlangVmActiveTasksAll                              []int64 `json:"erlang_vm.statistics.active_tasks_all"`
-	// ErlangVmRunQueueLengths                             []int64 `json:"erlang_vm.statistics.run_queue_lengths"`
-	// ErlangVmRunQueueLengthsAll                          []int64 `json:"erlang_vm.statistics.run_queue_lengths_all"`
+	ErlangVmMemory     erlangVmMemory     `json:"memory"`
+	ErlangVmStatistics erlangVmStatistics `json:"statistics"`
 }

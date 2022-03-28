@@ -35,7 +35,7 @@ type ConnectionMetrics struct {
 func (m *ConnectionMetrics) Describe(ch chan<- *prometheus.Desc) {
 	ch <- m.totalConnectionCreated
 	ch <- m.totalConnectionUpdated
-	ch <- m.totalConnectionUpdated
+	ch <- m.totalConnectionDestroyed
 	ch <- m.totalSuccessfulConnections
 	ch <- m.totalOngoingConnections
 	ch <- m.totalFailedConnections
