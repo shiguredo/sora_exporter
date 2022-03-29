@@ -1,9 +1,7 @@
 # CHANGES
 
-## develop
+## 2022.1.0
 
-- [ADD] アンドキュメントの Sora クライアント統計情報に対応する
-    - @tnamao
 - [CHANGE] `total_ongoing_connections` を counter => gauge に変更する
     - @tnamao
 - [ADD] Sora の標準統計情報の `total_received_invalid_turn_tcp_packet` `total_session_created` `total_session_destroyed` に対応する
