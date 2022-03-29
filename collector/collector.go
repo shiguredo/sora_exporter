@@ -1,4 +1,4 @@
-package main
+package collector
 
 import (
 	"context"
@@ -31,13 +31,13 @@ type Collector struct {
 }
 
 type CollectorOptions struct {
-	uri                     string
-	skipSslVerify           bool
-	timeout                 time.Duration
-	logger                  log.Logger
-	enableSoraClientMetrics bool
-	enableSoraErrorMetrics  bool
-	enableErlangVmMetrics   bool
+	URI                     string
+	SkipSslVerify           bool
+	Timeout                 time.Duration
+	Logger                  log.Logger
+	EnableSoraClientMetrics bool
+	EnableSoraErrorMetrics  bool
+	EnableErlangVmMetrics   bool
 }
 
 type HTTPClient interface {
@@ -46,14 +46,14 @@ type HTTPClient interface {
 
 func NewCollector(options *CollectorOptions) *Collector {
 	return &Collector{
-		URI:           options.uri,
-		timeout:       options.timeout,
-		skipSslVerify: options.skipSslVerify,
-		logger:        options.logger,
+		URI:           options.URI,
+		timeout:       options.Timeout,
+		skipSslVerify: options.SkipSslVerify,
+		logger:        options.Logger,
 
-		enableSoraClientMetrics: options.enableSoraClientMetrics,
-		enableSoraErrorMetrics:  options.enableSoraErrorMetrics,
-		enableErlangVmMetrics:   options.enableErlangVmMetrics,
+		enableSoraClientMetrics: options.EnableSoraClientMetrics,
+		enableSoraErrorMetrics:  options.EnableSoraErrorMetrics,
+		enableErlangVmMetrics:   options.EnableErlangVmMetrics,
 
 		soraVersionInfo:   newDescWithLabel("sora_version_info", "sora version info.", []string{"version"}),
 		ConnectionMetrics: connectionMetrics,

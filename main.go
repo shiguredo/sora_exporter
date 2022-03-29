@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
+	"github.com/shiguredo/sora_exporter/collector"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -118,14 +119,14 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (h *handler) innerHandler() http.Handler {
 	r := prometheus.NewRegistry()
 	r.MustRegister(version.NewCollector("sora_exporter"))
-	r.MustRegister(NewCollector(&CollectorOptions{
-		uri:                     h.soraGetStatsReportURL,
-		skipSslVerify:           h.soraSkipSslVeirfy,
-		timeout:                 h.soraTimeout,
-		logger:                  h.logger,
-		enableSoraClientMetrics: h.enableSoraClientMetrics,
-		enableSoraErrorMetrics:  h.enableSoraErrorMetrics,
-		enableErlangVmMetrics:   h.enableErlangVmMetrics,
+	r.MustRegister(collector.NewCollector(&collector.CollectorOptions{
+		URI:                     h.soraGetStatsReportURL,
+		SkipSslVerify:           h.soraSkipSslVeirfy,
+		Timeout:                 h.soraTimeout,
+		Logger:                  h.logger,
+		EnableSoraClientMetrics: h.enableSoraClientMetrics,
+		EnableSoraErrorMetrics:  h.enableSoraErrorMetrics,
+		EnableErlangVmMetrics:   h.enableErlangVmMetrics,
 	}))
 	handler := promhttp.HandlerFor(
 		prometheus.Gatherers{h.exporterMetricsRegistry, r},
