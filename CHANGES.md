@@ -1,5 +1,12 @@
 # CHANGES
 
+## develop
+
+- [CHANGE] GitHub リリースのタイトルにタグ名を設定する
+    - @tnamao
+- [CHANGE] リリース時のアーカイブファイルに対象の OS 名を含める
+    - @tnamao
+
 ## 2022.1.0
 
 - [CHANGE] `total_ongoing_connections` を counter => gauge に変更する
