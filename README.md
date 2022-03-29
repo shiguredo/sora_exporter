@@ -1,32 +1,51 @@
-# Sora Exporter
+# Sora exporter
 
-[![ci](https://github.com/johejo/sora_exporter/workflows/ci/badge.svg?branch=main)](https://github.com/johejo/sora_exporter/actions?query=workflow%3Aci)
-[![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/johejo/sora_exporter?style?flag-square)](https://github.com/johejo/sora_exporter/releases)
+[![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/shiguredo/sora_exporter.svg)](https://github.com/shiguredo/sora_exporter)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Actions Status](https://github.com/shiguredo/sora_exporter/workflows/ci/badge.svg)](https://github.com/shiguredo/sora_exporter/actions)
 
-Prometheus exporter for WebRTC SFU Sora metrics.
+## About Shiguredo's open source software
 
-https://sora.shiguredo.jp/
+We will not respond to PRs or issues that have not been discussed on Discord. Also, Discord is only available in Japanese.
 
-https://sora-doc.shiguredo.jp/api#id28
+Please read https://github.com/shiguredo/oss/blob/master/README.en.md before use.
 
-## Important Notes
+## 時雨堂のオープンソースソフトウェアについて
 
-Author is not an employee of shiguredo.
+利用前に https://github.com/shiguredo/oss をお読みください。
 
-There is no support available when you contact shiguredo.
+## Sora exporter について
 
-## Install
+このリポジトリは [@johejo](https://github.com/johejo/) の https://github.com/johejo/sora_exporter フォークです。
 
-Download pre-built binary from [release page](https://github.com/johejo/sora_exporter/releases) or use `go install github.com/johejo/sora_exporter`.
+時雨堂が管理し、メンテしています。
 
-## Docker Image
+## Discord
 
-[GitHub Packages](https://github.com/johejo?tab=packages&repo_name=sora_exporter)
+最新の状況などは Discord で共有しています。質問や相談も Discord でのみ受け付けています。
 
-## License
+https://discord.gg/shiguredo
 
-MIT
+## ライセンス
 
-## Author
+Apache License 2.0
 
-Mitsuo Heijo
+```
+Copyright 2021, Mitsuo Heijo (Original Author)
+Copyright 2022, Takeshi Namao
+Copyright 2022, Shiguredo Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
+
+オリジナルは MIT ライセンスですが [@johejo](https://github.com/johejo/) から許諾を得て Apachi License 2.0 へ変更しています。
