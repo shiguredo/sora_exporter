@@ -46,14 +46,17 @@ var (
 		"web.disable-exporter-metrics",
 		"Exclude metrics about the exporter itself (promhttp_*, process_*, go_*).",
 	).Bool()
+	// この統計情報はアンドキュメントです
 	enableSoraClientMetrics = kingpin.Flag(
 		"sora.client-metrics",
 		"Include metrics about Sora client connection stats.",
 	).Bool()
+	// この統計情報はアンドキュメントです
 	enableSoraErrorMetrics = kingpin.Flag(
 		"sora.error-metrics",
 		"Include metrics about Sora connect error stats.",
 	).Bool()
+	// この統計情報はアンドキュメントです
 	enableErlangVmMetrics = kingpin.Flag(
 		"sora.erlang-vm-metrics",
 		"Include metrics about Erlang VM stats.",

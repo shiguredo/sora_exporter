@@ -2,6 +2,7 @@ package collector
 
 import "github.com/prometheus/client_golang/prometheus"
 
+// この統計情報はアンドキュメントです
 var (
 	errorMetrics = ErrorMetrics{
 		sdpGenerationError: newDesc("sdp_generation_error_total", "The total number of SDP genration error."),

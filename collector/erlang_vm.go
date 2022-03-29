@@ -2,6 +2,7 @@ package collector
 
 import "github.com/prometheus/client_golang/prometheus"
 
+// この統計情報はアンドキュメントです
 var (
 	erlangVmMetrics = ErlangVmMetrics{
 		erlangVmMemoryTotal:                                 newDesc("erlang_vm_memory_total", "The total amount of memory currently allocated. This is the same as the sum of the memory size for processes and system."),

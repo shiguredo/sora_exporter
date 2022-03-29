@@ -2,6 +2,7 @@ package collector
 
 import "github.com/prometheus/client_golang/prometheus"
 
+// この統計情報はアンドキュメントです
 var (
 	clientMetrics = ClientMetrics{
 		totalFailedSoraClientTypeSoraAndroidSdk:             newDesc("sora_client_type_sora_android_sdk_failed_total", "The total number of failed connections for Sora Android SDK."),
