@@ -9,17 +9,20 @@ type soraGetStatsReport struct {
 }
 
 type soraConnectionReport struct {
-	TotalConnectionCreated     int64 `json:"total_connection_created"`
-	TotalConnectionUpdated     int64 `json:"total_connection_updated"`
-	TotalConnectionDestroyed   int64 `json:"total_connection_destroyed"`
-	TotalSuccessfulConnections int64 `json:"total_successful_connections"`
-	TotalOngoingConnections    int64 `json:"total_ongoing_connections"`
-	TotalFailedConnections     int64 `json:"total_failed_connections"`
-	TotalDurationSec           int64 `json:"total_duration_sec"`
-	TotalTurnUdpConnections    int64 `json:"total_turn_udp_connections"`
-	TotalTurnTcpConnections    int64 `json:"total_turn_tcp_connections"`
-	AverageDurationSec         int64 `json:"average_duration_sec"`
-	AverageSetupTimeMsec       int64 `json:"average_setup_time_msec"`
+	TotalConnectionCreated            int64 `json:"total_connection_created"`
+	TotalConnectionUpdated            int64 `json:"total_connection_updated"`
+	TotalConnectionDestroyed          int64 `json:"total_connection_destroyed"`
+	TotalSuccessfulConnections        int64 `json:"total_successful_connections"`
+	TotalOngoingConnections           int64 `json:"total_ongoing_connections"`
+	TotalFailedConnections            int64 `json:"total_failed_connections"`
+	TotalDurationSec                  int64 `json:"total_duration_sec"`
+	TotalTurnUdpConnections           int64 `json:"total_turn_udp_connections"`
+	TotalTurnTcpConnections           int64 `json:"total_turn_tcp_connections"`
+	AverageDurationSec                int64 `json:"average_duration_sec"`
+	AverageSetupTimeMsec              int64 `json:"average_setup_time_msec"`
+	TotalSessionCreated               int64 `json:"total_session_created"`
+	TotalSessionDestroyed             int64 `json:"total_session_destroyed"`
+	TotalReceivedInvalidTurnTcpPacket int64 `json:"total_received_invalid_turn_tcp_packet"`
 }
 
 type soraClientStatistics struct {
