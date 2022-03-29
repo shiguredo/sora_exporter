@@ -22,8 +22,26 @@ jobs:
 
     - name: Build
       run: |
-        GOOS=linux GOARCH=amd64 go build -o dist/sora_exporter_amd64 main.go
-        GOOS=linux GOARCH=arm64 go build -o dist/sora_exporter_arm64 main.go
+        GOOS=linux GOARCH=amd64 go build \
+          -o dist/sora_exporter_amd64 \
+          -ldflags "\
+            -X github.com/prometheus/common/version.Version=$(git describe --tag --abbrev=0) \
+            -X github.com/prometheus/common/version.Revision=$(git rev-parse --short HEAD) \
+            -X github.com/prometheus/common/version.Branch=main \
+            -X github.com/prometheus/common/version.BuildUser=shiguredo \
+            -X github.com/prometheus/common/version.BuildDate=$(date -u "+%Y-%m-%dT%H:%M:%SZ") \
+          " \
+          main.go
+        GOOS=linux GOARCH=arm64 go build \
+          -o dist/sora_exporter_arm64 \
+          -ldflags "\
+            -X github.com/prometheus/common/version.Version=$(git describe --tag --abbrev=0) \
+            -X github.com/prometheus/common/version.Revision=$(git rev-parse --short HEAD) \
+            -X github.com/prometheus/common/version.Branch=main \
+            -X github.com/prometheus/common/version.BuildUser=shiguredo \
+            -X github.com/prometheus/common/version.BuildDate=$(date -u "+%Y-%m-%dT%H:%M:%SZ") \
+          " \
+          main.go
         gzip dist/*
     - name: Release
       run: |
