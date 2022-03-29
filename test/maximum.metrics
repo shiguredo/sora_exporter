@@ -1,0 +1,168 @@
+# HELP sora_exporter_average_duration_seconds The average connection duration in seconds.
+# TYPE sora_exporter_average_duration_seconds gauge
+sora_exporter_average_duration_seconds 706
+# HELP sora_exporter_average_setup_time_seconds The average setup time in seconds.
+# TYPE sora_exporter_average_setup_time_seconds gauge
+sora_exporter_average_setup_time_seconds 0
+# HELP sora_exporter_connections_created_total The total number of connections created.
+# TYPE sora_exporter_connections_created_total counter
+sora_exporter_connections_created_total 2
+# HELP sora_exporter_connections_destroyed_total The total number of connections destryed.
+# TYPE sora_exporter_connections_destroyed_total counter
+sora_exporter_connections_destroyed_total 2
+# HELP sora_exporter_connections_updated_total The total number of connections updated.
+# TYPE sora_exporter_connections_updated_total counter
+sora_exporter_connections_updated_total 23
+# HELP sora_exporter_duration_seconds_total The total duration of connections.
+# TYPE sora_exporter_duration_seconds_total counter
+sora_exporter_duration_seconds_total 1412
+# HELP sora_exporter_erlang_vm_context_switches The total number of context switches since the system started.
+# TYPE sora_exporter_erlang_vm_context_switches counter
+sora_exporter_erlang_vm_context_switches 321
+# HELP sora_exporter_erlang_vm_exact_reductions_exact_reductions_since_last_call The number of exact reductions since last call.
+# TYPE sora_exporter_erlang_vm_exact_reductions_exact_reductions_since_last_call gauge
+sora_exporter_erlang_vm_exact_reductions_exact_reductions_since_last_call 213
+# HELP sora_exporter_erlang_vm_exact_reductions_total_exact_reductions The total number of exact reductions.
+# TYPE sora_exporter_erlang_vm_exact_reductions_total_exact_reductions counter
+sora_exporter_erlang_vm_exact_reductions_total_exact_reductions 432
+# HELP sora_exporter_erlang_vm_garbage_collection_number_of_gcs The number of information about garbage collection.
+# TYPE sora_exporter_erlang_vm_garbage_collection_number_of_gcs gauge
+sora_exporter_erlang_vm_garbage_collection_number_of_gcs 912
+# HELP sora_exporter_erlang_vm_garbage_collection_words_reclaimed The number of information about garbage collection word reclaimed.
+# TYPE sora_exporter_erlang_vm_garbage_collection_words_reclaimed gauge
+sora_exporter_erlang_vm_garbage_collection_words_reclaimed 345
+# HELP sora_exporter_erlang_vm_io_input The total number of bytes received through ports.
+# TYPE sora_exporter_erlang_vm_io_input counter
+sora_exporter_erlang_vm_io_input 769
+# HELP sora_exporter_erlang_vm_io_output The total number of bytes output through ports.
+# TYPE sora_exporter_erlang_vm_io_output counter
+sora_exporter_erlang_vm_io_output 331
+# HELP sora_exporter_erlang_vm_memory_atom The total amount of memory currently allocated for atoms. This memory is part of the memory presented as system memory.
+# TYPE sora_exporter_erlang_vm_memory_atom gauge
+sora_exporter_erlang_vm_memory_atom 3333
+# HELP sora_exporter_erlang_vm_memory_atom_used The total amount of memory currently used for atoms. This memory is part of the memory presented as atom memory.
+# TYPE sora_exporter_erlang_vm_memory_atom_used gauge
+sora_exporter_erlang_vm_memory_atom_used 2222
+# HELP sora_exporter_erlang_vm_memory_binary The total amount of memory currently allocated for binaries. This memory is part of the memory presented as system memory.
+# TYPE sora_exporter_erlang_vm_memory_binary gauge
+sora_exporter_erlang_vm_memory_binary 1111
+# HELP sora_exporter_erlang_vm_memory_code The total amount of memory currently allocated for Erlang code. This memory is part of the memory presented as system memory.
+# TYPE sora_exporter_erlang_vm_memory_code gauge
+sora_exporter_erlang_vm_memory_code 777
+# HELP sora_exporter_erlang_vm_memory_ets The total amount of memory currently allocated for ETS tables. This memory is part of the memory presented as system memory.
+# TYPE sora_exporter_erlang_vm_memory_ets gauge
+sora_exporter_erlang_vm_memory_ets 888
+# HELP sora_exporter_erlang_vm_memory_processes The total amount of memory currently allocated for the Erlang processes.
+# TYPE sora_exporter_erlang_vm_memory_processes gauge
+sora_exporter_erlang_vm_memory_processes 5678
+# HELP sora_exporter_erlang_vm_memory_processes_used The total amount of memory currently used by the Erlang processes. This is part of the memory presented as processes memory.
+# TYPE sora_exporter_erlang_vm_memory_processes_used gauge
+sora_exporter_erlang_vm_memory_processes_used 6666
+# HELP sora_exporter_erlang_vm_memory_system The total amount of memory currently allocated for the emulator that is not directly related to any Erlang process. Memory presented as processes is not included in this memory. instrument(3) can be used to get a more detailed breakdown of what memory is part of this type.
+# TYPE sora_exporter_erlang_vm_memory_system gauge
+sora_exporter_erlang_vm_memory_system 4444
+# HELP sora_exporter_erlang_vm_memory_total The total amount of memory currently allocated. This is the same as the sum of the memory size for processes and system.
+# TYPE sora_exporter_erlang_vm_memory_total gauge
+sora_exporter_erlang_vm_memory_total 1234
+# HELP sora_exporter_erlang_vm_reductions_reductions_since_last_call The number of information about reductions.
+# TYPE sora_exporter_erlang_vm_reductions_reductions_since_last_call gauge
+sora_exporter_erlang_vm_reductions_reductions_since_last_call 443
+# HELP sora_exporter_erlang_vm_reductions_total_reductions The total number of information about reductions.
+# TYPE sora_exporter_erlang_vm_reductions_total_reductions counter
+sora_exporter_erlang_vm_reductions_total_reductions 8080
+# HELP sora_exporter_erlang_vm_run_queue The total length of all normal and dirty CPU run queues.
+# TYPE sora_exporter_erlang_vm_run_queue gauge
+sora_exporter_erlang_vm_run_queue 0
+# HELP sora_exporter_erlang_vm_runtime_time_since_last_call The number of information about runtime since last call, in milliseconds.
+# TYPE sora_exporter_erlang_vm_runtime_time_since_last_call gauge
+sora_exporter_erlang_vm_runtime_time_since_last_call 100
+# HELP sora_exporter_erlang_vm_runtime_total_run_time The number of information about runtime, in milliseconds.
+# TYPE sora_exporter_erlang_vm_runtime_total_run_time gauge
+sora_exporter_erlang_vm_runtime_total_run_time 200
+# HELP sora_exporter_erlang_vm_total_active_tasks The number of active processes and ports on each run queue and its associated schedulers. (only tasks that are expected to be CPU bound are part of the result.)
+# TYPE sora_exporter_erlang_vm_total_active_tasks gauge
+sora_exporter_erlang_vm_total_active_tasks 1
+# HELP sora_exporter_erlang_vm_total_active_tasks_all The number of active processes and ports on each run queue and its associated schedulers.
+# TYPE sora_exporter_erlang_vm_total_active_tasks_all gauge
+sora_exporter_erlang_vm_total_active_tasks_all 1
+# HELP sora_exporter_erlang_vm_total_run_queue_lengths The number of processes and ports ready to run for each run queue. (only run queues with work that is expected to be CPU bound is part of the result.)
+# TYPE sora_exporter_erlang_vm_total_run_queue_lengths gauge
+sora_exporter_erlang_vm_total_run_queue_lengths 0
+# HELP sora_exporter_erlang_vm_total_run_queue_lengths_all The number of processes and ports ready to run for each run queue.
+# TYPE sora_exporter_erlang_vm_total_run_queue_lengths_all gauge
+sora_exporter_erlang_vm_total_run_queue_lengths_all 0
+# HELP sora_exporter_erlang_vm_wall_clock_total_wallclock_time The number of information about wall clock.
+# TYPE sora_exporter_erlang_vm_wall_clock_total_wallclock_time gauge
+sora_exporter_erlang_vm_wall_clock_total_wallclock_time 994
+# HELP sora_exporter_erlang_vm_wall_clock_wallclock_time_since_last_call The number of information about wall clock since last call.
+# TYPE sora_exporter_erlang_vm_wall_clock_wallclock_time_since_last_call gauge
+sora_exporter_erlang_vm_wall_clock_wallclock_time_since_last_call 9090
+# HELP sora_exporter_failed_connections_total The total number of failed connections.
+# TYPE sora_exporter_failed_connections_total counter
+sora_exporter_failed_connections_total 0
+# HELP sora_exporter_ongoing_connections_total The total number of ongoing connections.
+# TYPE sora_exporter_ongoing_connections_total gauge
+sora_exporter_ongoing_connections_total 0
+# HELP sora_exporter_sdp_generation_error_total The total number of SDP genration error.
+# TYPE sora_exporter_sdp_generation_error_total counter
+sora_exporter_sdp_generation_error_total 3
+# HELP sora_exporter_signaling_error_total The total number of signaling error.
+# TYPE sora_exporter_signaling_error_total counter
+sora_exporter_signaling_error_total 4
+# HELP sora_exporter_sora_client_type_known_successful_total The total number of successful connections for unknown client
+# TYPE sora_exporter_sora_client_type_known_successful_total counter
+sora_exporter_sora_client_type_known_successful_total 55
+# HELP sora_exporter_sora_client_type_sora_android_sdk_failed_total The total number of failed connections for Sora Android SDK.
+# TYPE sora_exporter_sora_client_type_sora_android_sdk_failed_total counter
+sora_exporter_sora_client_type_sora_android_sdk_failed_total 1
+# HELP sora_exporter_sora_client_type_sora_android_sdk_successful_total The total number of successful connections for Sora Android SDK.
+# TYPE sora_exporter_sora_client_type_sora_android_sdk_successful_total counter
+sora_exporter_sora_client_type_sora_android_sdk_successful_total 11
+# HELP sora_exporter_sora_client_type_sora_ios_sdk_failed_total The total number of failed connections for Sora IOS SDK.
+# TYPE sora_exporter_sora_client_type_sora_ios_sdk_failed_total counter
+sora_exporter_sora_client_type_sora_ios_sdk_failed_total 2
+# HELP sora_exporter_sora_client_type_sora_ios_sdk_successful_total The total number of successful connections for Sora IOS SDK.
+# TYPE sora_exporter_sora_client_type_sora_ios_sdk_successful_total counter
+sora_exporter_sora_client_type_sora_ios_sdk_successful_total 22
+# HELP sora_exporter_sora_client_type_sora_js_sdk_failed_total The total number of failed connections for Sora JavaScript SDK.
+# TYPE sora_exporter_sora_client_type_sora_js_sdk_failed_total counter
+sora_exporter_sora_client_type_sora_js_sdk_failed_total 3
+# HELP sora_exporter_sora_client_type_sora_js_sdk_successful_total The total number of successful connections for Sora JavaScript SDK.
+# TYPE sora_exporter_sora_client_type_sora_js_sdk_successful_total counter
+sora_exporter_sora_client_type_sora_js_sdk_successful_total 33
+# HELP sora_exporter_sora_client_type_sora_unity_sdk_failed_total The total number of failed connections for Sora Unity SDK.
+# TYPE sora_exporter_sora_client_type_sora_unity_sdk_failed_total counter
+sora_exporter_sora_client_type_sora_unity_sdk_failed_total 4
+# HELP sora_exporter_sora_client_type_sora_unity_sdk_successful_total The total number of successful connections for Sora Unity SDK.
+# TYPE sora_exporter_sora_client_type_sora_unity_sdk_successful_total counter
+sora_exporter_sora_client_type_sora_unity_sdk_successful_total 44
+# HELP sora_exporter_sora_client_type_unknown_failed_total The total number of failed connections for WebRTC native client Momo.
+# TYPE sora_exporter_sora_client_type_unknown_failed_total counter
+sora_exporter_sora_client_type_unknown_failed_total 5
+# HELP sora_exporter_sora_client_type_webrtc_native_client_momo_successful_total The total number of successful connections for WebRTC native client Momo.
+# TYPE sora_exporter_sora_client_type_webrtc_native_client_momo_successful_total counter
+sora_exporter_sora_client_type_webrtc_native_client_momo_successful_total 66
+# HELP sora_exporter_sora_client_type_webrtc_native_client_monmo_failed_total The total number of failed connections for WebRTC native client Momo.
+# TYPE sora_exporter_sora_client_type_webrtc_native_client_monmo_failed_total counter
+sora_exporter_sora_client_type_webrtc_native_client_monmo_failed_total 6
+# HELP sora_exporter_sora_version_info sora version info.
+# TYPE sora_exporter_sora_version_info gauge
+sora_exporter_sora_version_info{version="2022.1.0-canary.28"} 1
+# HELP sora_exporter_successfull_connections_total The total number of successfull connections.
+# TYPE sora_exporter_successfull_connections_total counter
+sora_exporter_successfull_connections_total 2
+# HELP sora_exporter_total_received_invalid_turn_tcp_packet The total number of invalid packets with TURN-TCP
+# TYPE sora_exporter_total_received_invalid_turn_tcp_packet counter
+sora_exporter_total_received_invalid_turn_tcp_packet 0
+# HELP sora_exporter_total_session_created The total number of session created.
+# TYPE sora_exporter_total_session_created counter
+sora_exporter_total_session_created 1
+# HELP sora_exporter_total_session_destroyed The total number of session destroyed.
+# TYPE sora_exporter_total_session_destroyed counter
+sora_exporter_total_session_destroyed 0
+# HELP sora_exporter_turn_tcp_connections_total The total number of connections with TURN-TCP.
+# TYPE sora_exporter_turn_tcp_connections_total counter
+sora_exporter_turn_tcp_connections_total 2
+# HELP sora_exporter_turn_udp_connections_total The total number of connections with TURN-UDP.
+# TYPE sora_exporter_turn_udp_connections_total counter
+sora_exporter_turn_udp_connections_total 0
