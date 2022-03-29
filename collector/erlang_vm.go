@@ -18,8 +18,8 @@ var (
 		erlangVmExactReductionsTotalExactReductions:         newDesc("erlang_vm_exact_reductions_total_exact_reductions", "The total number of exact reductions."),
 		erlangVmGarbageCollectionNumberOfGcs:                newDesc("erlang_vm_garbage_collection_number_of_gcs", "The number of information about garbage collection."),
 		erlangVmGarbageCollectionWordsReclaimed:             newDesc("erlang_vm_garbage_collection_words_reclaimed", "The number of information about garbage collection word reclaimed."),
-		erlangVmIoInput:                                     newDesc("erlang_vm_io_input", ""),
-		erlangVmIoOutput:                                    newDesc("erlang_vm_io_output", ""),
+		erlangVmIoInput:                                     newDesc("erlang_vm_io_input", "The total number of bytes received through ports."),
+		erlangVmIoOutput:                                    newDesc("erlang_vm_io_output", "The total number of bytes output through ports."),
 		erlangVmReductionsReductionsSinceLastCall:           newDesc("erlang_vm_reductions_reductions_since_last_call", "The number of information about reductions."),
 		erlangVmReductionsTotalReductions:                   newDesc("erlang_vm_reductions_total_reductions", "The total number of information about reductions."),
 		erlangVmRunQueue:                                    newDesc("erlang_vm_run_queue", "The total length of all normal and dirty CPU run queues."),
@@ -117,15 +117,15 @@ func (m *ErlangVmMetrics) Collect(ch chan<- prometheus.Metric, report erlangVmRe
 	ch <- newGauge(m.erlangVmMemoryBinary, float64(report.ErlangVmMemory.Binary))
 	ch <- newGauge(m.erlangVmMemoryCode, float64(report.ErlangVmMemory.Code))
 	ch <- newGauge(m.erlangVmMemoryEts, float64(report.ErlangVmMemory.Ets))
-	ch <- newGauge(m.erlangVmContextSwitches, float64(report.ErlangVmStatistics.ContextSwitches))
+	ch <- newCounter(m.erlangVmContextSwitches, float64(report.ErlangVmStatistics.ContextSwitches))
 	ch <- newGauge(m.erlangVmExactReductionsExactReductionsSinceLastCall, float64(report.ErlangVmStatistics.ExactReductions.ExactReductionsSinceLastCall))
-	ch <- newGauge(m.erlangVmExactReductionsTotalExactReductions, float64(report.ErlangVmStatistics.ExactReductions.TotalExactReductions))
+	ch <- newCounter(m.erlangVmExactReductionsTotalExactReductions, float64(report.ErlangVmStatistics.ExactReductions.TotalExactReductions))
 	ch <- newGauge(m.erlangVmGarbageCollectionNumberOfGcs, float64(report.ErlangVmStatistics.GarbageCollection.NumberOfGcs))
 	ch <- newGauge(m.erlangVmGarbageCollectionWordsReclaimed, float64(report.ErlangVmStatistics.GarbageCollection.WordsReclaimed))
-	ch <- newGauge(m.erlangVmIoInput, float64(report.ErlangVmStatistics.Io.Input))
-	ch <- newGauge(m.erlangVmIoOutput, float64(report.ErlangVmStatistics.Io.Output))
+	ch <- newCounter(m.erlangVmIoInput, float64(report.ErlangVmStatistics.Io.Input))
+	ch <- newCounter(m.erlangVmIoOutput, float64(report.ErlangVmStatistics.Io.Output))
 	ch <- newGauge(m.erlangVmReductionsReductionsSinceLastCall, float64(report.ErlangVmStatistics.Reductions.ReductionsSinceLastCall))
-	ch <- newGauge(m.erlangVmReductionsTotalReductions, float64(report.ErlangVmStatistics.Reductions.TotalReductions))
+	ch <- newCounter(m.erlangVmReductionsTotalReductions, float64(report.ErlangVmStatistics.Reductions.TotalReductions))
 	ch <- newGauge(m.erlangVmRunQueue, float64(report.ErlangVmStatistics.RunQueue))
 	ch <- newGauge(m.erlangVmRuntimeTimeSinceLastCall, float64(report.ErlangVmStatistics.Runtime.TimeSinceLastCall))
 	ch <- newGauge(m.erlangVmRuntimeTotalRunTime, float64(report.ErlangVmStatistics.Runtime.TotalRunTime))
