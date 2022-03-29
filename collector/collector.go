@@ -103,7 +103,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		c.ClientMetrics.Collect(ch, report.SoraClientReport)
 	}
 	if c.enableSoraConnectionErrorMetrics {
-		c.SoraConnectionErrorMetrics.Collect(ch, report.SoraErrorReport)
+		c.SoraConnectionErrorMetrics.Collect(ch, report.SoraConnectionErrorReport)
 	}
 	if c.enableErlangVmMetrics {
 		c.ErlangVmMetrics.Collect(ch, report.ErlangVmReport)
