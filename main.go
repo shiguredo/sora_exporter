@@ -52,9 +52,9 @@ var (
 		"Include metrics about Sora client connection stats.",
 	).Bool()
 	// この統計情報はアンドキュメントです
-	enableSoraErrorMetrics = kingpin.Flag(
-		"sora.error-metrics",
-		"Include metrics about Sora connect error stats.",
+	enableSoraConnectionErrorMetrics = kingpin.Flag(
+		"sora.connection-error-metrics",
+		"Include metrics about Sora connection error stats.",
 	).Bool()
 	// この統計情報はアンドキュメントです
 	enableErlangVmMetrics = kingpin.Flag(
@@ -75,34 +75,34 @@ type handler struct {
 	soraMetricsHandler http.Handler
 	// exporterMetricsRegistry is a separate registry for the metrics about
 	// the exporter itself.
-	exporterMetricsRegistry *prometheus.Registry
-	includeExporterMetrics  bool
-	maxRequests             int
-	logger                  log.Logger
-	soraGetStatsReportURL   string
-	soraSkipSslVeirfy       bool
-	soraTimeout             time.Duration
-	enableSoraClientMetrics bool
-	enableSoraErrorMetrics  bool
-	enableErlangVmMetrics   bool
+	exporterMetricsRegistry          *prometheus.Registry
+	includeExporterMetrics           bool
+	maxRequests                      int
+	logger                           log.Logger
+	soraGetStatsReportURL            string
+	soraSkipSslVeirfy                bool
+	soraTimeout                      time.Duration
+	enableSoraClientMetrics          bool
+	enableSoraConnectionErrorMetrics bool
+	enableErlangVmMetrics            bool
 }
 
 func newHandler(
 	includeExporterMetrics bool, maxRequests int, logger log.Logger,
 	soraGetStatsReportURL string, soraSkipSslVeirfy bool, soraTimeout time.Duration,
-	enableSoraClientMetrics bool, enableSoraErrorMetrics bool, enableErlangVmMetrics bool) *handler {
+	enableSoraClientMetrics bool, enableSoraConnectionErrorMetrics bool, enableErlangVmMetrics bool) *handler {
 
 	h := &handler{
-		exporterMetricsRegistry: prometheus.NewRegistry(),
-		includeExporterMetrics:  includeExporterMetrics,
-		maxRequests:             maxRequests,
-		logger:                  logger,
-		soraGetStatsReportURL:   soraGetStatsReportURL,
-		soraSkipSslVeirfy:       soraSkipSslVeirfy,
-		soraTimeout:             soraTimeout,
-		enableSoraClientMetrics: enableSoraClientMetrics,
-		enableSoraErrorMetrics:  enableSoraErrorMetrics,
-		enableErlangVmMetrics:   enableErlangVmMetrics,
+		exporterMetricsRegistry:          prometheus.NewRegistry(),
+		includeExporterMetrics:           includeExporterMetrics,
+		maxRequests:                      maxRequests,
+		logger:                           logger,
+		soraGetStatsReportURL:            soraGetStatsReportURL,
+		soraSkipSslVeirfy:                soraSkipSslVeirfy,
+		soraTimeout:                      soraTimeout,
+		enableSoraClientMetrics:          enableSoraClientMetrics,
+		enableSoraConnectionErrorMetrics: enableSoraConnectionErrorMetrics,
+		enableErlangVmMetrics:            enableErlangVmMetrics,
 	}
 	if h.includeExporterMetrics {
 		h.exporterMetricsRegistry.MustRegister(
@@ -123,13 +123,13 @@ func (h *handler) innerHandler() http.Handler {
 	r := prometheus.NewRegistry()
 	r.MustRegister(version.NewCollector("sora_exporter"))
 	r.MustRegister(collector.NewCollector(&collector.CollectorOptions{
-		URI:                     h.soraGetStatsReportURL,
-		SkipSslVerify:           h.soraSkipSslVeirfy,
-		Timeout:                 h.soraTimeout,
-		Logger:                  h.logger,
-		EnableSoraClientMetrics: h.enableSoraClientMetrics,
-		EnableSoraErrorMetrics:  h.enableSoraErrorMetrics,
-		EnableErlangVmMetrics:   h.enableErlangVmMetrics,
+		URI:                              h.soraGetStatsReportURL,
+		SkipSslVerify:                    h.soraSkipSslVeirfy,
+		Timeout:                          h.soraTimeout,
+		Logger:                           h.logger,
+		EnableSoraClientMetrics:          h.enableSoraClientMetrics,
+		EnableSoraConnectionErrorMetrics: h.enableSoraConnectionErrorMetrics,
+		EnableErlangVmMetrics:            h.enableErlangVmMetrics,
 	}))
 	handler := promhttp.HandlerFor(
 		prometheus.Gatherers{h.exporterMetricsRegistry, r},
@@ -179,7 +179,7 @@ func main() {
 	soraHandler := newHandler(
 		!*disableExporterMetrics, *maxRequests, logger,
 		*soraGetStatsReportURL, *soraSkipSslVeirfy, *soraTimeout,
-		*enableSoraClientMetrics, *enableSoraErrorMetrics, *enableErlangVmMetrics)
+		*enableSoraClientMetrics, *enableSoraConnectionErrorMetrics, *enableErlangVmMetrics)
 	http.Handle(*metricsPath, soraHandler)
 
 	level.Info(logger).Log("msg", "Listening on", "address", *listenAddress)

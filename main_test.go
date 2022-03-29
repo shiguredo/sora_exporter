@@ -164,13 +164,13 @@ func TestInvalidConfig(t *testing.T) {
 
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
-		URI:                     s.URL,
-		SkipSslVerify:           true,
-		Timeout:                 timeout,
-		Logger:                  log.NewNopLogger(),
-		EnableSoraClientMetrics: true,
-		EnableSoraErrorMetrics:  true,
-		EnableErlangVmMetrics:   true,
+		URI:                              s.URL,
+		SkipSslVerify:                    true,
+		Timeout:                          timeout,
+		Logger:                           log.NewNopLogger(),
+		EnableSoraClientMetrics:          true,
+		EnableSoraConnectionErrorMetrics: true,
+		EnableErlangVmMetrics:            true,
 	})
 	expectMetrics(t, h, "invalid_config.metrics")
 }
@@ -181,13 +181,13 @@ func TestMaximumMetrics(t *testing.T) {
 
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
-		URI:                     s.URL,
-		SkipSslVerify:           true,
-		Timeout:                 timeout,
-		Logger:                  log.NewNopLogger(),
-		EnableSoraClientMetrics: true,
-		EnableSoraErrorMetrics:  true,
-		EnableErlangVmMetrics:   true,
+		URI:                              s.URL,
+		SkipSslVerify:                    true,
+		Timeout:                          timeout,
+		Logger:                           log.NewNopLogger(),
+		EnableSoraClientMetrics:          true,
+		EnableSoraConnectionErrorMetrics: true,
+		EnableErlangVmMetrics:            true,
 	})
 	expectMetrics(t, h, "maximum.metrics")
 }
@@ -198,13 +198,13 @@ func TestSoraErlangVmEnabledMetrics(t *testing.T) {
 
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
-		URI:                     s.URL,
-		SkipSslVerify:           true,
-		Timeout:                 timeout,
-		Logger:                  log.NewNopLogger(),
-		EnableSoraClientMetrics: false,
-		EnableSoraErrorMetrics:  false,
-		EnableErlangVmMetrics:   true,
+		URI:                              s.URL,
+		SkipSslVerify:                    true,
+		Timeout:                          timeout,
+		Logger:                           log.NewNopLogger(),
+		EnableSoraClientMetrics:          false,
+		EnableSoraConnectionErrorMetrics: false,
+		EnableErlangVmMetrics:            true,
 	})
 	expectMetrics(t, h, "sora_erlang_vm_enabled.metrics")
 }
@@ -215,13 +215,13 @@ func TestSoraClientEnabledMetrics(t *testing.T) {
 
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
-		URI:                     s.URL,
-		SkipSslVerify:           true,
-		Timeout:                 timeout,
-		Logger:                  log.NewNopLogger(),
-		EnableSoraClientMetrics: true,
-		EnableSoraErrorMetrics:  false,
-		EnableErlangVmMetrics:   false,
+		URI:                              s.URL,
+		SkipSslVerify:                    true,
+		Timeout:                          timeout,
+		Logger:                           log.NewNopLogger(),
+		EnableSoraClientMetrics:          true,
+		EnableSoraConnectionErrorMetrics: false,
+		EnableErlangVmMetrics:            false,
 	})
 	expectMetrics(t, h, "sora_client_enabled.metrics")
 }
@@ -232,13 +232,13 @@ func TestSoraConnectionErrorEnabledMetrics(t *testing.T) {
 
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
-		URI:                     s.URL,
-		SkipSslVerify:           true,
-		Timeout:                 timeout,
-		Logger:                  log.NewNopLogger(),
-		EnableSoraClientMetrics: false,
-		EnableSoraErrorMetrics:  true,
-		EnableErlangVmMetrics:   false,
+		URI:                              s.URL,
+		SkipSslVerify:                    true,
+		Timeout:                          timeout,
+		Logger:                           log.NewNopLogger(),
+		EnableSoraClientMetrics:          false,
+		EnableSoraConnectionErrorMetrics: true,
+		EnableErlangVmMetrics:            false,
 	})
 	expectMetrics(t, h, "sora_connection_error_enabled.metrics")
 }
@@ -266,13 +266,13 @@ func TestMinimumMetrics(t *testing.T) {
 
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
-		URI:                     s.URL,
-		SkipSslVerify:           true,
-		Timeout:                 timeout,
-		Logger:                  log.NewNopLogger(),
-		EnableSoraClientMetrics: false,
-		EnableSoraErrorMetrics:  false,
-		EnableErlangVmMetrics:   false,
+		URI:                              s.URL,
+		SkipSslVerify:                    true,
+		Timeout:                          timeout,
+		Logger:                           log.NewNopLogger(),
+		EnableSoraClientMetrics:          false,
+		EnableSoraConnectionErrorMetrics: false,
+		EnableErlangVmMetrics:            false,
 	})
 	expectMetrics(t, h, "minimum.metrics")
 }

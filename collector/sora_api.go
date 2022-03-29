@@ -3,9 +3,9 @@ package collector
 type soraGetStatsReport struct {
 	SoraVersion string `json:"version"`
 	soraConnectionReport
-	SoraClientReport soraClientReport `json:"sora_client,omitempty"`
-	SoraErrorReport  soraErrorReport  `json:"error,omitempty"`
-	ErlangVmReport   erlangVmReport   `json:"erlang_vm,omitempty"`
+	SoraClientReport soraClientReport          `json:"sora_client,omitempty"`
+	SoraErrorReport  soraConnectionErrorReport `json:"error,omitempty"`
+	ErlangVmReport   erlangVmReport            `json:"erlang_vm,omitempty"`
 }
 
 type soraConnectionReport struct {
@@ -39,7 +39,7 @@ type soraClientReport struct {
 	TotalSuccessfulSoraClientType soraClientStatistics `json:"total_successful_sora_client_type"`
 }
 
-type soraErrorReport struct {
+type soraConnectionErrorReport struct {
 	SdpGenerationError int64 `json:"sdp_generation_error"`
 	SignalingError     int64 `json:"signaling_error"`
 }

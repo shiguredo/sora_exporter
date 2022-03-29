@@ -14,30 +14,30 @@ import (
 )
 
 type Collector struct {
-	mutex                   sync.RWMutex
-	logger                  log.Logger
-	timeout                 time.Duration
-	URI                     string
-	skipSslVerify           bool
-	enableSoraClientMetrics bool
-	enableSoraErrorMetrics  bool
-	enableErlangVmMetrics   bool
+	mutex                            sync.RWMutex
+	logger                           log.Logger
+	timeout                          time.Duration
+	URI                              string
+	skipSslVerify                    bool
+	enableSoraClientMetrics          bool
+	enableSoraConnectionErrorMetrics bool
+	enableErlangVmMetrics            bool
 
 	soraVersionInfo *prometheus.Desc
 	ConnectionMetrics
 	ClientMetrics
-	ErrorMetrics
+	SoraConnectionErrorMetrics
 	ErlangVmMetrics
 }
 
 type CollectorOptions struct {
-	URI                     string
-	SkipSslVerify           bool
-	Timeout                 time.Duration
-	Logger                  log.Logger
-	EnableSoraClientMetrics bool
-	EnableSoraErrorMetrics  bool
-	EnableErlangVmMetrics   bool
+	URI                              string
+	SkipSslVerify                    bool
+	Timeout                          time.Duration
+	Logger                           log.Logger
+	EnableSoraClientMetrics          bool
+	EnableSoraConnectionErrorMetrics bool
+	EnableErlangVmMetrics            bool
 }
 
 type HTTPClient interface {
@@ -51,15 +51,15 @@ func NewCollector(options *CollectorOptions) *Collector {
 		skipSslVerify: options.SkipSslVerify,
 		logger:        options.Logger,
 
-		enableSoraClientMetrics: options.EnableSoraClientMetrics,
-		enableSoraErrorMetrics:  options.EnableSoraErrorMetrics,
-		enableErlangVmMetrics:   options.EnableErlangVmMetrics,
+		enableSoraClientMetrics:          options.EnableSoraClientMetrics,
+		enableSoraConnectionErrorMetrics: options.EnableSoraConnectionErrorMetrics,
+		enableErlangVmMetrics:            options.EnableErlangVmMetrics,
 
-		soraVersionInfo:   newDescWithLabel("sora_version_info", "sora version info.", []string{"version"}),
-		ConnectionMetrics: connectionMetrics,
-		ClientMetrics:     clientMetrics,
-		ErrorMetrics:      errorMetrics,
-		ErlangVmMetrics:   erlangVmMetrics,
+		soraVersionInfo:            newDescWithLabel("sora_version_info", "sora version info.", []string{"version"}),
+		ConnectionMetrics:          connectionMetrics,
+		ClientMetrics:              clientMetrics,
+		SoraConnectionErrorMetrics: soraConnectionErrorMetrics,
+		ErlangVmMetrics:            erlangVmMetrics,
 	}
 }
 
@@ -102,8 +102,8 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	if c.enableSoraClientMetrics {
 		c.ClientMetrics.Collect(ch, report.SoraClientReport)
 	}
-	if c.enableSoraErrorMetrics {
-		c.ErrorMetrics.Collect(ch, report.SoraErrorReport)
+	if c.enableSoraConnectionErrorMetrics {
+		c.SoraConnectionErrorMetrics.Collect(ch, report.SoraErrorReport)
 	}
 	if c.enableErlangVmMetrics {
 		c.ErlangVmMetrics.Collect(ch, report.ErlangVmReport)
@@ -117,8 +117,8 @@ func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 	if c.enableSoraClientMetrics {
 		c.ClientMetrics.Describe(ch)
 	}
-	if c.enableSoraErrorMetrics {
-		c.ErrorMetrics.Describe(ch)
+	if c.enableSoraConnectionErrorMetrics {
+		c.SoraConnectionErrorMetrics.Describe(ch)
 	}
 	if c.enableErlangVmMetrics {
 		c.ErlangVmMetrics.Describe(ch)
