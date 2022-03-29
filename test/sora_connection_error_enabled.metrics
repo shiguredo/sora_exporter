@@ -1,0 +1,51 @@
+# HELP sora_exporter_average_duration_seconds The average connection duration in seconds.
+# TYPE sora_exporter_average_duration_seconds gauge
+sora_exporter_average_duration_seconds 706
+# HELP sora_exporter_average_setup_time_seconds The average setup time in seconds.
+# TYPE sora_exporter_average_setup_time_seconds gauge
+sora_exporter_average_setup_time_seconds 0
+# HELP sora_exporter_connections_created_total The total number of connections created.
+# TYPE sora_exporter_connections_created_total counter
+sora_exporter_connections_created_total 2
+# HELP sora_exporter_connections_destroyed_total The total number of connections destryed.
+# TYPE sora_exporter_connections_destroyed_total counter
+sora_exporter_connections_destroyed_total 2
+# HELP sora_exporter_connections_updated_total The total number of connections updated.
+# TYPE sora_exporter_connections_updated_total counter
+sora_exporter_connections_updated_total 23
+# HELP sora_exporter_duration_seconds_total The total duration of connections.
+# TYPE sora_exporter_duration_seconds_total counter
+sora_exporter_duration_seconds_total 1412
+# HELP sora_exporter_failed_connections_total The total number of failed connections.
+# TYPE sora_exporter_failed_connections_total counter
+sora_exporter_failed_connections_total 0
+# HELP sora_exporter_ongoing_connections_total The total number of ongoing connections.
+# TYPE sora_exporter_ongoing_connections_total gauge
+sora_exporter_ongoing_connections_total 0
+# HELP sora_exporter_sdp_generation_error_total The total number of SDP genration error.
+# TYPE sora_exporter_sdp_generation_error_total counter
+sora_exporter_sdp_generation_error_total 3
+# HELP sora_exporter_signaling_error_total The total number of signaling error.
+# TYPE sora_exporter_signaling_error_total counter
+sora_exporter_signaling_error_total 4
+# HELP sora_exporter_sora_version_info sora version info.
+# TYPE sora_exporter_sora_version_info gauge
+sora_exporter_sora_version_info{version="2022.1.0-canary.28"} 1
+# HELP sora_exporter_successfull_connections_total The total number of successfull connections.
+# TYPE sora_exporter_successfull_connections_total counter
+sora_exporter_successfull_connections_total 2
+# HELP sora_exporter_total_received_invalid_turn_tcp_packet The total number of invalid packets with TURN-TCP
+# TYPE sora_exporter_total_received_invalid_turn_tcp_packet counter
+sora_exporter_total_received_invalid_turn_tcp_packet 0
+# HELP sora_exporter_total_session_created The total number of session created.
+# TYPE sora_exporter_total_session_created counter
+sora_exporter_total_session_created 1
+# HELP sora_exporter_total_session_destroyed The total number of session destroyed.
+# TYPE sora_exporter_total_session_destroyed counter
+sora_exporter_total_session_destroyed 0
+# HELP sora_exporter_turn_tcp_connections_total The total number of connections with TURN-TCP.
+# TYPE sora_exporter_turn_tcp_connections_total counter
+sora_exporter_turn_tcp_connections_total 2
+# HELP sora_exporter_turn_udp_connections_total The total number of connections with TURN-UDP.
+# TYPE sora_exporter_turn_udp_connections_total counter
+sora_exporter_turn_udp_connections_total 0

@@ -1,14 +1,15 @@
 package main
 
 import (
-	"fmt"
 	stdlog "log"
 	"net/http"
 	"os"
 	"os/user"
+	"time"
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
+	"github.com/shiguredo/sora_exporter/collector"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -25,26 +26,83 @@ import (
 )
 
 var (
-	soraURL      string
-	printVersion bool
+	listenAddress = kingpin.Flag(
+		"web.listen-address",
+		"Address on which to expose metrics and web interface.",
+	).Default(":9490").String()
+	metricsPath = kingpin.Flag(
+		"web.telemetry-path",
+		"Path under which to expose metrics.",
+	).Default("/metrics").String()
+	soraGetStatsReportURL = kingpin.Flag(
+		"sora.get-stats-report-url",
+		"URL on which to scrape Sora GetStatsReport API",
+	).Default("http://127.0.0.1:3000/").String()
+	soraTimeout = kingpin.Flag(
+		"sora.timeout",
+		"Timeout for trying to get stats from Sora GetStatsReport API URL",
+	).Default("5s").Duration()
+	disableExporterMetrics = kingpin.Flag(
+		"web.disable-exporter-metrics",
+		"Exclude metrics about the exporter itself (promhttp_*, process_*, go_*).",
+	).Bool()
+	// この統計情報はアンドキュメントです
+	enableSoraClientMetrics = kingpin.Flag(
+		"sora.client-metrics",
+		"Include metrics about Sora client connection stats.",
+	).Bool()
+	// この統計情報はアンドキュメントです
+	enableSoraConnectionErrorMetrics = kingpin.Flag(
+		"sora.connection-error-metrics",
+		"Include metrics about Sora connection error stats.",
+	).Bool()
+	// この統計情報はアンドキュメントです
+	enableErlangVmMetrics = kingpin.Flag(
+		"sora.erlang-vm-metrics",
+		"Include metrics about Erlang VM stats.",
+	).Bool()
+	soraSkipSslVeirfy = kingpin.Flag(
+		"sora.skip-ssl-verify",
+		"Flag that enables SSL certificate verification for the Sora GetStatsReport URL",
+	).Bool()
+	maxRequests = kingpin.Flag(
+		"web.max-requests",
+		"Maximum number of parallel scrape requests. Use 0 to disable.",
+	).Default("40").Int()
 )
 
 type handler struct {
-	unfilteredHandler http.Handler
+	soraMetricsHandler http.Handler
 	// exporterMetricsRegistry is a separate registry for the metrics about
 	// the exporter itself.
-	exporterMetricsRegistry *prometheus.Registry
-	includeExporterMetrics  bool
-	maxRequests             int
-	logger                  log.Logger
+	exporterMetricsRegistry          *prometheus.Registry
+	includeExporterMetrics           bool
+	maxRequests                      int
+	logger                           log.Logger
+	soraGetStatsReportURL            string
+	soraSkipSslVeirfy                bool
+	soraTimeout                      time.Duration
+	enableSoraClientMetrics          bool
+	enableSoraConnectionErrorMetrics bool
+	enableErlangVmMetrics            bool
 }
 
-func newHandler(includeExporterMetrics bool, maxRequests int, logger log.Logger) *handler {
+func newHandler(
+	includeExporterMetrics bool, maxRequests int, logger log.Logger,
+	soraGetStatsReportURL string, soraSkipSslVeirfy bool, soraTimeout time.Duration,
+	enableSoraClientMetrics bool, enableSoraConnectionErrorMetrics bool, enableErlangVmMetrics bool) *handler {
+
 	h := &handler{
-		exporterMetricsRegistry: prometheus.NewRegistry(),
-		includeExporterMetrics:  includeExporterMetrics,
-		maxRequests:             maxRequests,
-		logger:                  logger,
+		exporterMetricsRegistry:          prometheus.NewRegistry(),
+		includeExporterMetrics:           includeExporterMetrics,
+		maxRequests:                      maxRequests,
+		logger:                           logger,
+		soraGetStatsReportURL:            soraGetStatsReportURL,
+		soraSkipSslVeirfy:                soraSkipSslVeirfy,
+		soraTimeout:                      soraTimeout,
+		enableSoraClientMetrics:          enableSoraClientMetrics,
+		enableSoraConnectionErrorMetrics: enableSoraConnectionErrorMetrics,
+		enableErlangVmMetrics:            enableErlangVmMetrics,
 	}
 	if h.includeExporterMetrics {
 		h.exporterMetricsRegistry.MustRegister(
@@ -52,38 +110,27 @@ func newHandler(includeExporterMetrics bool, maxRequests int, logger log.Logger)
 			promcollectors.NewGoCollector(),
 		)
 	}
-	if innerHandler, err := h.innerHandler(); err != nil {
-		panic(fmt.Sprintf("Couldn't create metrics handler: %s", err))
-	} else {
-		h.unfilteredHandler = innerHandler
-	}
+	h.soraMetricsHandler = h.innerHandler()
 	return h
 }
 
 // ServeHTTP implements http.Handler.
 func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	filters := r.URL.Query()["collect[]"]
-	level.Debug(h.logger).Log("msg", "collect query:", "filters", filters)
-
-	if len(filters) == 0 {
-		// No filters, use the prepared unfiltered handler.
-		h.unfilteredHandler.ServeHTTP(w, r)
-		return
-	}
-	// To serve filtered metrics, we create a filtering handler on the fly.
-	filteredHandler, err := h.innerHandler(filters...)
-	if err != nil {
-		level.Warn(h.logger).Log("msg", "Couldn't create filtered metrics handler:", "err", err)
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(fmt.Sprintf("Couldn't create filtered metrics handler: %s", err)))
-		return
-	}
-	filteredHandler.ServeHTTP(w, r)
+	h.soraMetricsHandler.ServeHTTP(w, r)
 }
 
-func (h *handler) innerHandler(filters ...string) (http.Handler, error) {
+func (h *handler) innerHandler() http.Handler {
 	r := prometheus.NewRegistry()
 	r.MustRegister(version.NewCollector("sora_exporter"))
+	r.MustRegister(collector.NewCollector(&collector.CollectorOptions{
+		URI:                              h.soraGetStatsReportURL,
+		SkipSslVerify:                    h.soraSkipSslVeirfy,
+		Timeout:                          h.soraTimeout,
+		Logger:                           h.logger,
+		EnableSoraClientMetrics:          h.enableSoraClientMetrics,
+		EnableSoraConnectionErrorMetrics: h.enableSoraConnectionErrorMetrics,
+		EnableErlangVmMetrics:            h.enableErlangVmMetrics,
+	}))
 	handler := promhttp.HandlerFor(
 		prometheus.Gatherers{h.exporterMetricsRegistry, r},
 		promhttp.HandlerOpts{
@@ -100,31 +147,10 @@ func (h *handler) innerHandler(filters ...string) (http.Handler, error) {
 			h.exporterMetricsRegistry, handler,
 		)
 	}
-	return handler, nil
+	return handler
 }
 
 func main() {
-	// lg := log.NewJSONLogger(os.Stderr)
-	var (
-		listenAddress = kingpin.Flag(
-			"web.listen-address",
-			"Address on which to expose metrics and web interface.",
-		).Default(":9490").String()
-		metricsPath = kingpin.Flag(
-			"web.telemetry-path",
-			"Path under which to expose metrics.",
-		).Default("/metrics").String()
-		// sora_client や erlang_vm をフィルターで切るようにする
-		// disableExporterMetrics = kingpin.Flag(
-		// 	"web.disable-exporter-metrics",
-		// 	"Exclude metrics about the exporter itself (promhttp_*, process_*, go_*).",
-		// ).Bool()
-		// maxRequests = kingpin.Flag(
-		// 	"web.max-requests",
-		// 	"Maximum number of parallel scrape requests. Use 0 to disable.",
-		// ).Default("40").Int()
-	)
-
 	promlogConfig := &promlog.Config{}
 	flag.AddFlags(kingpin.CommandLine, promlogConfig)
 	kingpin.Version(version.Print("sora_exporter"))
@@ -135,18 +161,6 @@ func main() {
 
 	level.Info(logger).Log("msg", "Starting sora_exporter", "version", version.Info())
 	level.Info(logger).Log("msg", "Build context", "build_context", version.BuildContext())
-
-	// 外だししたほうがいい
-	// reg := prometheus.NewRegistry()
-	// reg.MustRegister(
-	// 	prometheus.NewBuildInfoCollector(),
-	// 	prometheus.NewGoCollector(),
-	// 	collector.New(collector.WithLogger(lg), collector.WithTimeout(timeout), collector.WithSoraURL(soraURL)),
-	// )
-
-	// 外だししたほうがいい
-	// mux := http.NewServeMux()
-	// mux.Handle(metricsPath, promhttp.InstrumentMetricHandler(reg, promhttp.HandlerFor(reg, promhttp.HandlerOpts{})))
 
 	// root 権限で起動してたら warning を出す
 	if user, err := user.Current(); err == nil && user.Uid == "0" {
@@ -162,6 +176,11 @@ func main() {
 			</body>
 			</html>`))
 	})
+	soraHandler := newHandler(
+		!*disableExporterMetrics, *maxRequests, logger,
+		*soraGetStatsReportURL, *soraSkipSslVeirfy, *soraTimeout,
+		*enableSoraClientMetrics, *enableSoraConnectionErrorMetrics, *enableErlangVmMetrics)
+	http.Handle(*metricsPath, soraHandler)
 
 	level.Info(logger).Log("msg", "Listening on", "address", *listenAddress)
 	server := &http.Server{Addr: *listenAddress}
