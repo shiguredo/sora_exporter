@@ -16,6 +16,8 @@
     - @tnamao
 - [ADD] Sora への接続可否を判定するための `sora_up` メトリクスを追加する
     - @tnamao
+- [ADD] Sora が認識しているクラスターノードをメトリクスで返す `sora_cluster_node` を追加する
+    - @tnamao
 - [CHANGE] GitHub リリースのタイトルにタグ名を設定する
     - @tnamao
 - [CHANGE] リリース時のアーカイブファイルに対象の OS 名を含める
