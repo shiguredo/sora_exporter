@@ -5,18 +5,18 @@ import "github.com/prometheus/client_golang/prometheus"
 // この統計情報はアンドキュメントです
 var (
 	clientMetrics = ClientMetrics{
-		totalFailedSoraClientTypeSoraAndroidSdk:             newDesc("sora_client_type_sora_android_sdk_failed_total", "The total number of failed connections for Sora Android SDK."),
-		totalFailedSoraClientTypeSoraIosSdk:                 newDesc("sora_client_type_sora_ios_sdk_failed_total", "The total number of failed connections for Sora IOS SDK."),
-		totalFailedSoraClientTypeSoraJsSdk:                  newDesc("sora_client_type_sora_js_sdk_failed_total", "The total number of failed connections for Sora JavaScript SDK."),
-		totalFailedSoraClientTypeSoraUnitySdk:               newDesc("sora_client_type_sora_unity_sdk_failed_total", "The total number of failed connections for Sora Unity SDK."),
-		totalFailedSoraClientTypeUnknown:                    newDesc("sora_client_type_unknown_failed_total", "The total number of failed connections for WebRTC native client Momo."),
-		totalFailedSoraClientTypeWebrtcNativeClientMomo:     newDesc("sora_client_type_webrtc_native_client_monmo_failed_total", "The total number of failed connections for WebRTC native client Momo."),
-		totalSuccessfulSoraClientTypeSoraAndroidSdk:         newDesc("sora_client_type_sora_android_sdk_successful_total", "The total number of successful connections for Sora Android SDK."),
-		totalSuccessfulSoraClientTypeSoraIosSdk:             newDesc("sora_client_type_sora_ios_sdk_successful_total", "The total number of successful connections for Sora IOS SDK."),
-		totalSuccessfulSoraClientTypeSoraJsSdk:              newDesc("sora_client_type_sora_js_sdk_successful_total", "The total number of successful connections for Sora JavaScript SDK."),
-		totalSuccessfulSoraClientTypeSoraUnitySdk:           newDesc("sora_client_type_sora_unity_sdk_successful_total", "The total number of successful connections for Sora Unity SDK."),
-		totalSuccessfulSoraClientTypeUnknown:                newDesc("sora_client_type_known_successful_total", "The total number of successful connections for unknown client"),
-		totalSuccessfulSoraClientTypeWebrtcNativeClientMomo: newDesc("sora_client_type_webrtc_native_client_momo_successful_total", "The total number of successful connections for WebRTC native client Momo."),
+		totalFailedSoraClientTypeSoraAndroidSdk:             newDesc("client_type_sora_android_sdk_failed_total", "The total number of failed connections for Sora Android SDK."),
+		totalFailedSoraClientTypeSoraIosSdk:                 newDesc("client_type_sora_ios_sdk_failed_total", "The total number of failed connections for Sora IOS SDK."),
+		totalFailedSoraClientTypeSoraJsSdk:                  newDesc("client_type_sora_js_sdk_failed_total", "The total number of failed connections for Sora JavaScript SDK."),
+		totalFailedSoraClientTypeSoraUnitySdk:               newDesc("client_type_sora_unity_sdk_failed_total", "The total number of failed connections for Sora Unity SDK."),
+		totalFailedSoraClientTypeUnknown:                    newDesc("client_type_unknown_failed_total", "The total number of failed connections for WebRTC native client Momo."),
+		totalFailedSoraClientTypeWebrtcNativeClientMomo:     newDesc("client_type_webrtc_native_client_monmo_failed_total", "The total number of failed connections for WebRTC native client Momo."),
+		totalSuccessfulSoraClientTypeSoraAndroidSdk:         newDesc("client_type_sora_android_sdk_successful_total", "The total number of successful connections for Sora Android SDK."),
+		totalSuccessfulSoraClientTypeSoraIosSdk:             newDesc("client_type_sora_ios_sdk_successful_total", "The total number of successful connections for Sora IOS SDK."),
+		totalSuccessfulSoraClientTypeSoraJsSdk:              newDesc("client_type_sora_js_sdk_successful_total", "The total number of successful connections for Sora JavaScript SDK."),
+		totalSuccessfulSoraClientTypeSoraUnitySdk:           newDesc("client_type_sora_unity_sdk_successful_total", "The total number of successful connections for Sora Unity SDK."),
+		totalSuccessfulSoraClientTypeUnknown:                newDesc("client_type_known_successful_total", "The total number of successful connections for unknown client"),
+		totalSuccessfulSoraClientTypeWebrtcNativeClientMomo: newDesc("client_type_webrtc_native_client_momo_successful_total", "The total number of successful connections for WebRTC native client Momo."),
 	}
 )
 

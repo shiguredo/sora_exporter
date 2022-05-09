@@ -57,7 +57,7 @@ func NewCollector(options *CollectorOptions) *Collector {
 		enableErlangVmMetrics:            options.EnableErlangVmMetrics,
 
 		soraUp:                     newDesc("up", "Whether the last scrape of metrics from Sora was able to connect to the server (1 for yes, 0 for no)."),
-		soraVersionInfo:            newDescWithLabel("sora_version_info", "sora version info.", []string{"version"}),
+		soraVersionInfo:            newDescWithLabel("version_info", "sora version info.", []string{"version"}),
 		ConnectionMetrics:          connectionMetrics,
 		ClientMetrics:              clientMetrics,
 		SoraConnectionErrorMetrics: soraConnectionErrorMetrics,

@@ -28,9 +28,9 @@ sora_sdp_generation_error_total 3
 # HELP sora_signaling_error_total The total number of signaling error.
 # TYPE sora_signaling_error_total counter
 sora_signaling_error_total 4
-# HELP sora_sora_version_info sora version info.
-# TYPE sora_sora_version_info gauge
-sora_sora_version_info{version="2022.1.0-canary.28"} 1
+# HELP sora_version_info sora version info.
+# TYPE sora_version_info gauge
+sora_version_info{version="2022.1.0-canary.28"} 1
 # HELP sora_successfull_connections_total The total number of successfull connections.
 # TYPE sora_successfull_connections_total counter
 sora_successfull_connections_total 2

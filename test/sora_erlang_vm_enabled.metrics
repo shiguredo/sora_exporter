@@ -103,9 +103,9 @@ sora_failed_connections_total 0
 # HELP sora_ongoing_connections_total The total number of ongoing connections.
 # TYPE sora_ongoing_connections_total gauge
 sora_ongoing_connections_total 0
-# HELP sora_sora_version_info sora version info.
-# TYPE sora_sora_version_info gauge
-sora_sora_version_info{version="2022.1.0-canary.28"} 1
+# HELP sora_version_info sora version info.
+# TYPE sora_version_info gauge
+sora_version_info{version="2022.1.0-canary.28"} 1
 # HELP sora_successfull_connections_total The total number of successfull connections.
 # TYPE sora_successfull_connections_total counter
 sora_successfull_connections_total 2
