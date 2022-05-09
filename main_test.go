@@ -134,7 +134,7 @@ var (
 		  "sora_version": "2022.1.0-canary.44",
 		  "license_max_nodes": 10,
 		  "license_max_connections": 100,
-		  "license_serial_code": "TNAMAO-SRA-E003-202212-N10-100",
+		  "license_serial_code": "SAMPLE-SRA-E001-202212-N10-100",
 		  "license_type": "Experimental",
 		  "connected": true
 		},
@@ -148,11 +148,40 @@ var (
 		  "sora_version": "2022.1.0-canary.44",
 		  "license_max_nodes": 10,
 		  "license_max_connections": 100,
-		  "license_serial_code": "TNAMAO-SRA-E003-202212-N10-100",
+		  "license_serial_code": "SAMPLE-SRA-E001-202212-N10-100",
 		  "license_type": "Experimental",
 		  "connected": true
 		}
 	  ]`
+	listClusterNodesCurrentJsonData = `[
+		{
+		  "cluster_node_name": "node-01_canary_sora@10.211.55.42",
+		  "epoch": 1,
+		  "mode": "normal",
+		  "member_since": "2022-05-02T15:26:44.302363Z",
+		  "sora_version": "2021.2.9",
+		  "license_max_connections": 100,
+		  "license_serial_code": "SAMPLE-SRA-E001-202212-N10-100",
+		  "license_type": "Experimental",
+		  "cluster_signaling_url": "ws://127.0.0.1:5001/signaling",
+		  "cluster_api_url": "http://10.1.1.4:3000/",
+		  "connected": false
+		},
+		{
+		  "cluster_node_name": "node-02_canary_sora@10.211.55.40",
+		  "epoch": 1,
+		  "mode": "block_new_connection",
+		  "member_since": "2022-05-02T15:25:21.805078Z",
+		  "sora_version": "2021.2.9",
+		  "license_max_connections": 100,
+		  "license_serial_code": "SAMPLE-SRA-E001-202212-N10-100",
+		  "license_type": "Experimental",
+		  "cluster_signaling_url": "ws://127.0.0.1:5002/signaling",
+		  "cluster_api_url": "http://10.1.1.3:3000/",
+		  "connected": true
+		}
+	  ]
+	  `
 )
 
 type sora struct {
@@ -320,6 +349,25 @@ func TestMinimumMetrics(t *testing.T) {
 
 func TestSoraClusterEnabledMetrics(t *testing.T) {
 	s := newSora([]byte(testJsonData), []byte(listClusterNodesJsonData))
+	defer s.Close()
+
+	timeout, _ := time.ParseDuration("5s")
+	h := collector.NewCollector(&collector.CollectorOptions{
+		URI:                              s.URL,
+		SkipSslVerify:                    true,
+		Timeout:                          timeout,
+		Logger:                           log.NewNopLogger(),
+		EnableSoraClientMetrics:          false,
+		EnableSoraConnectionErrorMetrics: false,
+		EnableErlangVmMetrics:            false,
+		EnableSoraClusterMetrics:         true,
+	})
+	expectMetrics(t, h, "sora_cluster_metrics_enabled.metrics")
+}
+
+// Sora-2021.9.x 系の JSON レスポンスデータでのテスト
+func TestSoraClusterEnabledMetricsCurrentJsonData(t *testing.T) {
+	s := newSora([]byte(testJsonData), []byte(listClusterNodesCurrentJsonData))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
