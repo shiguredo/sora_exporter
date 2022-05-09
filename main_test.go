@@ -123,21 +123,85 @@ var (
 		"total_turn_udp_connections": 0,
 		"version": "2022.1.0-canary.28"
 	  }`
+	listClusterNodesJsonData = `[
+		{
+		  "node_name": "node-01_canary_sora@10.211.55.42",
+		  "epoch": 1,
+		  "mode": "normal",
+		  "cluster_signaling_url": "ws://127.0.0.1:5001/signaling",
+		  "cluster_api_url": "http://127.0.0.1:3101/",
+		  "member_since": "2022-05-09T07:44:52.973761Z",
+		  "sora_version": "2022.1.0-canary.44",
+		  "license_max_nodes": 10,
+		  "license_max_connections": 100,
+		  "license_serial_code": "SAMPLE-SRA-E001-202212-N10-100",
+		  "license_type": "Experimental",
+		  "connected": true
+		},
+		{
+		  "node_name": "node-02_canary_sora@10.211.55.40",
+		  "epoch": 1,
+		  "mode": "block_new_connection",
+		  "cluster_signaling_url": "ws://127.0.0.1:5002/signaling",
+		  "cluster_api_url": "http://127.0.0.1:3102/",
+		  "member_since": "2022-05-09T07:44:54.160763Z",
+		  "sora_version": "2022.1.0-canary.44",
+		  "license_max_nodes": 10,
+		  "license_max_connections": 100,
+		  "license_serial_code": "SAMPLE-SRA-E001-202212-N10-100",
+		  "license_type": "Experimental",
+		  "connected": true
+		}
+	  ]`
+	listClusterNodesCurrentJsonData = `[
+		{
+		  "cluster_node_name": "node-01_canary_sora@10.211.55.42",
+		  "epoch": 1,
+		  "mode": "normal",
+		  "member_since": "2022-05-02T15:26:44.302363Z",
+		  "sora_version": "2021.2.9",
+		  "license_max_connections": 100,
+		  "license_serial_code": "SAMPLE-SRA-E001-202212-N10-100",
+		  "license_type": "Experimental",
+		  "cluster_signaling_url": "ws://127.0.0.1:5001/signaling",
+		  "cluster_api_url": "http://10.1.1.4:3000/",
+		  "connected": false
+		},
+		{
+		  "cluster_node_name": "node-02_canary_sora@10.211.55.40",
+		  "epoch": 1,
+		  "mode": "block_new_connection",
+		  "member_since": "2022-05-02T15:25:21.805078Z",
+		  "sora_version": "2021.2.9",
+		  "license_max_connections": 100,
+		  "license_serial_code": "SAMPLE-SRA-E001-202212-N10-100",
+		  "license_type": "Experimental",
+		  "cluster_signaling_url": "ws://127.0.0.1:5002/signaling",
+		  "cluster_api_url": "http://10.1.1.3:3000/",
+		  "connected": true
+		}
+	  ]
+	  `
 )
 
 type sora struct {
 	*httptest.Server
-	response []byte
+	response                 []byte
+	listClusterNodesResponse []byte
 }
 
-func newSora(response []byte) *sora {
-	s := &sora{response: response}
+func newSora(response []byte, listClusterNodesResponse []byte) *sora {
+	s := &sora{response: response, listClusterNodesResponse: listClusterNodesResponse}
 	s.Server = httptest.NewServer(soraHandler(s))
 	return s
 }
 
 func soraHandler(s *sora) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("x-sora-target") == "Sora_20211215.ListClusterNodes" {
+			w.Write(s.listClusterNodesResponse)
+			return
+		}
 		w.Write(s.response)
 	}
 }
@@ -159,7 +223,7 @@ func expectMetrics(t *testing.T, c prometheus.Collector, fixture string) {
 }
 
 func TestInvalidConfig(t *testing.T) {
-	s := newSora([]byte("invalid config parameter"))
+	s := newSora([]byte("invalid config parameter"), []byte(listClusterNodesJsonData))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -171,12 +235,13 @@ func TestInvalidConfig(t *testing.T) {
 		EnableSoraClientMetrics:          true,
 		EnableSoraConnectionErrorMetrics: true,
 		EnableErlangVmMetrics:            true,
+		EnableSoraClusterMetrics:         true,
 	})
 	expectMetrics(t, h, "invalid_config.metrics")
 }
 
 func TestMaximumMetrics(t *testing.T) {
-	s := newSora([]byte(testJsonData))
+	s := newSora([]byte(testJsonData), []byte(listClusterNodesJsonData))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -188,12 +253,13 @@ func TestMaximumMetrics(t *testing.T) {
 		EnableSoraClientMetrics:          true,
 		EnableSoraConnectionErrorMetrics: true,
 		EnableErlangVmMetrics:            true,
+		EnableSoraClusterMetrics:         true,
 	})
 	expectMetrics(t, h, "maximum.metrics")
 }
 
 func TestSoraErlangVmEnabledMetrics(t *testing.T) {
-	s := newSora([]byte(testJsonData))
+	s := newSora([]byte(testJsonData), []byte(listClusterNodesJsonData))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -205,12 +271,13 @@ func TestSoraErlangVmEnabledMetrics(t *testing.T) {
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: false,
 		EnableErlangVmMetrics:            true,
+		EnableSoraClusterMetrics:         false,
 	})
 	expectMetrics(t, h, "sora_erlang_vm_enabled.metrics")
 }
 
 func TestSoraClientEnabledMetrics(t *testing.T) {
-	s := newSora([]byte(testJsonData))
+	s := newSora([]byte(testJsonData), []byte(listClusterNodesJsonData))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -222,12 +289,13 @@ func TestSoraClientEnabledMetrics(t *testing.T) {
 		EnableSoraClientMetrics:          true,
 		EnableSoraConnectionErrorMetrics: false,
 		EnableErlangVmMetrics:            false,
+		EnableSoraClusterMetrics:         false,
 	})
 	expectMetrics(t, h, "sora_client_enabled.metrics")
 }
 
 func TestSoraConnectionErrorEnabledMetrics(t *testing.T) {
-	s := newSora([]byte(testJsonData))
+	s := newSora([]byte(testJsonData), []byte(listClusterNodesJsonData))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -239,6 +307,7 @@ func TestSoraConnectionErrorEnabledMetrics(t *testing.T) {
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: true,
 		EnableErlangVmMetrics:            false,
+		EnableSoraClusterMetrics:         false,
 	})
 	expectMetrics(t, h, "sora_connection_error_enabled.metrics")
 }
@@ -261,7 +330,7 @@ func TestMinimumMetrics(t *testing.T) {
 		"total_turn_udp_connections": 555,
 		"version": "2022.1.0-canary.28"
 	  }`
-	s := newSora([]byte(resp))
+	s := newSora([]byte(resp), []byte(listClusterNodesJsonData))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -273,6 +342,44 @@ func TestMinimumMetrics(t *testing.T) {
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: false,
 		EnableErlangVmMetrics:            false,
+		EnableSoraClusterMetrics:         false,
 	})
 	expectMetrics(t, h, "minimum.metrics")
+}
+
+func TestSoraClusterEnabledMetrics(t *testing.T) {
+	s := newSora([]byte(testJsonData), []byte(listClusterNodesJsonData))
+	defer s.Close()
+
+	timeout, _ := time.ParseDuration("5s")
+	h := collector.NewCollector(&collector.CollectorOptions{
+		URI:                              s.URL,
+		SkipSslVerify:                    true,
+		Timeout:                          timeout,
+		Logger:                           log.NewNopLogger(),
+		EnableSoraClientMetrics:          false,
+		EnableSoraConnectionErrorMetrics: false,
+		EnableErlangVmMetrics:            false,
+		EnableSoraClusterMetrics:         true,
+	})
+	expectMetrics(t, h, "sora_cluster_metrics_enabled.metrics")
+}
+
+// Sora-2021.9.x 系の JSON レスポンスデータでのテスト
+func TestSoraClusterEnabledMetricsCurrentJsonData(t *testing.T) {
+	s := newSora([]byte(testJsonData), []byte(listClusterNodesCurrentJsonData))
+	defer s.Close()
+
+	timeout, _ := time.ParseDuration("5s")
+	h := collector.NewCollector(&collector.CollectorOptions{
+		URI:                              s.URL,
+		SkipSslVerify:                    true,
+		Timeout:                          timeout,
+		Logger:                           log.NewNopLogger(),
+		EnableSoraClientMetrics:          false,
+		EnableSoraConnectionErrorMetrics: false,
+		EnableErlangVmMetrics:            false,
+		EnableSoraClusterMetrics:         true,
+	})
+	expectMetrics(t, h, "sora_cluster_metrics_enabled.metrics")
 }

@@ -61,6 +61,10 @@ var (
 		"sora.erlang-vm-metrics",
 		"Include metrics about Erlang VM stats.",
 	).Bool()
+	enableSoraClusterMetrics = kingpin.Flag(
+		"sora.cluster-metrics",
+		"Include metrics about Sora cluster stats.",
+	).Bool()
 	soraSkipSslVeirfy = kingpin.Flag(
 		"sora.skip-ssl-verify",
 		"Flag that enables SSL certificate verification for the Sora GetStatsReport URL",
@@ -85,12 +89,13 @@ type handler struct {
 	enableSoraClientMetrics          bool
 	enableSoraConnectionErrorMetrics bool
 	enableErlangVmMetrics            bool
+	enableSoraClusterMetrics         bool
 }
 
 func newHandler(
 	includeExporterMetrics bool, maxRequests int, logger log.Logger,
 	soraGetStatsReportURL string, soraSkipSslVeirfy bool, soraTimeout time.Duration,
-	enableSoraClientMetrics bool, enableSoraConnectionErrorMetrics bool, enableErlangVmMetrics bool) *handler {
+	enableSoraClientMetrics bool, enableSoraConnectionErrorMetrics bool, enableErlangVmMetrics bool, enableSoraClusterMetrics bool) *handler {
 
 	h := &handler{
 		exporterMetricsRegistry:          prometheus.NewRegistry(),
@@ -103,6 +108,7 @@ func newHandler(
 		enableSoraClientMetrics:          enableSoraClientMetrics,
 		enableSoraConnectionErrorMetrics: enableSoraConnectionErrorMetrics,
 		enableErlangVmMetrics:            enableErlangVmMetrics,
+		enableSoraClusterMetrics:         enableSoraClusterMetrics,
 	}
 	if h.includeExporterMetrics {
 		h.exporterMetricsRegistry.MustRegister(
@@ -130,6 +136,7 @@ func (h *handler) innerHandler() http.Handler {
 		EnableSoraClientMetrics:          h.enableSoraClientMetrics,
 		EnableSoraConnectionErrorMetrics: h.enableSoraConnectionErrorMetrics,
 		EnableErlangVmMetrics:            h.enableErlangVmMetrics,
+		EnableSoraClusterMetrics:         h.enableSoraClusterMetrics,
 	}))
 	handler := promhttp.HandlerFor(
 		prometheus.Gatherers{h.exporterMetricsRegistry, r},
@@ -179,7 +186,7 @@ func main() {
 	soraHandler := newHandler(
 		!*disableExporterMetrics, *maxRequests, logger,
 		*soraGetStatsReportURL, *soraSkipSslVeirfy, *soraTimeout,
-		*enableSoraClientMetrics, *enableSoraConnectionErrorMetrics, *enableErlangVmMetrics)
+		*enableSoraClientMetrics, *enableSoraConnectionErrorMetrics, *enableErlangVmMetrics, *enableSoraClusterMetrics)
 	http.Handle(*metricsPath, soraHandler)
 
 	level.Info(logger).Log("msg", "Listening on", "address", *listenAddress)

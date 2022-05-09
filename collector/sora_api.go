@@ -109,3 +109,9 @@ type erlangVmReport struct {
 	ErlangVmMemory     erlangVmMemory     `json:"memory"`
 	ErlangVmStatistics erlangVmStatistics `json:"statistics"`
 }
+
+type soraClusterNode struct {
+	ClusterNodeName *string `json:"cluster_node_name"`
+	NodeName        *string `json:"node_name"`
+	Mode            *string `json:"mode"`
+}

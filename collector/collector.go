@@ -22,6 +22,7 @@ type Collector struct {
 	enableSoraClientMetrics          bool
 	enableSoraConnectionErrorMetrics bool
 	enableErlangVmMetrics            bool
+	EnableSoraClusterMetrics         bool
 
 	soraUp          *prometheus.Desc
 	soraVersionInfo *prometheus.Desc
@@ -29,6 +30,7 @@ type Collector struct {
 	ClientMetrics
 	SoraConnectionErrorMetrics
 	ErlangVmMetrics
+	SoraClusterMetrics
 }
 
 type CollectorOptions struct {
@@ -39,6 +41,7 @@ type CollectorOptions struct {
 	EnableSoraClientMetrics          bool
 	EnableSoraConnectionErrorMetrics bool
 	EnableErlangVmMetrics            bool
+	EnableSoraClusterMetrics         bool
 }
 
 type HTTPClient interface {
@@ -55,6 +58,7 @@ func NewCollector(options *CollectorOptions) *Collector {
 		enableSoraClientMetrics:          options.EnableSoraClientMetrics,
 		enableSoraConnectionErrorMetrics: options.EnableSoraConnectionErrorMetrics,
 		enableErlangVmMetrics:            options.EnableErlangVmMetrics,
+		EnableSoraClusterMetrics:         options.EnableSoraClusterMetrics,
 
 		soraUp:                     newDesc("up", "Whether the last scrape of metrics from Sora was able to connect to the server (1 for yes, 0 for no)."),
 		soraVersionInfo:            newDescWithLabel("version_info", "sora version info.", []string{"version"}),
@@ -62,6 +66,7 @@ func NewCollector(options *CollectorOptions) *Collector {
 		ClientMetrics:              clientMetrics,
 		SoraConnectionErrorMetrics: soraConnectionErrorMetrics,
 		ErlangVmMetrics:            erlangVmMetrics,
+		SoraClusterMetrics:         soraClusterMetrics,
 	}
 }
 
@@ -88,7 +93,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		level.Error(c.logger).Log("msg", "failed to request to sora", "err", err)
+		level.Error(c.logger).Log("msg", "failed to request to Sora GetStatsReport API", "err", err)
 		ch <- newGauge(c.soraUp, 0)
 		return
 	}
@@ -96,9 +101,34 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	var report soraGetStatsReport
 	if err := json.NewDecoder(resp.Body).Decode(&report); err != nil {
-		level.Error(c.logger).Log("msg", "failed to decode response body from sora", "err", err)
+		level.Error(c.logger).Log("msg", "failed to decode response body from Sora GetStatsReport API", "err", err)
 		ch <- newGauge(c.soraUp, 0)
 		return
+	}
+
+	var nodeList []soraClusterNode
+	if c.EnableSoraClusterMetrics {
+		req, err = http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
+		if err != nil {
+			level.Error(c.logger).Log("msg", "failed to create request to sora", "err", err)
+			ch <- newGauge(c.soraUp, 0)
+			return
+		}
+		req.Header.Set("x-sora-target", "Sora_20211215.ListClusterNodes")
+
+		nodeResp, err := client.Do(req)
+		if err != nil {
+			level.Error(c.logger).Log("msg", "failed to request to Sora ListClusterNodes API", "err", err)
+			ch <- newGauge(c.soraUp, 0)
+			return
+		}
+		defer nodeResp.Body.Close()
+
+		if err := json.NewDecoder(nodeResp.Body).Decode(&nodeList); err != nil {
+			level.Error(c.logger).Log("msg", "failed to decode response body from Sora ListClusterNodes API", "err", err)
+			ch <- newGauge(c.soraUp, 0)
+			return
+		}
 	}
 
 	ch <- newGauge(c.soraUp, 1)
@@ -113,6 +143,9 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	}
 	if c.enableErlangVmMetrics {
 		c.ErlangVmMetrics.Collect(ch, report.ErlangVmReport)
+	}
+	if c.EnableSoraClusterMetrics {
+		c.SoraClusterMetrics.Collect(ch, nodeList)
 	}
 }
 
@@ -129,6 +162,9 @@ func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 	}
 	if c.enableErlangVmMetrics {
 		c.ErlangVmMetrics.Describe(ch)
+	}
+	if c.EnableSoraClusterMetrics {
+		c.SoraClusterMetrics.Describe(ch)
 	}
 }
 

@@ -4,6 +4,10 @@ sora_average_duration_seconds 706
 # HELP sora_average_setup_time_seconds The average setup time in seconds.
 # TYPE sora_average_setup_time_seconds gauge
 sora_average_setup_time_seconds 0
+# HELP sora_cluster_node The sora server known cluster node.
+# TYPE sora_cluster_node gauge
+sora_cluster_node{mode="block_new_connection",node_name="node-02_canary_sora@10.211.55.40"} 1
+sora_cluster_node{mode="normal",node_name="node-01_canary_sora@10.211.55.42"} 1
 # HELP sora_client_type_total The total number of connections by Sora client types
 # TYPE sora_client_type_total counter
 sora_client_type_total{client="android_sdk",state="failed"} 1
