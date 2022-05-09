@@ -124,3 +124,6 @@ sora_turn_tcp_connections_total 2
 # HELP sora_turn_udp_connections_total The total number of connections with TURN-UDP.
 # TYPE sora_turn_udp_connections_total counter
 sora_turn_udp_connections_total 0
+# HELP sora_up Whether the last scrape of metrics from Sora was able to connect to the server (1 for yes, 0 for no).
+# TYPE sora_up gauge
+sora_up 1

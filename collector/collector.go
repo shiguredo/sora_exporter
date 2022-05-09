@@ -23,6 +23,7 @@ type Collector struct {
 	enableSoraConnectionErrorMetrics bool
 	enableErlangVmMetrics            bool
 
+	soraUp          *prometheus.Desc
 	soraVersionInfo *prometheus.Desc
 	ConnectionMetrics
 	ClientMetrics
@@ -55,6 +56,7 @@ func NewCollector(options *CollectorOptions) *Collector {
 		enableSoraConnectionErrorMetrics: options.EnableSoraConnectionErrorMetrics,
 		enableErlangVmMetrics:            options.EnableErlangVmMetrics,
 
+		soraUp:                     newDesc("up", "Whether the last scrape of metrics from Sora was able to connect to the server (1 for yes, 0 for no)."),
 		soraVersionInfo:            newDescWithLabel("sora_version_info", "sora version info.", []string{"version"}),
 		ConnectionMetrics:          connectionMetrics,
 		ClientMetrics:              clientMetrics,
@@ -73,6 +75,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
 	if err != nil {
 		level.Error(c.logger).Log("msg", "failed to create request to sora", "err", err)
+		ch <- newGauge(c.soraUp, 0)
 		return
 	}
 	req.Header.Set("x-sora-target", "Sora_20171010.GetStatsReport")
@@ -86,6 +89,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	resp, err := client.Do(req)
 	if err != nil {
 		level.Error(c.logger).Log("msg", "failed to request to sora", "err", err)
+		ch <- newGauge(c.soraUp, 0)
 		return
 	}
 	defer resp.Body.Close()
@@ -93,9 +97,11 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	var report soraGetStatsReport
 	if err := json.NewDecoder(resp.Body).Decode(&report); err != nil {
 		level.Error(c.logger).Log("msg", "failed to decode response body from sora", "err", err)
+		ch <- newGauge(c.soraUp, 0)
 		return
 	}
 
+	ch <- newGauge(c.soraUp, 1)
 	ch <- newInfo(c.soraVersionInfo, report.SoraVersion)
 	c.ConnectionMetrics.Collect(ch, report.soraConnectionReport)
 
@@ -111,6 +117,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 }
 
 func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
+	ch <- c.soraUp
 	ch <- c.soraVersionInfo
 	c.ConnectionMetrics.Describe(ch)
 
