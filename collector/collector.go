@@ -102,7 +102,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	ch <- newGauge(c.soraUp, 1)
-	ch <- newInfo(c.soraVersionInfo, report.SoraVersion)
+	ch <- newGauge(c.soraVersionInfo, 1, report.SoraVersion)
 	c.ConnectionMetrics.Collect(ch, report.soraConnectionReport)
 
 	if c.enableSoraClientMetrics {
@@ -140,14 +140,10 @@ func newDescWithLabel(name, help string, labels []string) *prometheus.Desc {
 	return prometheus.NewDesc(prometheus.BuildFQName("sora", "", name), help, labels, nil)
 }
 
-func newGauge(d *prometheus.Desc, v float64) prometheus.Metric {
-	return prometheus.MustNewConstMetric(d, prometheus.GaugeValue, v)
+func newGauge(d *prometheus.Desc, v float64, labelValues ...string) prometheus.Metric {
+	return prometheus.MustNewConstMetric(d, prometheus.GaugeValue, v, labelValues...)
 }
 
-func newCounter(d *prometheus.Desc, v float64) prometheus.Metric {
-	return prometheus.MustNewConstMetric(d, prometheus.CounterValue, v)
-}
-
-func newInfo(d *prometheus.Desc, labelValues ...string) prometheus.Metric {
-	return prometheus.MustNewConstMetric(d, prometheus.GaugeValue, 1, labelValues...)
+func newCounter(d *prometheus.Desc, v float64, labelValues ...string) prometheus.Metric {
+	return prometheus.MustNewConstMetric(d, prometheus.CounterValue, v, labelValues...)
 }
