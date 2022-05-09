@@ -1,6 +1,6 @@
 # CHANGES
 
-## develop
+## 2022.2.0
 
 - [CHANGE] Sora に関するメトリクスの接頭辞を `sora_exporter` から `sora` に変更する
     - @tnamao
