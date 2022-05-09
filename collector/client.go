@@ -5,7 +5,7 @@ import "github.com/prometheus/client_golang/prometheus"
 // この統計情報はアンドキュメントです
 var (
 	clientMetrics = ClientMetrics{
-		totalSoraClientConnections: newDescWithLabel("sora_client_connections_total", "The total number of connections by Sora client types", []string{"type", "state"}),
+		totalSoraClientConnections: newDescWithLabel("client_type_total", "The total number of connections by Sora client types", []string{"client", "state"}),
 	}
 )
 

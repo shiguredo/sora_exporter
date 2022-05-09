@@ -4,6 +4,20 @@ sora_average_duration_seconds 706
 # HELP sora_average_setup_time_seconds The average setup time in seconds.
 # TYPE sora_average_setup_time_seconds gauge
 sora_average_setup_time_seconds 0
+# HELP sora_client_type_total The total number of connections by Sora client types
+# TYPE sora_client_type_total counter
+sora_client_type_total{client="android_sdk",state="failed"} 1
+sora_client_type_total{client="android_sdk",state="successful"} 11
+sora_client_type_total{client="ios_sdk",state="failed"} 2
+sora_client_type_total{client="ios_sdk",state="successful"} 22
+sora_client_type_total{client="js_sdk",state="failed"} 3
+sora_client_type_total{client="js_sdk",state="successful"} 33
+sora_client_type_total{client="momo",state="failed"} 6
+sora_client_type_total{client="momo",state="successful"} 66
+sora_client_type_total{client="unity_sdk",state="failed"} 4
+sora_client_type_total{client="unity_sdk",state="successful"} 44
+sora_client_type_total{client="unknown",state="failed"} 5
+sora_client_type_total{client="unknown",state="successful"} 55
 # HELP sora_connection_error_total The total number of connection error.
 # TYPE sora_connection_error_total counter
 sora_connection_error_total{reason="sdp"} 3
@@ -109,20 +123,6 @@ sora_received_invalid_turn_tcp_packet_total 0
 # TYPE sora_session_total counter
 sora_session_total{state="created"} 1
 sora_session_total{state="destroyed"} 0
-# HELP sora_sora_client_connections_total The total number of connections by Sora client types
-# TYPE sora_sora_client_connections_total counter
-sora_sora_client_connections_total{state="failed",type="android_sdk"} 1
-sora_sora_client_connections_total{state="failed",type="ios_sdk"} 2
-sora_sora_client_connections_total{state="failed",type="js_sdk"} 3
-sora_sora_client_connections_total{state="failed",type="momo"} 6
-sora_sora_client_connections_total{state="failed",type="unity_sdk"} 4
-sora_sora_client_connections_total{state="failed",type="unknown"} 5
-sora_sora_client_connections_total{state="successful",type="android_sdk"} 11
-sora_sora_client_connections_total{state="successful",type="ios_sdk"} 22
-sora_sora_client_connections_total{state="successful",type="js_sdk"} 33
-sora_sora_client_connections_total{state="successful",type="momo"} 66
-sora_sora_client_connections_total{state="successful",type="unity_sdk"} 44
-sora_sora_client_connections_total{state="successful",type="unknown"} 55
 # HELP sora_turn_connections_total The total number of connections with TURN.
 # TYPE sora_turn_connections_total counter
 sora_turn_connections_total{proto="tcp"} 2
