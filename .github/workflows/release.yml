@@ -23,7 +23,7 @@ jobs:
     - name: Build
       run: |
         GOOS=linux GOARCH=amd64 go build \
-          -o dist/sora_exporter_amd64 \
+          -o dist/sora_exporter_linux_amd64 \
           -ldflags "\
             -X github.com/prometheus/common/version.Version=$(git describe --tag --abbrev=0) \
             -X github.com/prometheus/common/version.Revision=$(git rev-parse --short HEAD) \
@@ -33,7 +33,7 @@ jobs:
           " \
           main.go
         GOOS=linux GOARCH=arm64 go build \
-          -o dist/sora_exporter_arm64 \
+          -o dist/sora_exporter_linux_arm64 \
           -ldflags "\
             -X github.com/prometheus/common/version.Version=$(git describe --tag --abbrev=0) \
             -X github.com/prometheus/common/version.Revision=$(git rev-parse --short HEAD) \
@@ -45,4 +45,9 @@ jobs:
         gzip dist/*
     - name: Release
       run: |
-        ghr -t "${{ secrets.GITHUB_TOKEN }}" -u "${{ github.repository_owner }}" -r "sora_exporter" --replace "${GITHUB_REF##*/}" dist/
+        ghr -t "${{ secrets.GITHUB_TOKEN }}" \
+            -u "${{ github.repository_owner }}" \
+            -r "sora_exporter" \
+            -n "${{ github.ref }}" \
+            --replace "${GITHUB_REF##*/}" \
+            dist/

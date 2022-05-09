@@ -4,20 +4,10 @@ sora_average_duration_seconds 706
 # HELP sora_average_setup_time_seconds The average setup time in seconds.
 # TYPE sora_average_setup_time_seconds gauge
 sora_average_setup_time_seconds 0
-# HELP sora_client_type_total The total number of connections by Sora client types
-# TYPE sora_client_type_total counter
-sora_client_type_total{client="android_sdk",state="failed"} 1
-sora_client_type_total{client="android_sdk",state="successful"} 11
-sora_client_type_total{client="ios_sdk",state="failed"} 2
-sora_client_type_total{client="ios_sdk",state="successful"} 22
-sora_client_type_total{client="js_sdk",state="failed"} 3
-sora_client_type_total{client="js_sdk",state="successful"} 33
-sora_client_type_total{client="momo",state="failed"} 6
-sora_client_type_total{client="momo",state="successful"} 66
-sora_client_type_total{client="unity_sdk",state="failed"} 4
-sora_client_type_total{client="unity_sdk",state="successful"} 44
-sora_client_type_total{client="unknown",state="failed"} 5
-sora_client_type_total{client="unknown",state="successful"} 55
+# HELP sora_cluster_node The sora server known cluster node.
+# TYPE sora_cluster_node gauge
+sora_cluster_node{mode="block_new_connection",node_name="node-02_canary_sora@10.211.55.40"} 1
+sora_cluster_node{mode="normal",node_name="node-01_canary_sora@10.211.55.42"} 1
 # HELP sora_connections_total The total number of connections created.
 # TYPE sora_connections_total counter
 sora_connections_total{state="created"} 2
