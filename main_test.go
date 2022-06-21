@@ -16,7 +16,6 @@ import (
 )
 
 var (
-	testInfo     = "Release_date: test\nVersion: test\n"
 	testJsonData = `{
 		"average_duration_sec": 706,
 		"average_setup_time_msec": 372,
@@ -203,12 +202,6 @@ func soraHandler(s *sora) http.HandlerFunc {
 			return
 		}
 		w.Write(s.response)
-	}
-}
-
-func soraHandlerStale(exit chan bool) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		<-exit
 	}
 }
 
