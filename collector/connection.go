@@ -11,7 +11,7 @@ var (
 		averageDurationSec:                newDesc("average_duration_seconds", "The average connection duration in seconds."),
 		averageSetupTimeSec:               newDesc("average_setup_time_seconds", "The average setup time in seconds."),
 		totalSession:                      newDescWithLabel("session_total", "The total number of session.", []string{"state"}),
-		totalReceivedInvalidTurnTcpPacket: newDesc("received_invalid_turn_tcp_packet_total", "The total number of invalid packets with TURN-TCP"),
+		totalReceivedInvalidTurnTCPPacket: newDesc("received_invalid_turn_tcp_packet_total", "The total number of invalid packets with TURN-TCP"),
 	}
 )
 
@@ -23,7 +23,7 @@ type ConnectionMetrics struct {
 	averageDurationSec                *prometheus.Desc
 	averageSetupTimeSec               *prometheus.Desc
 	totalSession                      *prometheus.Desc
-	totalReceivedInvalidTurnTcpPacket *prometheus.Desc
+	totalReceivedInvalidTurnTCPPacket *prometheus.Desc
 }
 
 func (m *ConnectionMetrics) Describe(ch chan<- *prometheus.Desc) {
@@ -34,7 +34,7 @@ func (m *ConnectionMetrics) Describe(ch chan<- *prometheus.Desc) {
 	ch <- m.averageDurationSec
 	ch <- m.averageSetupTimeSec
 	ch <- m.totalSession
-	ch <- m.totalReceivedInvalidTurnTcpPacket
+	ch <- m.totalReceivedInvalidTurnTCPPacket
 }
 
 func (m *ConnectionMetrics) Collect(ch chan<- prometheus.Metric, report soraConnectionReport) {
@@ -45,11 +45,11 @@ func (m *ConnectionMetrics) Collect(ch chan<- prometheus.Metric, report soraConn
 	ch <- newCounter(m.totalConnection, float64(report.TotalFailedConnections), "failed")
 	ch <- newGauge(m.totalOngoingConnections, float64(report.TotalOngoingConnections))
 	ch <- newCounter(m.totalDurationSec, float64(report.TotalDurationSec))
-	ch <- newCounter(m.totalTurnConnections, float64(report.TotalTurnUdpConnections), "udp")
-	ch <- newCounter(m.totalTurnConnections, float64(report.TotalTurnTcpConnections), "tcp")
+	ch <- newCounter(m.totalTurnConnections, float64(report.TotalTurnUDPConnections), "udp")
+	ch <- newCounter(m.totalTurnConnections, float64(report.TotalTurnTCPConnections), "tcp")
 	ch <- newGauge(m.averageDurationSec, float64(report.AverageDurationSec))
 	ch <- newGauge(m.averageSetupTimeSec, float64(report.AverageSetupTimeMsec/1000))
 	ch <- newCounter(m.totalSession, float64(report.TotalSessionCreated), "created")
 	ch <- newCounter(m.totalSession, float64(report.TotalSessionDestroyed), "destroyed")
-	ch <- newCounter(m.totalReceivedInvalidTurnTcpPacket, float64(report.TotalReceivedInvalidTurnTcpPacket))
+	ch <- newCounter(m.totalReceivedInvalidTurnTCPPacket, float64(report.TotalReceivedInvalidTurnTCPPacket))
 }
