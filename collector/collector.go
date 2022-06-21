@@ -21,7 +21,7 @@ type Collector struct {
 	skipSslVerify                    bool
 	enableSoraClientMetrics          bool
 	enableSoraConnectionErrorMetrics bool
-	enableErlangVmMetrics            bool
+	enableErlangVMMetrics            bool
 	EnableSoraClusterMetrics         bool
 
 	soraUp          *prometheus.Desc
@@ -29,7 +29,7 @@ type Collector struct {
 	ConnectionMetrics
 	ClientMetrics
 	SoraConnectionErrorMetrics
-	ErlangVmMetrics
+	ErlangVMMetrics
 	SoraClusterMetrics
 }
 
@@ -40,7 +40,7 @@ type CollectorOptions struct {
 	Logger                           log.Logger
 	EnableSoraClientMetrics          bool
 	EnableSoraConnectionErrorMetrics bool
-	EnableErlangVmMetrics            bool
+	EnableErlangVMMetrics            bool
 	EnableSoraClusterMetrics         bool
 }
 
@@ -57,7 +57,7 @@ func NewCollector(options *CollectorOptions) *Collector {
 
 		enableSoraClientMetrics:          options.EnableSoraClientMetrics,
 		enableSoraConnectionErrorMetrics: options.EnableSoraConnectionErrorMetrics,
-		enableErlangVmMetrics:            options.EnableErlangVmMetrics,
+		enableErlangVMMetrics:            options.EnableErlangVMMetrics,
 		EnableSoraClusterMetrics:         options.EnableSoraClusterMetrics,
 
 		soraUp:                     newDesc("up", "Whether the last scrape of metrics from Sora was able to connect to the server (1 for yes, 0 for no)."),
@@ -65,7 +65,7 @@ func NewCollector(options *CollectorOptions) *Collector {
 		ConnectionMetrics:          connectionMetrics,
 		ClientMetrics:              clientMetrics,
 		SoraConnectionErrorMetrics: soraConnectionErrorMetrics,
-		ErlangVmMetrics:            erlangVmMetrics,
+		ErlangVMMetrics:            erlangVMMetrics,
 		SoraClusterMetrics:         soraClusterMetrics,
 	}
 }
@@ -141,8 +141,8 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	if c.enableSoraConnectionErrorMetrics {
 		c.SoraConnectionErrorMetrics.Collect(ch, report.SoraConnectionErrorReport)
 	}
-	if c.enableErlangVmMetrics {
-		c.ErlangVmMetrics.Collect(ch, report.ErlangVmReport)
+	if c.enableErlangVMMetrics {
+		c.ErlangVMMetrics.Collect(ch, report.ErlangVMReport)
 	}
 	if c.EnableSoraClusterMetrics {
 		c.SoraClusterMetrics.Collect(ch, nodeList)
@@ -160,8 +160,8 @@ func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 	if c.enableSoraConnectionErrorMetrics {
 		c.SoraConnectionErrorMetrics.Describe(ch)
 	}
-	if c.enableErlangVmMetrics {
-		c.ErlangVmMetrics.Describe(ch)
+	if c.enableErlangVMMetrics {
+		c.ErlangVMMetrics.Describe(ch)
 	}
 	if c.EnableSoraClusterMetrics {
 		c.SoraClusterMetrics.Describe(ch)

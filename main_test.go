@@ -16,8 +16,7 @@ import (
 )
 
 var (
-	testInfo     = "Release_date: test\nVersion: test\n"
-	testJsonData = `{
+	testJSONData = `{
 		"average_duration_sec": 706,
 		"average_setup_time_msec": 372,
 		"erlang_vm": {
@@ -123,7 +122,7 @@ var (
 		"total_turn_udp_connections": 0,
 		"version": "2022.1.0-canary.28"
 	  }`
-	listClusterNodesJsonData = `[
+	listClusterNodesJSONData = `[
 		{
 		  "node_name": "node-01_canary_sora@10.211.55.42",
 		  "epoch": 1,
@@ -153,7 +152,7 @@ var (
 		  "connected": true
 		}
 	  ]`
-	listClusterNodesCurrentJsonData = `[
+	listClusterNodesCurrentJSONData = `[
 		{
 		  "cluster_node_name": "node-01_canary_sora@10.211.55.42",
 		  "epoch": 1,
@@ -206,12 +205,6 @@ func soraHandler(s *sora) http.HandlerFunc {
 	}
 }
 
-func soraHandlerStale(exit chan bool) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		<-exit
-	}
-}
-
 func expectMetrics(t *testing.T, c prometheus.Collector, fixture string) {
 	exp, err := os.Open(path.Join("test", fixture))
 	if err != nil {
@@ -223,7 +216,7 @@ func expectMetrics(t *testing.T, c prometheus.Collector, fixture string) {
 }
 
 func TestInvalidConfig(t *testing.T) {
-	s := newSora([]byte("invalid config parameter"), []byte(listClusterNodesJsonData))
+	s := newSora([]byte("invalid config parameter"), []byte(listClusterNodesJSONData))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -234,14 +227,14 @@ func TestInvalidConfig(t *testing.T) {
 		Logger:                           log.NewNopLogger(),
 		EnableSoraClientMetrics:          true,
 		EnableSoraConnectionErrorMetrics: true,
-		EnableErlangVmMetrics:            true,
+		EnableErlangVMMetrics:            true,
 		EnableSoraClusterMetrics:         true,
 	})
 	expectMetrics(t, h, "invalid_config.metrics")
 }
 
 func TestMaximumMetrics(t *testing.T) {
-	s := newSora([]byte(testJsonData), []byte(listClusterNodesJsonData))
+	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -252,14 +245,14 @@ func TestMaximumMetrics(t *testing.T) {
 		Logger:                           log.NewNopLogger(),
 		EnableSoraClientMetrics:          true,
 		EnableSoraConnectionErrorMetrics: true,
-		EnableErlangVmMetrics:            true,
+		EnableErlangVMMetrics:            true,
 		EnableSoraClusterMetrics:         true,
 	})
 	expectMetrics(t, h, "maximum.metrics")
 }
 
-func TestSoraErlangVmEnabledMetrics(t *testing.T) {
-	s := newSora([]byte(testJsonData), []byte(listClusterNodesJsonData))
+func TestSoraErlangVMEnabledMetrics(t *testing.T) {
+	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -270,14 +263,14 @@ func TestSoraErlangVmEnabledMetrics(t *testing.T) {
 		Logger:                           log.NewNopLogger(),
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: false,
-		EnableErlangVmMetrics:            true,
+		EnableErlangVMMetrics:            true,
 		EnableSoraClusterMetrics:         false,
 	})
 	expectMetrics(t, h, "sora_erlang_vm_enabled.metrics")
 }
 
 func TestSoraClientEnabledMetrics(t *testing.T) {
-	s := newSora([]byte(testJsonData), []byte(listClusterNodesJsonData))
+	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -288,14 +281,14 @@ func TestSoraClientEnabledMetrics(t *testing.T) {
 		Logger:                           log.NewNopLogger(),
 		EnableSoraClientMetrics:          true,
 		EnableSoraConnectionErrorMetrics: false,
-		EnableErlangVmMetrics:            false,
+		EnableErlangVMMetrics:            false,
 		EnableSoraClusterMetrics:         false,
 	})
 	expectMetrics(t, h, "sora_client_enabled.metrics")
 }
 
 func TestSoraConnectionErrorEnabledMetrics(t *testing.T) {
-	s := newSora([]byte(testJsonData), []byte(listClusterNodesJsonData))
+	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -306,7 +299,7 @@ func TestSoraConnectionErrorEnabledMetrics(t *testing.T) {
 		Logger:                           log.NewNopLogger(),
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: true,
-		EnableErlangVmMetrics:            false,
+		EnableErlangVMMetrics:            false,
 		EnableSoraClusterMetrics:         false,
 	})
 	expectMetrics(t, h, "sora_connection_error_enabled.metrics")
@@ -330,7 +323,7 @@ func TestMinimumMetrics(t *testing.T) {
 		"total_turn_udp_connections": 555,
 		"version": "2022.1.0-canary.28"
 	  }`
-	s := newSora([]byte(resp), []byte(listClusterNodesJsonData))
+	s := newSora([]byte(resp), []byte(listClusterNodesJSONData))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -341,14 +334,14 @@ func TestMinimumMetrics(t *testing.T) {
 		Logger:                           log.NewNopLogger(),
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: false,
-		EnableErlangVmMetrics:            false,
+		EnableErlangVMMetrics:            false,
 		EnableSoraClusterMetrics:         false,
 	})
 	expectMetrics(t, h, "minimum.metrics")
 }
 
 func TestSoraClusterEnabledMetrics(t *testing.T) {
-	s := newSora([]byte(testJsonData), []byte(listClusterNodesJsonData))
+	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -359,7 +352,7 @@ func TestSoraClusterEnabledMetrics(t *testing.T) {
 		Logger:                           log.NewNopLogger(),
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: false,
-		EnableErlangVmMetrics:            false,
+		EnableErlangVMMetrics:            false,
 		EnableSoraClusterMetrics:         true,
 	})
 	expectMetrics(t, h, "sora_cluster_metrics_enabled.metrics")
@@ -367,7 +360,7 @@ func TestSoraClusterEnabledMetrics(t *testing.T) {
 
 // Sora-2021.9.x 系の JSON レスポンスデータでのテスト
 func TestSoraClusterEnabledMetricsCurrentJsonData(t *testing.T) {
-	s := newSora([]byte(testJsonData), []byte(listClusterNodesCurrentJsonData))
+	s := newSora([]byte(testJSONData), []byte(listClusterNodesCurrentJSONData))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -378,7 +371,7 @@ func TestSoraClusterEnabledMetricsCurrentJsonData(t *testing.T) {
 		Logger:                           log.NewNopLogger(),
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: false,
-		EnableErlangVmMetrics:            false,
+		EnableErlangVMMetrics:            false,
 		EnableSoraClusterMetrics:         true,
 	})
 	expectMetrics(t, h, "sora_cluster_metrics_enabled.metrics")

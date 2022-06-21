@@ -5,7 +5,7 @@ type soraGetStatsReport struct {
 	soraConnectionReport
 	SoraClientReport          soraClientReport          `json:"sora_client,omitempty"`
 	SoraConnectionErrorReport soraConnectionErrorReport `json:"error,omitempty"`
-	ErlangVmReport            erlangVmReport            `json:"erlang_vm,omitempty"`
+	ErlangVMReport            erlangVMReport            `json:"erlang_vm,omitempty"`
 }
 
 type soraConnectionReport struct {
@@ -16,13 +16,13 @@ type soraConnectionReport struct {
 	TotalOngoingConnections           int64 `json:"total_ongoing_connections"`
 	TotalFailedConnections            int64 `json:"total_failed_connections"`
 	TotalDurationSec                  int64 `json:"total_duration_sec"`
-	TotalTurnUdpConnections           int64 `json:"total_turn_udp_connections"`
-	TotalTurnTcpConnections           int64 `json:"total_turn_tcp_connections"`
+	TotalTurnUDPConnections           int64 `json:"total_turn_udp_connections"`
+	TotalTurnTCPConnections           int64 `json:"total_turn_tcp_connections"`
 	AverageDurationSec                int64 `json:"average_duration_sec"`
 	AverageSetupTimeMsec              int64 `json:"average_setup_time_msec"`
 	TotalSessionCreated               int64 `json:"total_session_created"`
 	TotalSessionDestroyed             int64 `json:"total_session_destroyed"`
-	TotalReceivedInvalidTurnTcpPacket int64 `json:"total_received_invalid_turn_tcp_packet"`
+	TotalReceivedInvalidTurnTCPPacket int64 `json:"total_received_invalid_turn_tcp_packet"`
 }
 
 type soraClientStatistics struct {
@@ -44,7 +44,7 @@ type soraConnectionErrorReport struct {
 	SignalingError     int64 `json:"signaling_error"`
 }
 
-type erlangVmMemory struct {
+type erlangVMMemory struct {
 	Total         int64 `json:"total"`
 	Processes     int64 `json:"processes"`
 	ProcessesUsed int64 `json:"processes_used"`
@@ -86,7 +86,7 @@ type wallClock struct {
 	WallclockTimeSinceLastCall int64 `json:"wallclock_time_since_last_call"`
 }
 
-type erlangVmStatistics struct {
+type erlangVMStatistics struct {
 	ContextSwitches         int64             `json:"context_switches"`
 	ExactReductions         exatReducations   `json:"exact_reductions"`
 	GarbageCollection       garbageCollection `json:"garbage_collection"`
@@ -99,15 +99,15 @@ type erlangVmStatistics struct {
 	TotalRunQueueLengths    int64             `json:"total_run_queue_lengths"`
 	TotalRunQueueLengthsAll int64             `json:"total_run_queue_lengths_all"`
 	WallClock               wallClock         `json:"wall_clock"`
-	// ErlangVmActiveTasks                                 []int64 `json:"active_tasks"`
-	// ErlangVmActiveTasksAll                              []int64 `json:"active_tasks_all"`
-	// ErlangVmRunQueueLengths                             []int64 `json:"run_queue_lengths"`
-	// ErlangVmRunQueueLengthsAll                          []int64 `json:"run_queue_lengths_all"`
+	// ErlangVMActiveTasks                                 []int64 `json:"active_tasks"`
+	// ErlangVMActiveTasksAll                              []int64 `json:"active_tasks_all"`
+	// ErlangVMRunQueueLengths                             []int64 `json:"run_queue_lengths"`
+	// ErlangVMRunQueueLengthsAll                          []int64 `json:"run_queue_lengths_all"`
 }
 
-type erlangVmReport struct {
-	ErlangVmMemory     erlangVmMemory     `json:"memory"`
-	ErlangVmStatistics erlangVmStatistics `json:"statistics"`
+type erlangVMReport struct {
+	ErlangVMMemory     erlangVMMemory     `json:"memory"`
+	ErlangVMStatistics erlangVMStatistics `json:"statistics"`
 }
 
 type soraClusterNode struct {
