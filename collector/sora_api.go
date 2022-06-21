@@ -26,12 +26,14 @@ type soraConnectionReport struct {
 }
 
 type soraClientStatistics struct {
-	SoraAndroidSdk         int64 `json:"sora_android_sdk"`
-	SoraIosSdk             int64 `json:"sora_ios_sdk"`
-	SoraJsSdk              int64 `json:"sora_js_sdk"`
-	SoraUnitySdk           int64 `json:"sora_unity_sdk"`
-	Unknown                int64 `json:"unknown"`
-	WebrtcNativeClientMomo int64 `json:"webrtc_native_client_momo"`
+	SoraAndroidSdk              int64 `json:"sora_android_sdk"`
+	SoraCppSdk                  int64 `json:"sora_cpp_sdk"`
+	SoraIosSdk                  int64 `json:"sora_ios_sdk"`
+	SoraJsSdk                   int64 `json:"sora_js_sdk"`
+	SoraUnitySdk                int64 `json:"sora_unity_sdk"`
+	Unknown                     int64 `json:"unknown"`
+	WebrtcLoadTestingToolZakuro int64 `json:"webrtc_load_testing_tool_zakuro"`
+	WebrtcNativeClientMomo      int64 `json:"webrtc_native_client_momo"`
 }
 
 type soraClientReport struct {
