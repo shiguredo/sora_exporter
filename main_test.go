@@ -93,18 +93,22 @@ var (
 		"sora_client": {
 		  "total_failed_sora_client_type": {
 			"sora_android_sdk": 1,
+			"sora_cpp_sdk": 7,
 			"sora_ios_sdk": 2,
 			"sora_js_sdk": 3,
 			"sora_unity_sdk": 4,
 			"unknown": 5,
+			"webrtc_load_testing_tool_zakuro": 8,
 			"webrtc_native_client_momo": 6
 		  },
 		  "total_successful_sora_client_type": {
 			"sora_android_sdk": 11,
+			"sora_cpp_sdk": 77,
 			"sora_ios_sdk": 22,
 			"sora_js_sdk": 33,
 			"sora_unity_sdk": 44,
 			"unknown": 55,
+			"webrtc_load_testing_tool_zakuro": 88,
 			"webrtc_native_client_momo": 66
 		  }
 		},
