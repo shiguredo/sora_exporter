@@ -2,7 +2,7 @@
 
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/shiguredo/sora_exporter.svg)](https://github.com/shiguredo/sora_exporter)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Actions Status](https://github.com/shiguredo/sora_exporter/workflows/ci/badge.svg)](https://github.com/shiguredo/sora_exporter/actions)
+[![Actions Status](https://github.com/shiguredo/sora_exporter/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/shiguredo/sora_exporter/actions/workflows/ci.yml)
 
 ## About Shiguredo's open source software
 
@@ -48,4 +48,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 
-オリジナルは MIT ライセンスですが [@johejo](https://github.com/johejo/) から許諾を得て Apachi License 2.0 へ変更しています。
+オリジナルは MIT ライセンスですが [@johejo](https://github.com/johejo/) から許諾を得て Apache License 2.0 へ変更しています。

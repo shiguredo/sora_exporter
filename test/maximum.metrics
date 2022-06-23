@@ -12,6 +12,8 @@ sora_cluster_node{mode="normal",node_name="node-01_canary_sora@10.211.55.42"} 1
 # TYPE sora_client_type_total counter
 sora_client_type_total{client="android_sdk",state="failed"} 1
 sora_client_type_total{client="android_sdk",state="successful"} 11
+sora_client_type_total{client="cpp_sdk",state="failed"} 7
+sora_client_type_total{client="cpp_sdk",state="successful"} 77
 sora_client_type_total{client="ios_sdk",state="failed"} 2
 sora_client_type_total{client="ios_sdk",state="successful"} 22
 sora_client_type_total{client="js_sdk",state="failed"} 3
@@ -22,6 +24,8 @@ sora_client_type_total{client="unity_sdk",state="failed"} 4
 sora_client_type_total{client="unity_sdk",state="successful"} 44
 sora_client_type_total{client="unknown",state="failed"} 5
 sora_client_type_total{client="unknown",state="successful"} 55
+sora_client_type_total{client="zakuro",state="failed"} 8
+sora_client_type_total{client="zakuro",state="successful"} 88
 # HELP sora_connection_error_total The total number of connection error.
 # TYPE sora_connection_error_total counter
 sora_connection_error_total{reason="sdp"} 3

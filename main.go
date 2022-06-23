@@ -57,7 +57,7 @@ var (
 		"Include metrics about Sora connection error stats.",
 	).Bool()
 	// この統計情報はアンドキュメントです
-	enableErlangVmMetrics = kingpin.Flag(
+	enableErlangVMMetrics = kingpin.Flag(
 		"sora.erlang-vm-metrics",
 		"Include metrics about Erlang VM stats.",
 	).Bool()
@@ -88,14 +88,14 @@ type handler struct {
 	soraTimeout                      time.Duration
 	enableSoraClientMetrics          bool
 	enableSoraConnectionErrorMetrics bool
-	enableErlangVmMetrics            bool
+	enableErlangVMMetrics            bool
 	enableSoraClusterMetrics         bool
 }
 
 func newHandler(
 	includeExporterMetrics bool, maxRequests int, logger log.Logger,
 	soraGetStatsReportURL string, soraSkipSslVeirfy bool, soraTimeout time.Duration,
-	enableSoraClientMetrics bool, enableSoraConnectionErrorMetrics bool, enableErlangVmMetrics bool, enableSoraClusterMetrics bool) *handler {
+	enableSoraClientMetrics bool, enableSoraConnectionErrorMetrics bool, enableErlangVMMetrics bool, enableSoraClusterMetrics bool) *handler {
 
 	h := &handler{
 		exporterMetricsRegistry:          prometheus.NewRegistry(),
@@ -107,7 +107,7 @@ func newHandler(
 		soraTimeout:                      soraTimeout,
 		enableSoraClientMetrics:          enableSoraClientMetrics,
 		enableSoraConnectionErrorMetrics: enableSoraConnectionErrorMetrics,
-		enableErlangVmMetrics:            enableErlangVmMetrics,
+		enableErlangVMMetrics:            enableErlangVMMetrics,
 		enableSoraClusterMetrics:         enableSoraClusterMetrics,
 	}
 	if h.includeExporterMetrics {
@@ -135,7 +135,7 @@ func (h *handler) innerHandler() http.Handler {
 		Logger:                           h.logger,
 		EnableSoraClientMetrics:          h.enableSoraClientMetrics,
 		EnableSoraConnectionErrorMetrics: h.enableSoraConnectionErrorMetrics,
-		EnableErlangVmMetrics:            h.enableErlangVmMetrics,
+		EnableErlangVMMetrics:            h.enableErlangVMMetrics,
 		EnableSoraClusterMetrics:         h.enableSoraClusterMetrics,
 	}))
 	handler := promhttp.HandlerFor(
@@ -186,7 +186,7 @@ func main() {
 	soraHandler := newHandler(
 		!*disableExporterMetrics, *maxRequests, logger,
 		*soraGetStatsReportURL, *soraSkipSslVeirfy, *soraTimeout,
-		*enableSoraClientMetrics, *enableSoraConnectionErrorMetrics, *enableErlangVmMetrics, *enableSoraClusterMetrics)
+		*enableSoraClientMetrics, *enableSoraConnectionErrorMetrics, *enableErlangVMMetrics, *enableSoraClusterMetrics)
 	http.Handle(*metricsPath, soraHandler)
 
 	level.Info(logger).Log("msg", "Listening on", "address", *listenAddress)
