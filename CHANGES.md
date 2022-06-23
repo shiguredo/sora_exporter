@@ -1,5 +1,12 @@
 # CHANGES
 
+## 2022.3.0
+
+- [ADD] Sora の接続クライアントメトリクスに `cpp_sdk` と `zakuro` を追加する
+    - @tnamao
+- [ADD] [Staticcheck](https://staticcheck.io/) の静的解析に対応する
+    - @tnamao
+
 ## 2022.2.0
 
 - [CHANGE] Sora に関するメトリクスの接頭辞を `sora_exporter` から `sora` に変更する
