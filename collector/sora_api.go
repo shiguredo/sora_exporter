@@ -3,6 +3,7 @@ package collector
 type soraGetStatsReport struct {
 	SoraVersion string `json:"version"`
 	soraConnectionReport
+	soraWebhookReport
 	SoraClientReport          soraClientReport          `json:"sora_client,omitempty"`
 	SoraConnectionErrorReport soraConnectionErrorReport `json:"error,omitempty"`
 	ErlangVMReport            erlangVMReport            `json:"erlang_vm,omitempty"`
@@ -23,6 +24,17 @@ type soraConnectionReport struct {
 	TotalSessionCreated               int64 `json:"total_session_created"`
 	TotalSessionDestroyed             int64 `json:"total_session_destroyed"`
 	TotalReceivedInvalidTurnTCPPacket int64 `json:"total_received_invalid_turn_tcp_packet"`
+}
+
+type soraWebhookReport struct {
+	TotalAuthWebhookAllowed       int64 `json:"total_auth_webhook_allowed"`
+	TotalAuthWebhookDenied        int64 `json:"total_auth_webhook_denied"`
+	TotalSuccessfulAuthWebhook    int64 `json:"total_successful_auth_webhook"`
+	TotalFailedAuthWebhook        int64 `json:"total_failed_auth_webhook"`
+	TotalSuccessfulSessionWebhook int64 `json:"total_successful_session_webhook"`
+	TotalFailedSessionWebhook     int64 `json:"total_failed_session_webhook"`
+	TotalSuccessfulEventWebhook   int64 `json:"total_successful_event_webhook"`
+	TotalFailedEventWebhook       int64 `json:"total_failed_event_webhook"`
 }
 
 type soraClientStatistics struct {
