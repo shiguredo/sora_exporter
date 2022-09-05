@@ -27,6 +27,7 @@ type Collector struct {
 	soraUp          *prometheus.Desc
 	soraVersionInfo *prometheus.Desc
 	ConnectionMetrics
+	WebhookMetrics
 	ClientMetrics
 	SoraConnectionErrorMetrics
 	ErlangVMMetrics
@@ -63,6 +64,7 @@ func NewCollector(options *CollectorOptions) *Collector {
 		soraUp:                     newDesc("up", "Whether the last scrape of metrics from Sora was able to connect to the server (1 for yes, 0 for no)."),
 		soraVersionInfo:            newDescWithLabel("version_info", "sora version info.", []string{"version"}),
 		ConnectionMetrics:          connectionMetrics,
+		WebhookMetrics:             webhookMetrics,
 		ClientMetrics:              clientMetrics,
 		SoraConnectionErrorMetrics: soraConnectionErrorMetrics,
 		ErlangVMMetrics:            erlangVMMetrics,
@@ -134,6 +136,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	ch <- newGauge(c.soraUp, 1)
 	ch <- newGauge(c.soraVersionInfo, 1, report.SoraVersion)
 	c.ConnectionMetrics.Collect(ch, report.soraConnectionReport)
+	c.WebhookMetrics.Collect(ch, report.soraWebhookReport)
 
 	if c.enableSoraClientMetrics {
 		c.ClientMetrics.Collect(ch, report.SoraClientReport)
@@ -153,6 +156,7 @@ func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.soraUp
 	ch <- c.soraVersionInfo
 	c.ConnectionMetrics.Describe(ch)
+	c.WebhookMetrics.Describe(ch)
 
 	if c.enableSoraClientMetrics {
 		c.ClientMetrics.Describe(ch)

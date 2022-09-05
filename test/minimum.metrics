@@ -1,3 +1,7 @@
+# HELP sora_auth_webhook_total The total number of auth webhook.
+# TYPE sora_auth_webhook_total counter
+sora_auth_webhook_total{state="failed"} 93
+sora_auth_webhook_total{state="successful"} 96
 # HELP sora_average_duration_seconds The average connection duration in seconds.
 # TYPE sora_average_duration_seconds gauge
 sora_average_duration_seconds 706
@@ -14,6 +18,10 @@ sora_connections_total{state="updated"} 23
 # HELP sora_duration_seconds_total The total duration of connections.
 # TYPE sora_duration_seconds_total counter
 sora_duration_seconds_total 1412
+# HELP sora_event_webhook_total The total number of event webhook.
+# TYPE sora_event_webhook_total counter
+sora_event_webhook_total{state="failed"} 94
+sora_event_webhook_total{state="successful"} 97
 # HELP sora_ongoing_connections_total The total number of ongoing connections.
 # TYPE sora_ongoing_connections_total gauge
 sora_ongoing_connections_total 88
@@ -24,6 +32,14 @@ sora_received_invalid_turn_tcp_packet_total 123
 # TYPE sora_session_total counter
 sora_session_total{state="created"} 111
 sora_session_total{state="destroyed"} 222
+# HELP sora_session_webhook_total The total number of session webhook.
+# TYPE sora_session_webhook_total counter
+sora_session_webhook_total{state="failed"} 95
+sora_session_webhook_total{state="successful"} 98
+# HELP sora_successful_auth_webhook_total The total number of successful auth webhook.
+# TYPE sora_successful_auth_webhook_total counter
+sora_successful_auth_webhook_total{state="allowed"} 91
+sora_successful_auth_webhook_total{state="denied"} 92
 # HELP sora_turn_connections_total The total number of connections with TURN.
 # TYPE sora_turn_connections_total counter
 sora_turn_connections_total{proto="tcp"} 444
