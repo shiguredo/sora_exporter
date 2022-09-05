@@ -1,5 +1,12 @@
 # CHANGES
 
+## 2022.4.0
+
+- [ADD] Sora の Webhook メトリクスに対応する
+    - @tnamao
+- [CHANGE] Go 1.19 に上げる
+    - @tnamao
+
 ## 2022.3.0
 
 - [ADD] Sora の接続クライアントメトリクスに `cpp_sdk` と `zakuro` を追加する
