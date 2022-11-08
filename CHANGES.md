@@ -1,5 +1,12 @@
 # CHANGES
 
+## 2022.5.0
+
+- [ADD] Sora の接続クライアントメトリクスに `flutter_sdk` を追加する
+    - @tnamao
+- [CHANGE] exporter-toolkit の変更に追従する
+    - @tnamao
+
 ## 2022.4.0
 
 - [ADD] Sora の Webhook メトリクスに対応する
