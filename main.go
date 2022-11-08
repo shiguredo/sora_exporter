@@ -190,8 +190,15 @@ func main() {
 	http.Handle(*metricsPath, soraHandler)
 
 	level.Info(logger).Log("msg", "Listening on", "address", *listenAddress)
-	server := &http.Server{Addr: *listenAddress}
-	if err := web.ListenAndServe(server, "", logger); err != nil {
+	server := &http.Server{}
+	webSystemdSocket := false
+	webConfigFile := ""
+	webFlagConfig := &web.FlagConfig{
+		WebListenAddresses: &[]string{*listenAddress},
+		WebSystemdSocket:   &webSystemdSocket,
+		WebConfigFile:      &webConfigFile,
+	}
+	if err := web.ListenAndServe(server, webFlagConfig, logger); err != nil {
 		level.Error(logger).Log("err", err)
 		os.Exit(1)
 	}
