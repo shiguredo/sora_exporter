@@ -94,6 +94,7 @@ var (
 		  "total_failed_sora_client_type": {
 			"sora_android_sdk": 1,
 			"sora_cpp_sdk": 7,
+			"sora_flutter_sdk": 9,
 			"sora_ios_sdk": 2,
 			"sora_js_sdk": 3,
 			"sora_unity_sdk": 4,
@@ -104,6 +105,7 @@ var (
 		  "total_successful_sora_client_type": {
 			"sora_android_sdk": 11,
 			"sora_cpp_sdk": 77,
+			"sora_flutter_sdk": 99,
 			"sora_ios_sdk": 22,
 			"sora_js_sdk": 33,
 			"sora_unity_sdk": 44,
