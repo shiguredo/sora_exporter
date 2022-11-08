@@ -14,6 +14,8 @@ sora_client_type_total{client="android_sdk",state="failed"} 1
 sora_client_type_total{client="android_sdk",state="successful"} 11
 sora_client_type_total{client="cpp_sdk",state="failed"} 7
 sora_client_type_total{client="cpp_sdk",state="successful"} 77
+sora_client_type_total{client="flutter_sdk",state="failed"} 9
+sora_client_type_total{client="flutter_sdk",state="successful"} 99
 sora_client_type_total{client="ios_sdk",state="failed"} 2
 sora_client_type_total{client="ios_sdk",state="successful"} 22
 sora_client_type_total{client="js_sdk",state="failed"} 3
