@@ -6,7 +6,7 @@
   - 以下の三つのメトリクスを追加する
     - [counter] sora_cluster_raft_commit_index ${INDEX}
     - [counter] sora_cluster_raft_term ${TERM}
-    - [gauge] sora_cluster_raft_role { role = "${ROLE_NAME}" } 1
+    - [gauge] sora_cluster_raft_state { state = "${STATE_NAME}" } 1
   - これらは、以下の条件が満たされた時だけ、結果に含まれる
     - Sora のクラスタ機能が有効になっている
     - sora_exporter が `--sora.cluster-metrics` オプション付きで起動されている

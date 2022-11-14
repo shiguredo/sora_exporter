@@ -127,7 +127,7 @@ type erlangVMReport struct {
 }
 
 type soraClusterReport struct {
-	RaftRole string       `json:"raft_role"`
+	RaftState string       `json:"raft_state"`
 	RaftTerm int64        `json:"raft_term"`
 	RaftCommitIndex int64 `json:"raft_commit_index"`
 }

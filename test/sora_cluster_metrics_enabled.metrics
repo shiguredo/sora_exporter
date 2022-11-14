@@ -15,9 +15,9 @@ sora_cluster_node{mode="normal",node_name="node-01_canary_sora@10.211.55.42"} 1
 # HELP sora_cluster_raft_commit_index The latest committed Raft log index.
 # TYPE sora_cluster_raft_commit_index counter
 sora_cluster_raft_commit_index 0
-# HELP sora_cluster_raft_role The current Raft role. The role name is indicated by the label 'role'. The value of this metric is always set to 1.
-# TYPE sora_cluster_raft_role gauge
-sora_cluster_raft_role{role=""} 1
+# HELP sora_cluster_raft_state The current Raft state. The state name is indicated by the label 'state'. The value of this metric is always set to 1.
+# TYPE sora_cluster_raft_state gauge
+sora_cluster_raft_state{state=""} 1
 # HELP sora_cluster_raft_term The current Raft term.
 # TYPE sora_cluster_raft_term counter
 sora_cluster_raft_term 0
