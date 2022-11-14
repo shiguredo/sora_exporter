@@ -6,7 +6,7 @@ import "github.com/prometheus/client_golang/prometheus"
 var (
 	soraClusterMetrics = SoraClusterMetrics{
 		clusterNode: newDescWithLabel("cluster_node", "The sora server known cluster node.", []string{"node_name", "mode"}),
-		raftRole:        newDescWithLabel("cluster_raft_role", "The current Raft role (follower or leader). The role name is indicated by the label 'role'. The value of this metric is always set to 1.", []string{"role"}),
+		raftRole:        newDescWithLabel("cluster_raft_role", "The current Raft role. The role name is indicated by the label 'role'. The value of this metric is always set to 1.", []string{"role"}),
 		raftTerm:        newDesc("cluster_raft_term", "The current Raft term."),
 		raftCommitIndex: newDesc("cluster_raft_commit_index", "The latest committed Raft log index."),
 	}

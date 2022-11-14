@@ -12,6 +12,15 @@ sora_average_setup_time_seconds 0
 # TYPE sora_cluster_node gauge
 sora_cluster_node{mode="block_new_connection",node_name="node-02_canary_sora@10.211.55.40"} 1
 sora_cluster_node{mode="normal",node_name="node-01_canary_sora@10.211.55.42"} 1
+# HELP sora_cluster_raft_commit_index The latest committed Raft log index.
+# TYPE sora_cluster_raft_commit_index counter
+sora_cluster_raft_commit_index 0
+# HELP sora_cluster_raft_role The current Raft role. The role name is indicated by the label 'role'. The value of this metric is always set to 1.
+# TYPE sora_cluster_raft_role gauge
+sora_cluster_raft_role{role=""} 1
+# HELP sora_cluster_raft_term The current Raft term.
+# TYPE sora_cluster_raft_term counter
+sora_cluster_raft_term 0
 # HELP sora_connections_total The total number of connections created.
 # TYPE sora_connections_total counter
 sora_connections_total{state="created"} 2
