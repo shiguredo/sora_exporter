@@ -19,6 +19,11 @@ var (
 	testJSONData = `{
 		"average_duration_sec": 706,
 		"average_setup_time_msec": 372,
+                "cluster": {
+                  "raft_commit_index": 10,
+                  "raft_state": "follower",
+                  "raft_term": 3
+                },
 		"erlang_vm": {
 		  "memory": {
 			"total": 1234,

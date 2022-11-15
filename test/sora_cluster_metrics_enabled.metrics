@@ -14,13 +14,13 @@ sora_cluster_node{mode="block_new_connection",node_name="node-02_canary_sora@10.
 sora_cluster_node{mode="normal",node_name="node-01_canary_sora@10.211.55.42"} 1
 # HELP sora_cluster_raft_commit_index The latest committed Raft log index.
 # TYPE sora_cluster_raft_commit_index counter
-sora_cluster_raft_commit_index 0
+sora_cluster_raft_commit_index 10
 # HELP sora_cluster_raft_state The current Raft state. The state name is indicated by the label 'state'. The value of this metric is always set to 1.
 # TYPE sora_cluster_raft_state gauge
-sora_cluster_raft_state{state=""} 1
+sora_cluster_raft_state{state="follower"} 1
 # HELP sora_cluster_raft_term The current Raft term.
 # TYPE sora_cluster_raft_term counter
-sora_cluster_raft_term 0
+sora_cluster_raft_term 3
 # HELP sora_connections_total The total number of connections created.
 # TYPE sora_connections_total counter
 sora_connections_total{state="created"} 2
