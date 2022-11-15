@@ -33,11 +33,7 @@ func (m *SoraClusterMetrics) Collect(ch chan<- prometheus.Metric, nodeList []sor
 			ch <- newGauge(m.clusterNode, 1, *node.NodeName, *node.Mode)
 		}
 	}
-	if report.RaftState == "" {
-		ch <- newGauge(m.raftState, 1.0, "undefined")
-	} else {
-		ch <- newGauge(m.raftState, 1.0, report.RaftState)
-	}
+	ch <- newGauge(m.raftState, 1.0, report.RaftState)
 	ch <- newCounter(m.raftTerm, float64(report.RaftTerm))
 	ch <- newCounter(m.raftCommitIndex, float64(report.RaftCommitIndex))
 }
