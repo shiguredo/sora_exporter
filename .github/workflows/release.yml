@@ -22,8 +22,7 @@ jobs:
 
     - name: Build
       run: |
-        RELEASE_TAG=$(git describe --tag --abbrev=0)
-        VERSION=$(echo ${RELEASE_TAG} | awk -F'-' '{print $2}')
+        VERSION=$(git describe --tag --abbrev=0)
         REVISION=$(git rev-parse --short HEAD)
         GOOS=linux GOARCH=amd64 go build \
           -o dist/sora_exporter_linux_amd64-${VERSION} \
