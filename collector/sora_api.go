@@ -7,6 +7,7 @@ type soraGetStatsReport struct {
 	SoraClientReport          soraClientReport          `json:"sora_client,omitempty"`
 	SoraConnectionErrorReport soraConnectionErrorReport `json:"error,omitempty"`
 	ErlangVMReport            erlangVMReport            `json:"erlang_vm,omitempty"`
+	ClusterReport             soraClusterReport         `json:"cluster,omitempty"`
 }
 
 type soraConnectionReport struct {
@@ -123,6 +124,12 @@ type erlangVMStatistics struct {
 type erlangVMReport struct {
 	ErlangVMMemory     erlangVMMemory     `json:"memory"`
 	ErlangVMStatistics erlangVMStatistics `json:"statistics"`
+}
+
+type soraClusterReport struct {
+	RaftState       string `json:"raft_state"`
+	RaftTerm        int64  `json:"raft_term"`
+	RaftCommitIndex int64  `json:"raft_commit_index"`
 }
 
 type soraClusterNode struct {

@@ -148,7 +148,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		c.ErlangVMMetrics.Collect(ch, report.ErlangVMReport)
 	}
 	if c.EnableSoraClusterMetrics {
-		c.SoraClusterMetrics.Collect(ch, nodeList)
+		c.SoraClusterMetrics.Collect(ch, nodeList, report.ClusterReport)
 	}
 }
 

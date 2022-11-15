@@ -1,5 +1,17 @@
 # CHANGES
 
+## 2022.6.0
+
+- [ADD] クラスタ機能で使用している Raft 関連のメトリクスを追加
+  - 以下の三つのメトリクスを追加する
+    - [counter] sora_cluster_raft_commit_index ${INDEX}
+    - [counter] sora_cluster_raft_term ${TERM}
+    - [gauge] sora_cluster_raft_state { state = "${STATE_NAME}" } 1
+  - これらは、以下の条件が満たされた時だけ、結果に含まれる
+    - Sora のクラスタ機能が有効になっている
+    - sora_exporter が `--sora.cluster-metrics` オプション付きで起動されている
+  - @sile
+
 ## 2022.5.0
 
 - [ADD] Sora の接続クライアントメトリクスに `flutter_sdk` を追加する
