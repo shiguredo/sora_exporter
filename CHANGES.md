@@ -1,5 +1,10 @@
 # CHANGES
 
+## 2022.6.1
+
+- [CHANGE] リリース用 Github Actions のワークフローを修正
+  - @tnamao
+
 ## 2022.6.0
 
 - [ADD] クラスタ機能で使用している Raft 関連のメトリクスを追加
