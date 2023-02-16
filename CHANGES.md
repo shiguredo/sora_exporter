@@ -1,5 +1,14 @@
 # CHANGES
 
+## develop
+
+- [CHANGE] Go 1.20 に上げる
+  - @tnamao
+- [CHANGE] staticcheck を 2023.1.1 に上げる
+  - @tnamao
+- [CHANGE] staticcheck-action を 1.3.0 に上げる
+  - @tnamao
+
 ## 2022.6.1
 
 - [CHANGE] リリース用 Github Actions のワークフローを修正
