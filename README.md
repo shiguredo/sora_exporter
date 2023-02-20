@@ -1,4 +1,4 @@
-# Sora exporter
+# Sora Exporter
 
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/shiguredo/sora_exporter.svg)](https://github.com/shiguredo/sora_exporter)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
@@ -14,11 +14,11 @@ Please read https://github.com/shiguredo/oss/blob/master/README.en.md before use
 
 利用前に https://github.com/shiguredo/oss をお読みください。
 
-## Sora exporter について
+## Sora Exporter について
 
 このリポジトリは [@johejo](https://github.com/johejo/) の https://github.com/johejo/sora_exporter フォークです。
 
-時雨堂が管理し、メンテしています。
+時雨堂のサービスである [Sora Labo](https://sora-labo.shiguredo.app/) と [Sora Cloud](https://sora-cloud.shiguredo.jp) で利用するために開発、メンテナンスをしています。
 
 ## Discord
 
@@ -32,8 +32,8 @@ Apache License 2.0
 
 ```
 Copyright 2021, Mitsuo Heijo (Original Author)
-Copyright 2022, Takeshi Namao
-Copyright 2022, Shiguredo Inc.
+Copyright 2022-2022, Takeshi Namao
+Copyright 2022-2022, Shiguredo Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
