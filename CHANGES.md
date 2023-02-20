@@ -1,6 +1,6 @@
 # CHANGES
 
-## develop
+## 2023.1.0
 
 - [CHANGE] Go 1.20 に上げる
   - @tnamao
