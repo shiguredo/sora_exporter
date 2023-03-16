@@ -198,29 +198,51 @@ var (
 		  "cluster_api_url": "http://10.1.1.3:3000/",
 		  "connected": true
 		}
-	  ]
-	  `
+	  ]`
+	getLicenseJSONDATA = `{
+		"expired_at": "2025-09",
+		"max_connections": 100,
+		"max_nodes": 10,
+		"product_name": "Sora",
+		"serial_code": "EXPORTER-SRA-E001-202509-N10-100",
+		"type": "Experimental"
+	  }`
+	getLicenseWithoutMaxNodesJSONDATA = `{
+		"expired_at": "2025-09",
+		"max_connections": 100,
+		"product_name": "Sora",
+		"serial_code": "EXPORTER-SRA-E001-202509-N10-100",
+		"type": "Experimental"
+	  }`
 )
 
 type sora struct {
 	*httptest.Server
 	response                 []byte
 	listClusterNodesResponse []byte
+	getLicenseResponse       []byte
 }
 
-func newSora(response []byte, listClusterNodesResponse []byte) *sora {
-	s := &sora{response: response, listClusterNodesResponse: listClusterNodesResponse}
+func newSora(response, listClusterNodesResponse, getLicenseResponse []byte) *sora {
+	s := &sora{
+		response:                 response,
+		listClusterNodesResponse: listClusterNodesResponse,
+		getLicenseResponse:       getLicenseResponse,
+	}
 	s.Server = httptest.NewServer(soraHandler(s))
 	return s
 }
 
 func soraHandler(s *sora) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("x-sora-target") == "Sora_20211215.ListClusterNodes" {
+		switch r.Header.Get("x-sora-target") {
+		case "Sora_20211215.ListClusterNodes":
 			w.Write(s.listClusterNodesResponse)
-			return
+		case "Sora_20171218.GetLicense":
+			w.Write(s.getLicenseResponse)
+		default:
+			w.Write(s.response)
 		}
-		w.Write(s.response)
 	}
 }
 
@@ -235,7 +257,7 @@ func expectMetrics(t *testing.T, c prometheus.Collector, fixture string) {
 }
 
 func TestInvalidConfig(t *testing.T) {
-	s := newSora([]byte("invalid config parameter"), []byte(listClusterNodesJSONData))
+	s := newSora([]byte("invalid config parameter"), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -253,7 +275,7 @@ func TestInvalidConfig(t *testing.T) {
 }
 
 func TestMaximumMetrics(t *testing.T) {
-	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData))
+	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -271,7 +293,7 @@ func TestMaximumMetrics(t *testing.T) {
 }
 
 func TestSoraErlangVMEnabledMetrics(t *testing.T) {
-	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData))
+	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -289,7 +311,7 @@ func TestSoraErlangVMEnabledMetrics(t *testing.T) {
 }
 
 func TestSoraClientEnabledMetrics(t *testing.T) {
-	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData))
+	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -307,7 +329,7 @@ func TestSoraClientEnabledMetrics(t *testing.T) {
 }
 
 func TestSoraConnectionErrorEnabledMetrics(t *testing.T) {
-	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData))
+	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -350,7 +372,7 @@ func TestMinimumMetrics(t *testing.T) {
 		"total_turn_udp_connections": 555,
 		"version": "2022.1.0-canary.28"
 	  }`
-	s := newSora([]byte(resp), []byte(listClusterNodesJSONData))
+	s := newSora([]byte(resp), []byte(listClusterNodesJSONData), []byte(getLicenseWithoutMaxNodesJSONDATA))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -368,7 +390,7 @@ func TestMinimumMetrics(t *testing.T) {
 }
 
 func TestSoraClusterEnabledMetrics(t *testing.T) {
-	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData))
+	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
@@ -387,7 +409,7 @@ func TestSoraClusterEnabledMetrics(t *testing.T) {
 
 // Sora-2021.9.x 系の JSON レスポンスデータでのテスト
 func TestSoraClusterEnabledMetricsCurrentJsonData(t *testing.T) {
-	s := newSora([]byte(testJSONData), []byte(listClusterNodesCurrentJSONData))
+	s := newSora([]byte(testJSONData), []byte(listClusterNodesCurrentJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
 	timeout, _ := time.ParseDuration("5s")
