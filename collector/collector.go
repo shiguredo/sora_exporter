@@ -32,6 +32,7 @@ type Collector struct {
 	SoraConnectionErrorMetrics
 	ErlangVMMetrics
 	SoraClusterMetrics
+	LicenseMetrics
 }
 
 type CollectorOptions struct {
@@ -69,6 +70,7 @@ func NewCollector(options *CollectorOptions) *Collector {
 		SoraConnectionErrorMetrics: soraConnectionErrorMetrics,
 		ErlangVMMetrics:            erlangVMMetrics,
 		SoraClusterMetrics:         soraClusterMetrics,
+		LicenseMetrics:             licenseMetrics,
 	}
 }
 
@@ -133,8 +135,32 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		}
 	}
 
+	req, err = http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
+	if err != nil {
+		level.Error(c.logger).Log("msg", "failed to create request to sora", "err", err)
+		ch <- newGauge(c.soraUp, 0)
+		return
+	}
+	req.Header.Set("x-sora-target", "Sora_20171218.GetLicense")
+
+	licenseResp, err := client.Do(req)
+	if err != nil {
+		level.Error(c.logger).Log("msg", "failed to request to Sora GetLicense API", "err", err)
+		ch <- newGauge(c.soraUp, 0)
+		return
+	}
+	defer licenseResp.Body.Close()
+
+	var licenseInfo soraLicenseInfo
+	if err := json.NewDecoder(licenseResp.Body).Decode(&licenseInfo); err != nil {
+		level.Error(c.logger).Log("msg", "failed to decode response body from Sora GetLicense API", "err", err)
+		ch <- newGauge(c.soraUp, 0)
+		return
+	}
+
 	ch <- newGauge(c.soraUp, 1)
 	ch <- newGauge(c.soraVersionInfo, 1, report.SoraVersion)
+	c.LicenseMetrics.Collect(ch, licenseInfo)
 	c.ConnectionMetrics.Collect(ch, report.soraConnectionReport)
 	c.WebhookMetrics.Collect(ch, report.soraWebhookReport)
 
@@ -155,6 +181,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.soraUp
 	ch <- c.soraVersionInfo
+	c.LicenseMetrics.Describe(ch)
 	c.ConnectionMetrics.Describe(ch)
 	c.WebhookMetrics.Describe(ch)
 

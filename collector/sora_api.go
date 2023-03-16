@@ -137,3 +137,12 @@ type soraClusterNode struct {
 	NodeName        *string `json:"node_name"`
 	Mode            *string `json:"mode"`
 }
+
+type soraLicenseInfo struct {
+	ExpiredAt      string `json:"expired_at"`
+	MaxConnections int64  `json:"max_connections"`
+	MaxNodes       *int64 `json:"max_nodes"`
+	ProductName    string `json:"product_name"`
+	SerialCode     string `json:"serial_code"`
+	Type           string `json:"type"`
+}
