@@ -1,5 +1,14 @@
 # CHANGES
 
+## develop
+
+- [ADD] Sora のライセンス情報を返すメトリクスを追加する
+    - `sora_license_info` ライセンスのテキスト情報
+    - `sora_license_max_connections` ライセンスの同時接続数
+    - `sora_license_max_nodes` クラスターライセンスに含まれる最大ノード数
+        - GetLicense API のレスポンスに `max_nodes` が含まれる場合のみにメトリクスを返す
+    - @tnamao
+
 ## 2023.1.0
 
 - [CHANGE] Go 1.20 に上げる
