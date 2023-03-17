@@ -22,7 +22,7 @@ import (
 
 	"github.com/prometheus/exporter-toolkit/web"
 
-	kingpin "gopkg.in/alecthomas/kingpin.v2"
+	kingpin "github.com/alecthomas/kingpin/v2"
 )
 
 var (

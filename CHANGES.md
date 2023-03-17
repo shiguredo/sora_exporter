@@ -2,6 +2,11 @@
 
 ## develop
 
+- [CHANGE] kingpin の更新に伴うパッケージ名の変更
+    - kingpin のバージョンは `v2.2.6` から `v2.3.2` に更新
+    - `gopkg.in/alecthomas/kingpin.v2` から `github.com/alecthomas/kingpin/v2` に変更
+    - kingpin に依存している関連パッケージの更新
+    - @tnamao
 - [CHANGE] Sora exporter がスクレイピングする Sora API のオプション名を変更する
     - コマンドライン引数の `--sora.get-stats-report-url` を `--sora.api-url` に変更する
     - 破壊的変更になるため、バージョンアップの際に注意してください
