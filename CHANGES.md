@@ -2,6 +2,10 @@
 
 ## develop
 
+- [CHANGE] Sora exporter がスクレイピングする Sora API のオプション名を変更する
+    - コマンドライン引数の `--sora.get-stats-report-url` を `--sora.api-url` に変更する
+    - 破壊的変更になるため、バージョンアップの際に注意してください
+    - @tnamao
 - [ADD] Sora のライセンス情報を返すメトリクスを追加する
     - `sora_license_info` ライセンスのテキスト情報
     - `sora_license_max_connections` ライセンスの同時接続数
