@@ -12,28 +12,28 @@
 ## 2023.1.0
 
 - [CHANGE] Go 1.20 に上げる
-  - @tnamao
+    - @tnamao
 - [CHANGE] staticcheck を 2023.1.1 に上げる
-  - @tnamao
+    - @tnamao
 - [CHANGE] staticcheck-action を 1.3.0 に上げる
-  - @tnamao
+    - @tnamao
 
 ## 2022.6.1
 
 - [CHANGE] リリース用 Github Actions のワークフローを修正
-  - @tnamao
+    - @tnamao
 
 ## 2022.6.0
 
 - [ADD] クラスタ機能で使用している Raft 関連のメトリクスを追加
-  - 以下の三つのメトリクスを追加する
-    - [counter] sora_cluster_raft_commit_index ${INDEX}
-    - [counter] sora_cluster_raft_term ${TERM}
-    - [gauge] sora_cluster_raft_state { state = "${STATE_NAME}" } 1
-  - これらは、以下の条件が満たされた時だけ、結果に含まれる
-    - Sora のクラスタ機能が有効になっている
-    - sora_exporter が `--sora.cluster-metrics` オプション付きで起動されている
-  - @sile
+    - 以下の三つのメトリクスを追加する
+        - [counter] sora_cluster_raft_commit_index ${INDEX}
+        - [counter] sora_cluster_raft_term ${TERM}
+        - [gauge] sora_cluster_raft_state { state = "${STATE_NAME}" } 1
+    - これらは、以下の条件が満たされた時だけ、結果に含まれる
+        - Sora のクラスタ機能が有効になっている
+        - sora_exporter が `--sora.cluster-metrics` オプション付きで起動されている
+    - @sile
 
 ## 2022.5.0
 
