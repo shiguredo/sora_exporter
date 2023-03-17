@@ -1,30 +1,48 @@
 # CHANGES
 
+## 2023.2.0
+
+- [CHANGE] kingpin の更新に伴うパッケージ名の変更
+    - kingpin のバージョンは `v2.2.6` から `v2.3.2` に更新
+    - `gopkg.in/alecthomas/kingpin.v2` から `github.com/alecthomas/kingpin/v2` に変更
+    - kingpin に依存している関連パッケージの更新
+    - @tnamao
+- [CHANGE] Sora exporter がスクレイピングする Sora API のオプション名を変更する
+    - コマンドライン引数の `--sora.get-stats-report-url` を `--sora.api-url` に変更する
+    - 破壊的変更になるため、バージョンアップの際に注意してください
+    - @tnamao
+- [ADD] Sora のライセンス情報を返すメトリクスを追加する
+    - `sora_license_info` ライセンスのテキスト情報
+    - `sora_license_max_connections` ライセンスの同時接続数
+    - `sora_license_max_nodes` クラスターライセンスに含まれる最大ノード数
+        - GetLicense API のレスポンスに `max_nodes` が含まれる場合のみにメトリクスを返す
+    - @tnamao
+
 ## 2023.1.0
 
 - [CHANGE] Go 1.20 に上げる
-  - @tnamao
+    - @tnamao
 - [CHANGE] staticcheck を 2023.1.1 に上げる
-  - @tnamao
+    - @tnamao
 - [CHANGE] staticcheck-action を 1.3.0 に上げる
-  - @tnamao
+    - @tnamao
 
 ## 2022.6.1
 
 - [CHANGE] リリース用 Github Actions のワークフローを修正
-  - @tnamao
+    - @tnamao
 
 ## 2022.6.0
 
 - [ADD] クラスタ機能で使用している Raft 関連のメトリクスを追加
-  - 以下の三つのメトリクスを追加する
-    - [counter] sora_cluster_raft_commit_index ${INDEX}
-    - [counter] sora_cluster_raft_term ${TERM}
-    - [gauge] sora_cluster_raft_state { state = "${STATE_NAME}" } 1
-  - これらは、以下の条件が満たされた時だけ、結果に含まれる
-    - Sora のクラスタ機能が有効になっている
-    - sora_exporter が `--sora.cluster-metrics` オプション付きで起動されている
-  - @sile
+    - 以下の三つのメトリクスを追加する
+        - [counter] sora_cluster_raft_commit_index ${INDEX}
+        - [counter] sora_cluster_raft_term ${TERM}
+        - [gauge] sora_cluster_raft_state { state = "${STATE_NAME}" } 1
+    - これらは、以下の条件が満たされた時だけ、結果に含まれる
+        - Sora のクラスタ機能が有効になっている
+        - sora_exporter が `--sora.cluster-metrics` オプション付きで起動されている
+    - @sile
 
 ## 2022.5.0
 

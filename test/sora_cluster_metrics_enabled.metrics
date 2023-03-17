@@ -35,6 +35,15 @@ sora_duration_seconds_total 1412
 # TYPE sora_event_webhook_total counter
 sora_event_webhook_total{state="failed"} 94
 sora_event_webhook_total{state="successful"} 97
+# HELP sora_license_info sora license info.
+# TYPE sora_license_info gauge
+sora_license_info{expired_at="2025-09",product_name="Sora",serial_code="EXPORTER-SRA-E001-202509-N10-100",type="Experimental"} 1
+# HELP sora_license_max_connections sora license file's max_connections.
+# TYPE sora_license_max_connections gauge
+sora_license_max_connections 100
+# HELP sora_license_max_nodes sora license file's max_nodes.
+# TYPE sora_license_max_nodes gauge
+sora_license_max_nodes 10
 # HELP sora_ongoing_connections_total The total number of ongoing connections.
 # TYPE sora_ongoing_connections_total gauge
 sora_ongoing_connections_total 0
