@@ -1,6 +1,6 @@
 # CHANGES
 
-## develop
+## 2023.2.0
 
 - [CHANGE] kingpin の更新に伴うパッケージ名の変更
     - kingpin のバージョンは `v2.2.6` から `v2.3.2` に更新
