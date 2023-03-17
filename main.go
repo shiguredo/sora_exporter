@@ -34,13 +34,13 @@ var (
 		"web.telemetry-path",
 		"Path under which to expose metrics.",
 	).Default("/metrics").String()
-	soraGetStatsReportURL = kingpin.Flag(
-		"sora.get-stats-report-url",
-		"URL on which to scrape Sora GetStatsReport API",
+	soraAPIURL = kingpin.Flag(
+		"sora.api-url",
+		"URL on which to scrape Sora API",
 	).Default("http://127.0.0.1:3000/").String()
 	soraTimeout = kingpin.Flag(
 		"sora.timeout",
-		"Timeout for trying to get stats from Sora GetStatsReport API URL",
+		"Timeout for trying to get stats from Sora API URL",
 	).Default("5s").Duration()
 	disableExporterMetrics = kingpin.Flag(
 		"web.disable-exporter-metrics",
@@ -67,7 +67,7 @@ var (
 	).Bool()
 	soraSkipSslVeirfy = kingpin.Flag(
 		"sora.skip-ssl-verify",
-		"Flag that enables SSL certificate verification for the Sora GetStatsReport URL",
+		"Flag that enables SSL certificate verification for the Sora URL",
 	).Bool()
 	maxRequests = kingpin.Flag(
 		"web.max-requests",
@@ -83,7 +83,7 @@ type handler struct {
 	includeExporterMetrics           bool
 	maxRequests                      int
 	logger                           log.Logger
-	soraGetStatsReportURL            string
+	soraAPIURL                       string
 	soraSkipSslVeirfy                bool
 	soraTimeout                      time.Duration
 	enableSoraClientMetrics          bool
@@ -94,7 +94,7 @@ type handler struct {
 
 func newHandler(
 	includeExporterMetrics bool, maxRequests int, logger log.Logger,
-	soraGetStatsReportURL string, soraSkipSslVeirfy bool, soraTimeout time.Duration,
+	soraAPIURL string, soraSkipSslVeirfy bool, soraTimeout time.Duration,
 	enableSoraClientMetrics bool, enableSoraConnectionErrorMetrics bool, enableErlangVMMetrics bool, enableSoraClusterMetrics bool) *handler {
 
 	h := &handler{
@@ -102,7 +102,7 @@ func newHandler(
 		includeExporterMetrics:           includeExporterMetrics,
 		maxRequests:                      maxRequests,
 		logger:                           logger,
-		soraGetStatsReportURL:            soraGetStatsReportURL,
+		soraAPIURL:                       soraAPIURL,
 		soraSkipSslVeirfy:                soraSkipSslVeirfy,
 		soraTimeout:                      soraTimeout,
 		enableSoraClientMetrics:          enableSoraClientMetrics,
@@ -129,7 +129,7 @@ func (h *handler) innerHandler() http.Handler {
 	r := prometheus.NewRegistry()
 	r.MustRegister(version.NewCollector("sora_exporter"))
 	r.MustRegister(collector.NewCollector(&collector.CollectorOptions{
-		URI:                              h.soraGetStatsReportURL,
+		URI:                              h.soraAPIURL,
 		SkipSslVerify:                    h.soraSkipSslVeirfy,
 		Timeout:                          h.soraTimeout,
 		Logger:                           h.logger,
@@ -185,7 +185,7 @@ func main() {
 	})
 	soraHandler := newHandler(
 		!*disableExporterMetrics, *maxRequests, logger,
-		*soraGetStatsReportURL, *soraSkipSslVeirfy, *soraTimeout,
+		*soraAPIURL, *soraSkipSslVeirfy, *soraTimeout,
 		*enableSoraClientMetrics, *enableSoraConnectionErrorMetrics, *enableErlangVMMetrics, *enableSoraClusterMetrics)
 	http.Handle(*metricsPath, soraHandler)
 
