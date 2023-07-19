@@ -103,6 +103,7 @@ var (
 			"sora_ios_sdk": 2,
 			"sora_js_sdk": 3,
 			"sora_unity_sdk": 4,
+			"obs_studio_whip": 1,
 			"unknown": 5,
 			"webrtc_load_testing_tool_zakuro": 8,
 			"webrtc_native_client_momo": 6
@@ -114,6 +115,7 @@ var (
 			"sora_ios_sdk": 22,
 			"sora_js_sdk": 33,
 			"sora_unity_sdk": 44,
+			"obs_studio_whip": 1,
 			"unknown": 55,
 			"webrtc_load_testing_tool_zakuro": 88,
 			"webrtc_native_client_momo": 66
