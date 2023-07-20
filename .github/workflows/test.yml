@@ -1,4 +1,4 @@
-name: Go Static Check
+name: Go Test
 
 on:
   push:
@@ -8,11 +8,14 @@ on:
       - '*'
     paths:
       - "**.go"
+      - "test/**"
+      - "go.mod"
+      - "go.sum"
 
 jobs:
 
   build:
-    name: static-check
+    name: go test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -24,9 +27,4 @@ jobs:
 
     - run: go version
 
-    - run: go fmt .
-
-    - uses: dominikh/staticcheck-action@v1.3.0
-      with:
-        version: "2023.1.3"
-        install-go: false
+    - run: go test -v
