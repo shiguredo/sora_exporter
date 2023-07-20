@@ -8,6 +8,7 @@
   - `prometheus/client-golang` 1.14.0 => 1.16.0
   - `prometheus/common` 0.41.0 => 0.44.0
   - `prometheus/exporter-toolkit` 0.9.1 => 0.10.0
+  - @tnamao
 
 ## 2023.2.0
 
