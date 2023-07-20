@@ -4,6 +4,10 @@
 
 - [ADD] `sora_client` の `obs_studio_whip` に対応する
   - @voluntas
+- [CHANGE] 依存パッケージを更新する
+  - `prometheus/client-golang` 1.14.0 => 1.16.0
+  - `prometheus/common` 0.41.0 => 0.44.0
+  - `prometheus/exporter-toolkit` 0.9.1 => 0.10.0
 
 ## 2023.2.0
 
