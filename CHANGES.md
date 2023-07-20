@@ -1,6 +1,6 @@
 # CHANGES
 
-## develop
+## 2023.3.0
 
 - [ADD] `sora_client` の `obs_studio_whip` に対応する
   - @voluntas
