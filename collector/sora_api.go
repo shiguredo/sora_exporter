@@ -46,6 +46,7 @@ type soraClientStatistics struct {
 	SoraJsSdk                   int64 `json:"sora_js_sdk"`
 	SoraUnitySdk                int64 `json:"sora_unity_sdk"`
 	ObsStudioWhip               int64 `json:"obs_studio_whip"`
+	SoraPythonSdk               int64 `json:"sora_python_sdk"`
 	Unknown                     int64 `json:"unknown"`
 	WebrtcLoadTestingToolZakuro int64 `json:"webrtc_load_testing_tool_zakuro"`
 	WebrtcNativeClientMomo      int64 `json:"webrtc_native_client_momo"`

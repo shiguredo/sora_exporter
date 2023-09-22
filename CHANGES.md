@@ -1,5 +1,10 @@
 # CHANGES
 
+## develop
+
+- [ADD] `sora_client` の `sora_python_sdk` に対応する
+  - @tnamao
+
 ## 2023.3.0
 
 - [ADD] `sora_client` の `obs_studio_whip` に対応する
