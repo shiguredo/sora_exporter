@@ -4,6 +4,8 @@
 
 - [ADD] `sora_client` の `sora_python_sdk` に対応する
   - @tnamao
+- [UPDATE] Go を 1.21 に上げる
+  - @tnamao
 
 ## 2023.3.0
 
