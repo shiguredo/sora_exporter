@@ -1,5 +1,12 @@
 # CHANGES
 
+## 2023.4.0
+
+- [ADD] `sora_client` の `sora_python_sdk` に対応する
+  - @tnamao
+- [UPDATE] Go を 1.21 に上げる
+  - @tnamao
+
 ## 2023.3.0
 
 - [ADD] `sora_client` の `obs_studio_whip` に対応する
@@ -8,6 +15,7 @@
   - `prometheus/client-golang` 1.14.0 => 1.16.0
   - `prometheus/common` 0.41.0 => 0.44.0
   - `prometheus/exporter-toolkit` 0.9.1 => 0.10.0
+  - @tnamao
 
 ## 2023.2.0
 
