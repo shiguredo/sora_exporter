@@ -1,6 +1,6 @@
 # CHANGES
 
-## develop
+## 2023.4.0
 
 - [ADD] `sora_client` の `sora_python_sdk` に対応する
   - @tnamao
