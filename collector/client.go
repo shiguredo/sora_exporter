@@ -19,6 +19,7 @@ func (m *ClientMetrics) Describe(ch chan<- *prometheus.Desc) {
 
 func (m *ClientMetrics) Collect(ch chan<- prometheus.Metric, report soraClientReport) {
 	ch <- newCounter(m.totalSoraClientConnections, float64(report.TotalFailedSoraClientType.SoraAndroidSdk), "android_sdk", "failed")
+	ch <- newCounter(m.totalSoraClientConnections, float64(report.TotalFailedSoraClientType.SoraCSdk), "c_sdk", "failed")
 	ch <- newCounter(m.totalSoraClientConnections, float64(report.TotalFailedSoraClientType.SoraCppSdk), "cpp_sdk", "failed")
 	ch <- newCounter(m.totalSoraClientConnections, float64(report.TotalFailedSoraClientType.SoraFlutterSdk), "flutter_sdk", "failed")
 	ch <- newCounter(m.totalSoraClientConnections, float64(report.TotalFailedSoraClientType.SoraIosSdk), "ios_sdk", "failed")
@@ -30,6 +31,7 @@ func (m *ClientMetrics) Collect(ch chan<- prometheus.Metric, report soraClientRe
 	ch <- newCounter(m.totalSoraClientConnections, float64(report.TotalFailedSoraClientType.WebrtcLoadTestingToolZakuro), "zakuro", "failed")
 	ch <- newCounter(m.totalSoraClientConnections, float64(report.TotalFailedSoraClientType.WebrtcNativeClientMomo), "momo", "failed")
 	ch <- newCounter(m.totalSoraClientConnections, float64(report.TotalSuccessfulSoraClientType.SoraAndroidSdk), "android_sdk", "successful")
+	ch <- newCounter(m.totalSoraClientConnections, float64(report.TotalSuccessfulSoraClientType.SoraCSdk), "c_sdk", "successful")
 	ch <- newCounter(m.totalSoraClientConnections, float64(report.TotalSuccessfulSoraClientType.SoraCppSdk), "cpp_sdk", "successful")
 	ch <- newCounter(m.totalSoraClientConnections, float64(report.TotalSuccessfulSoraClientType.SoraFlutterSdk), "flutter_sdk", "successful")
 	ch <- newCounter(m.totalSoraClientConnections, float64(report.TotalSuccessfulSoraClientType.SoraIosSdk), "ios_sdk", "successful")
