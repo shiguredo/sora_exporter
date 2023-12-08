@@ -40,6 +40,7 @@ type soraWebhookReport struct {
 
 type soraClientStatistics struct {
 	SoraAndroidSdk              int64 `json:"sora_android_sdk"`
+	SoraCSdk                    int64 `json:"sora_c_sdk"`
 	SoraCppSdk                  int64 `json:"sora_cpp_sdk"`
 	SoraFlutterSdk              int64 `json:"sora_flutter_sdk"`
 	SoraIosSdk                  int64 `json:"sora_ios_sdk"`

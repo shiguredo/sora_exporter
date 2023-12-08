@@ -1,5 +1,12 @@
 # CHANGES
 
+## 2023.5.0
+
+- [UPDATE] CI の staticcheck のバージョンを 2023.1.6 に上げる
+  - @tnamao
+- [ADD] `sora_client` の `sora_c_sdk` に対応する
+  - @tnamao
+
 ## 2023.4.0
 
 - [ADD] `sora_client` の `sora_python_sdk` に対応する
