@@ -1,6 +1,6 @@
 # CHANGES
 
-## develop
+## 2023.5.0
 
 - [UPDATE] CI の staticcheck のバージョンを 2023.1.6 に上げる
   - @tnamao
