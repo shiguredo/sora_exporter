@@ -1,6 +1,6 @@
 # CHANGES
 
-## develop
+## 2024.1.0
 
 - [FIX] Sora 2023.2.0 で `ListClusterNodes` API の `include_all_known_nodes` のデフォルト値が変更で panic が起こす問題に対応する
   - Sora 2023.2.0 以降で Sora Exporter 2023.5.0 以前のバージョンを使用し、クラスターメトリクスが有効になっている場合に発生する
