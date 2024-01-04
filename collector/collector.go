@@ -1,6 +1,7 @@
 package collector
 
 import (
+	"bytes"
 	"context"
 	"crypto/tls"
 	"encoding/json"
@@ -48,6 +49,10 @@ type CollectorOptions struct {
 
 type HTTPClient interface {
 	Do(*http.Request) (*http.Response, error)
+}
+
+type SoraListClusterNodesRequest struct {
+	IncludeAllKnownNodes bool `json:"include_all_known_nodes"`
 }
 
 func NewCollector(options *CollectorOptions) *Collector {
@@ -112,7 +117,17 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	var nodeList []soraClusterNode
 	if c.EnableSoraClusterMetrics {
-		req, err = http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
+		requestParams := SoraListClusterNodesRequest{
+			IncludeAllKnownNodes: true,
+		}
+		encodedParams, err := json.Marshal(requestParams)
+		if err != nil {
+			level.Error(c.logger).Log("msg", "failed to encode Sora ListClusterNodes API request parameters", "err", err)
+			ch <- newGauge(c.soraUp, 0)
+			return
+		}
+
+		req, err = http.NewRequestWithContext(ctx, http.MethodPost, c.URI, bytes.NewBuffer(encodedParams))
 		if err != nil {
 			level.Error(c.logger).Log("msg", "failed to create request to sora", "err", err)
 			ch <- newGauge(c.soraUp, 0)

@@ -136,9 +136,10 @@ type soraClusterReport struct {
 }
 
 type soraClusterNode struct {
-	ClusterNodeName *string `json:"cluster_node_name"`
-	NodeName        *string `json:"node_name"`
-	Mode            *string `json:"mode"`
+	ClusterNodeName string `json:"cluster_node_name"`
+	NodeName        string `json:"node_name"`
+	Mode            string `json:"mode"`
+	Connected       bool   `json:"connected"`
 }
 
 type soraLicenseInfo struct {
