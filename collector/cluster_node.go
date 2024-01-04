@@ -1,6 +1,8 @@
 package collector
 
-import "github.com/prometheus/client_golang/prometheus"
+import (
+	"github.com/prometheus/client_golang/prometheus"
+)
 
 var (
 	soraClusterMetrics = SoraClusterMetrics{
@@ -27,10 +29,14 @@ func (m *SoraClusterMetrics) Describe(ch chan<- *prometheus.Desc) {
 
 func (m *SoraClusterMetrics) Collect(ch chan<- prometheus.Metric, nodeList []soraClusterNode, report soraClusterReport) {
 	for _, node := range nodeList {
-		if node.ClusterNodeName != nil {
-			ch <- newGauge(m.clusterNode, 1, *node.ClusterNodeName, *node.Mode)
+		value := 0.0
+		if node.Connected {
+			value = 1.0
+		}
+		if node.ClusterNodeName != "" {
+			ch <- newGauge(m.clusterNode, value, node.ClusterNodeName, node.Mode)
 		} else {
-			ch <- newGauge(m.clusterNode, 1, *node.NodeName, *node.Mode)
+			ch <- newGauge(m.clusterNode, value, node.NodeName, node.Mode)
 		}
 	}
 	ch <- newGauge(m.raftState, 1.0, report.RaftState)

@@ -150,17 +150,7 @@ var (
 	listClusterNodesJSONData = `[
 		{
 		  "node_name": "node-01_canary_sora@10.211.55.42",
-		  "epoch": 1,
-		  "mode": "normal",
-		  "cluster_signaling_url": "ws://127.0.0.1:5001/signaling",
-		  "cluster_api_url": "http://127.0.0.1:3101/",
-		  "member_since": "2022-05-09T07:44:52.973761Z",
-		  "sora_version": "2022.1.0-canary.44",
-		  "license_max_nodes": 10,
-		  "license_max_connections": 100,
-		  "license_serial_code": "SAMPLE-SRA-E001-202212-N10-100",
-		  "license_type": "Experimental",
-		  "connected": true
+		  "connected": false
 		},
 		{
 		  "node_name": "node-02_canary_sora@10.211.55.40",
@@ -175,20 +165,25 @@ var (
 		  "license_serial_code": "SAMPLE-SRA-E001-202212-N10-100",
 		  "license_type": "Experimental",
 		  "connected": true
-		}
-	  ]`
+		},
+		{
+			"node_name": "node-03_canary_sora@10.211.55.41",
+			"epoch": 1,
+			"mode": "normal",
+			"cluster_signaling_url": "ws://127.0.0.1:5001/signaling",
+			"cluster_api_url": "http://127.0.0.1:3101/",
+			"member_since": "2022-05-09T07:44:54.160763Z",
+			"sora_version": "2022.1.0-canary.44",
+			"license_max_nodes": 10,
+			"license_max_connections": 100,
+			"license_serial_code": "SAMPLE-SRA-E001-202212-N10-100",
+			"license_type": "Experimental",
+			"connected": true
+		  }
+		]`
 	listClusterNodesCurrentJSONData = `[
 		{
 		  "cluster_node_name": "node-01_canary_sora@10.211.55.42",
-		  "epoch": 1,
-		  "mode": "normal",
-		  "member_since": "2022-05-02T15:26:44.302363Z",
-		  "sora_version": "2021.2.9",
-		  "license_max_connections": 100,
-		  "license_serial_code": "SAMPLE-SRA-E001-202212-N10-100",
-		  "license_type": "Experimental",
-		  "cluster_signaling_url": "ws://127.0.0.1:5001/signaling",
-		  "cluster_api_url": "http://10.1.1.4:3000/",
 		  "connected": false
 		},
 		{
@@ -203,7 +198,21 @@ var (
 		  "cluster_signaling_url": "ws://127.0.0.1:5002/signaling",
 		  "cluster_api_url": "http://10.1.1.3:3000/",
 		  "connected": true
-		}
+		},
+		{
+			"node_name": "node-03_canary_sora@10.211.55.41",
+			"epoch": 1,
+			"mode": "normal",
+			"cluster_signaling_url": "ws://127.0.0.1:5001/signaling",
+			"cluster_api_url": "http://127.0.0.1:3101/",
+			"member_since": "2022-05-09T07:44:54.160763Z",
+			"sora_version": "2022.1.0-canary.44",
+			"license_max_nodes": 10,
+			"license_max_connections": 100,
+			"license_serial_code": "SAMPLE-SRA-E001-202212-N10-100",
+			"license_type": "Experimental",
+			"connected": true
+		  }
 	  ]`
 	getLicenseJSONDATA = `{
 		"expired_at": "2025-09",
