@@ -1,5 +1,15 @@
 # CHANGES
 
+## 2024.1.0
+
+- [FIX] Sora 2023.2.0 で `ListClusterNodes` API の `include_all_known_nodes` のデフォルト値が変更で panic が起こす問題に対応する
+  - Sora 2023.2.0 以降で Sora Exporter 2023.5.0 以前のバージョンを使用し、クラスターメトリクスが有効になっている場合に発生する
+  - @tnamao
+- [CHANGE] Sora の `ListClusterNodes` API を呼び出す際に、API リクエストの `include_all_known_nodes` を `true` にし切断中のノードも含め、接続状態を gauge で返すようにする
+  - **破壊的変更** になるため、バージョンアップの際に注意してください
+  - gauge の値は 1 が接続、0 が切断を表し `ListClusterNodes` API のレスポンスに含まれる `connected` の値により返す値を切り替えている
+  - @tnamao
+
 ## 2023.5.0
 
 - [UPDATE] CI の staticcheck のバージョンを 2023.1.6 に上げる
