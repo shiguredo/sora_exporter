@@ -36,6 +36,9 @@ sora_duration_seconds_total 1412
 # TYPE sora_event_webhook_total counter
 sora_event_webhook_total{state="failed"} 94
 sora_event_webhook_total{state="successful"} 97
+# HELP sora_license_expired_at_timestamp_seconds sora license file's expired at.
+# TYPE sora_license_expired_at_timestamp_seconds gauge
+sora_license_expired_at_timestamp_seconds 1.759276799e+09
 # HELP sora_license_info sora license info.
 # TYPE sora_license_info gauge
 sora_license_info{expired_at="2025-09",product_name="Sora",serial_code="EXPORTER-SRA-E001-202509-N10-100",type="Experimental"} 1
@@ -63,6 +66,9 @@ sora_session_webhook_total{state="successful"} 98
 # TYPE sora_successful_auth_webhook_total counter
 sora_successful_auth_webhook_total{state="allowed"} 91
 sora_successful_auth_webhook_total{state="denied"} 92
+# HELP sora_time_seconds HELP time_seconds System time in seconds since epoch.
+# TYPE sora_time_seconds gauge
+sora_time_seconds 1.7046492910003123e+09
 # HELP sora_turn_connections_total The total number of connections with TURN.
 # TYPE sora_turn_connections_total counter
 sora_turn_connections_total{proto="tcp"} 2
