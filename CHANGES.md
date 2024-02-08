@@ -1,6 +1,6 @@
 # CHANGES
 
-## develop
+## 2024.2.0
 
 - [ADD] `sora_license_expired_at_timestamp_seconds` メトリクスを追加する
   - Sora のライセンス期限を epoch 秒に変換したものを返す
