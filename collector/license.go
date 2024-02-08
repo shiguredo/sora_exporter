@@ -11,7 +11,7 @@ var (
 		licenseInfo:                      newDescWithLabel("license_info", "sora license info.", []string{"expired_at", "product_name", "serial_code", "type"}),
 		licenseMaxConnections:            newDesc("license_max_connections", "sora license file's max_connections."),
 		licenseMaxNodes:                  newDesc("license_max_nodes", "sora license file's max_nodes."),
-		licenseExpiredAtTimestampSeconds: newDesc("license_expired_at_timestamp_seconds", "sora license file's expired at."),
+		licenseExpiredAtTimestampSeconds: newDesc("license_expired_at_timestamp_seconds", "sora license file's expire seconds since epoch."),
 	}
 )
 

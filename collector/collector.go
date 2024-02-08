@@ -81,7 +81,7 @@ func NewCollector(options *CollectorOptions) *Collector {
 		soraUp:          newDesc("up", "Whether the last scrape of metrics from Sora was able to connect to the server (1 for yes, 0 for no)."),
 		soraVersionInfo: newDescWithLabel("version_info", "sora version info.", []string{"version"}),
 		// same as node expoter's node_time_seconds
-		soraTimeSeconds: newDesc("time_seconds", "HELP time_seconds System time in seconds since epoch."),
+		soraTimeSeconds: newDesc("time_seconds", "System time in seconds since epoch."),
 
 		ConnectionMetrics:          connectionMetrics,
 		WebhookMetrics:             webhookMetrics,

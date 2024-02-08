@@ -147,7 +147,7 @@ sora_erlang_vm_wall_clock_wallclock_time_since_last_call 9090
 # TYPE sora_event_webhook_total counter
 sora_event_webhook_total{state="failed"} 94
 sora_event_webhook_total{state="successful"} 97
-# HELP sora_license_expired_at_timestamp_seconds sora license file's expired at.
+# HELP sora_license_expired_at_timestamp_seconds sora license file's expire seconds since epoch.
 # TYPE sora_license_expired_at_timestamp_seconds gauge
 sora_license_expired_at_timestamp_seconds 1.759276799e+09
 # HELP sora_license_info sora license info.
@@ -177,7 +177,7 @@ sora_session_webhook_total{state="successful"} 98
 # TYPE sora_successful_auth_webhook_total counter
 sora_successful_auth_webhook_total{state="allowed"} 91
 sora_successful_auth_webhook_total{state="denied"} 92
-# HELP sora_time_seconds HELP time_seconds System time in seconds since epoch.
+# HELP sora_time_seconds System time in seconds since epoch.
 # TYPE sora_time_seconds gauge
 sora_time_seconds 1.7046492910003123e+09
 # HELP sora_turn_connections_total The total number of connections with TURN.
