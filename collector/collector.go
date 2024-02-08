@@ -14,12 +14,18 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
+var (
+	// for testing
+	freezedTimeSeconds = float64(time.Date(2024, 1, 7, 17, 41, 31, 312389, time.UTC).UnixNano()) / 1e9
+)
+
 type Collector struct {
 	mutex                            sync.RWMutex
 	logger                           log.Logger
 	timeout                          time.Duration
 	URI                              string
 	skipSslVerify                    bool
+	freezeTimeSeconds                bool
 	enableSoraClientMetrics          bool
 	enableSoraConnectionErrorMetrics bool
 	enableErlangVMMetrics            bool
@@ -27,6 +33,8 @@ type Collector struct {
 
 	soraUp          *prometheus.Desc
 	soraVersionInfo *prometheus.Desc
+	soraTimeSeconds *prometheus.Desc
+
 	ConnectionMetrics
 	WebhookMetrics
 	ClientMetrics
@@ -40,6 +48,7 @@ type CollectorOptions struct {
 	URI                              string
 	SkipSslVerify                    bool
 	Timeout                          time.Duration
+	FreezeTimeSeconds                bool
 	Logger                           log.Logger
 	EnableSoraClientMetrics          bool
 	EnableSoraConnectionErrorMetrics bool
@@ -62,13 +71,19 @@ func NewCollector(options *CollectorOptions) *Collector {
 		skipSslVerify: options.SkipSslVerify,
 		logger:        options.Logger,
 
+		// for testing
+		freezeTimeSeconds: options.FreezeTimeSeconds,
+
 		enableSoraClientMetrics:          options.EnableSoraClientMetrics,
 		enableSoraConnectionErrorMetrics: options.EnableSoraConnectionErrorMetrics,
 		enableErlangVMMetrics:            options.EnableErlangVMMetrics,
 		EnableSoraClusterMetrics:         options.EnableSoraClusterMetrics,
 
-		soraUp:                     newDesc("up", "Whether the last scrape of metrics from Sora was able to connect to the server (1 for yes, 0 for no)."),
-		soraVersionInfo:            newDescWithLabel("version_info", "sora version info.", []string{"version"}),
+		soraUp:          newDesc("up", "Whether the last scrape of metrics from Sora was able to connect to the server (1 for yes, 0 for no)."),
+		soraVersionInfo: newDescWithLabel("version_info", "sora version info.", []string{"version"}),
+		// same as node expoter's node_time_seconds
+		soraTimeSeconds: newDesc("time_seconds", "System time in seconds since epoch."),
+
 		ConnectionMetrics:          connectionMetrics,
 		WebhookMetrics:             webhookMetrics,
 		ClientMetrics:              clientMetrics,
@@ -175,6 +190,14 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	ch <- newGauge(c.soraUp, 1)
 	ch <- newGauge(c.soraVersionInfo, 1, report.SoraVersion)
+
+	if c.freezeTimeSeconds {
+		ch <- newGauge(c.soraTimeSeconds, freezedTimeSeconds)
+	} else {
+		nowSec := float64(time.Now().UnixNano()) / 1e9
+		ch <- newGauge(c.soraTimeSeconds, nowSec)
+	}
+
 	c.LicenseMetrics.Collect(ch, licenseInfo)
 	c.ConnectionMetrics.Collect(ch, report.soraConnectionReport)
 	c.WebhookMetrics.Collect(ch, report.soraWebhookReport)
@@ -196,6 +219,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.soraUp
 	ch <- c.soraVersionInfo
+	ch <- c.soraTimeSeconds
 	c.LicenseMetrics.Describe(ch)
 	c.ConnectionMetrics.Describe(ch)
 	c.WebhookMetrics.Describe(ch)
