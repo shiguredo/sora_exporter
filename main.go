@@ -86,6 +86,7 @@ type handler struct {
 	soraAPIURL                       string
 	soraSkipSslVeirfy                bool
 	soraTimeout                      time.Duration
+	soraFreezeTimeSeconds            bool
 	enableSoraClientMetrics          bool
 	enableSoraConnectionErrorMetrics bool
 	enableErlangVMMetrics            bool
@@ -94,7 +95,7 @@ type handler struct {
 
 func newHandler(
 	includeExporterMetrics bool, maxRequests int, logger log.Logger,
-	soraAPIURL string, soraSkipSslVeirfy bool, soraTimeout time.Duration,
+	soraAPIURL string, soraSkipSslVeirfy bool, soraTimeout time.Duration, soraFreezeTimeSeconds bool,
 	enableSoraClientMetrics bool, enableSoraConnectionErrorMetrics bool, enableErlangVMMetrics bool, enableSoraClusterMetrics bool) *handler {
 
 	h := &handler{
@@ -105,6 +106,7 @@ func newHandler(
 		soraAPIURL:                       soraAPIURL,
 		soraSkipSslVeirfy:                soraSkipSslVeirfy,
 		soraTimeout:                      soraTimeout,
+		soraFreezeTimeSeconds:            soraFreezeTimeSeconds,
 		enableSoraClientMetrics:          enableSoraClientMetrics,
 		enableSoraConnectionErrorMetrics: enableSoraConnectionErrorMetrics,
 		enableErlangVMMetrics:            enableErlangVMMetrics,
@@ -132,6 +134,7 @@ func (h *handler) innerHandler() http.Handler {
 		URI:                              h.soraAPIURL,
 		SkipSslVerify:                    h.soraSkipSslVeirfy,
 		Timeout:                          h.soraTimeout,
+		FreezeTimeSeconds:                h.soraFreezeTimeSeconds,
 		Logger:                           h.logger,
 		EnableSoraClientMetrics:          h.enableSoraClientMetrics,
 		EnableSoraConnectionErrorMetrics: h.enableSoraConnectionErrorMetrics,
@@ -185,7 +188,7 @@ func main() {
 	})
 	soraHandler := newHandler(
 		!*disableExporterMetrics, *maxRequests, logger,
-		*soraAPIURL, *soraSkipSslVeirfy, *soraTimeout,
+		*soraAPIURL, *soraSkipSslVeirfy, *soraTimeout, false,
 		*enableSoraClientMetrics, *enableSoraConnectionErrorMetrics, *enableErlangVMMetrics, *enableSoraClusterMetrics)
 	http.Handle(*metricsPath, soraHandler)
 

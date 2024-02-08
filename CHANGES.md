@@ -1,5 +1,16 @@
 # CHANGES
 
+## 2024.2.0
+
+- [ADD] `sora_license_expired_at_timestamp_seconds` メトリクスを追加する
+  - Sora のライセンス期限を epoch 秒に変換したものを返す
+  - 仮にライセンスの期限が 2024 年 1 月の場合は、`2024-01-31T23:59:59Z` の epoch 秒になる
+  - @tnamao
+- [ADD] `sora_time_seconds` メトリクスを追加する
+  - これは `Node exporter` の `node_time_seconds` と同じもので、exporter が起動しているサーバーのシステム時間を epoch 秒で返す
+  - `sora_license_expired_at_timestamp_seconds` と組み合わせてライセンスの期限を監視することを想定している
+  - @tnamao
+
 ## 2024.1.0
 
 - [FIX] Sora 2023.2.0 で `ListClusterNodes` API の `include_all_known_nodes` のデフォルト値が変更で panic が起こす問題に対応する
