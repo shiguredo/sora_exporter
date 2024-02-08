@@ -15,6 +15,7 @@ import (
 )
 
 var (
+	// for testing
 	freezedTimeSeconds = float64(time.Date(2024, 1, 7, 17, 41, 31, 312389, time.UTC).UnixNano()) / 1e9
 )
 
