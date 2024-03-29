@@ -1,5 +1,7 @@
 # CHANGES
 
+- [ADD] `sora_client` の `obs_studio_whep` に対応する
+  - @tnamao
 - [ADD] Sora のクラスターリレー機能のメトリクスを追加する
   - GetStatsReport API の `cluster_relay` 以下の統計情報を、起動オプションの `--sora.cluster-metrics` を有効にした時のみ収集する
   - 次のメトリクスを送受信しているノード単位で返す

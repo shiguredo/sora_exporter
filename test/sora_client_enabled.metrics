@@ -26,6 +26,8 @@ sora_client_type_total{client="momo",state="failed"} 6
 sora_client_type_total{client="momo",state="successful"} 66
 sora_client_type_total{client="unity_sdk",state="failed"} 4
 sora_client_type_total{client="unity_sdk",state="successful"} 44
+sora_client_type_total{client="obs_studio_whep",state="failed"} 13
+sora_client_type_total{client="obs_studio_whep",state="successful"} 1313
 sora_client_type_total{client="obs_studio_whip",state="failed"} 10
 sora_client_type_total{client="obs_studio_whip",state="successful"} 1010
 sora_client_type_total{client="python_sdk",state="failed"} 11
