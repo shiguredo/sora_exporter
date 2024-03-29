@@ -1,5 +1,15 @@
 # CHANGES
 
+- [CHANGE] クラスターリレーのメトリクス名を変更する
+  - Prometheus メトリクスの命名規則に沿った名前に変更する
+  - 送受信バイト数
+    - `sora_cluster_relay_received_bytes` を `sora_cluster_relay_recived_bytes_total` に変更する
+    - `sora_cluster_relay_sent_bytes` を `sora_cluster_relay_sent_bytes_total` に変更する
+  - 送受信パケット数
+    - `sora_cluster_relay_received_packets` を `sora_cluster_relay_recived_packets_total` に変更する
+    - `sora_cluster_relay_sent_packets` を `sora_cluster_relay_sent_packets_total` に変更する
+  @tnamao
+
 ## 2024.3.0
 
 - [UPDATE] Go を 1.22 に上げる
