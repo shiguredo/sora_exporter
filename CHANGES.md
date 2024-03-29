@@ -1,5 +1,22 @@
 # CHANGES
 
+## 2024.3.0
+
+- [UPDATE] Go を 1.22 に上げる
+  - @tnamao
+- [ADD] `sora_client` の `obs_studio_whep` に対応する
+  - @tnamao
+- [ADD] Sora のクラスターリレー機能のメトリクスを追加する
+  - GetStatsReport API の `cluster_relay` 以下の統計情報を、起動オプションの `--sora.cluster-metrics` を有効にした時のみ収集する
+  - 次のメトリクスを送受信しているノード単位で返す
+  - 送受信バイト数
+    - `sora_cluster_relay_received_bytes`
+    - `sora_cluster_relay_sent_bytes`
+  - 送受信パケット数
+    - `sora_cluster_relay_received_packets`
+    - `sora_cluster_relay_sent_packets`
+  - @tnamao
+
 ## 2024.2.0
 
 - [ADD] `sora_license_expired_at_timestamp_seconds` メトリクスを追加する

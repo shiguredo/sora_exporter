@@ -24,6 +24,22 @@ var (
                   "raft_state": "follower",
                   "raft_term": 3
                 },
+		"cluster_relay": [
+			{
+				"node_name": "node-01",
+				"total_received_byte_size": 11,
+				"total_sent_byte_size": 12,
+				"total_received": 13,
+				"total_sent": 14
+			},
+			{
+				"node_name": "node-02",
+				"total_received_byte_size": 21,
+				"total_sent_byte_size": 22,
+				"total_received": 23,
+				"total_sent": 24
+			}
+		],
 		"erlang_vm": {
 		  "memory": {
 			"total": 1234,
@@ -105,6 +121,7 @@ var (
 			"sora_js_sdk": 3,
 			"sora_unity_sdk": 4,
 			"obs_studio_whip": 10,
+			"obs_studio_whep": 13,
 			"sora_python_sdk": 11,
 			"unknown": 5,
 			"webrtc_load_testing_tool_zakuro": 8,
@@ -119,6 +136,7 @@ var (
 			"sora_js_sdk": 33,
 			"sora_unity_sdk": 44,
 			"obs_studio_whip": 1010,
+			"obs_studio_whep": 1313,
 			"sora_python_sdk": 1111,
 			"unknown": 55,
 			"webrtc_load_testing_tool_zakuro": 88,
