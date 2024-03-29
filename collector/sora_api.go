@@ -8,6 +8,7 @@ type soraGetStatsReport struct {
 	SoraConnectionErrorReport soraConnectionErrorReport `json:"error,omitempty"`
 	ErlangVMReport            erlangVMReport            `json:"erlang_vm,omitempty"`
 	ClusterReport             soraClusterReport         `json:"cluster,omitempty"`
+	ClusterRelay              []soraClusterRelay        `json:"cluster_relay,omitempty"`
 }
 
 type soraConnectionReport struct {
@@ -140,6 +141,14 @@ type soraClusterNode struct {
 	NodeName        string `json:"node_name"`
 	Mode            string `json:"mode"`
 	Connected       bool   `json:"connected"`
+}
+
+type soraClusterRelay struct {
+	NodeName              string `json:"node_name"`
+	TotalReceivedByteSize int64  `json:"total_received_byte_size"`
+	TotalSentByteSize     int64  `json:"total_sent_byte_size"`
+	TotalReceived         int64  `json:"total_received"`
+	TotalSent             int64  `json:"total_sent"`
 }
 
 type soraLicenseInfo struct {
