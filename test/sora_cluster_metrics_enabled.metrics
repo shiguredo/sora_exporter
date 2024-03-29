@@ -22,22 +22,22 @@ sora_cluster_raft_state{state="follower"} 1
 # HELP sora_cluster_raft_term The current Raft term.
 # TYPE sora_cluster_raft_term counter
 sora_cluster_raft_term 3
-# HELP sora_cluster_relay_received_bytes The total number of bytes received by the cluster relay.
-# TYPE sora_cluster_relay_received_bytes counter
-sora_cluster_relay_received_bytes{node_name="node-01"} 11
-sora_cluster_relay_received_bytes{node_name="node-02"} 21
-# HELP sora_cluster_relay_received_packets The total number of packets received by the cluster relay.
-# TYPE sora_cluster_relay_received_packets counter
-sora_cluster_relay_received_packets{node_name="node-01"} 13
-sora_cluster_relay_received_packets{node_name="node-02"} 23
-# HELP sora_cluster_relay_sent_bytes The total number of bytes sent by the cluster relay.
-# TYPE sora_cluster_relay_sent_bytes counter
-sora_cluster_relay_sent_bytes{node_name="node-01"} 12
-sora_cluster_relay_sent_bytes{node_name="node-02"} 22
-# HELP sora_cluster_relay_sent_packets The total number of packets sent by the cluster relay.
-# TYPE sora_cluster_relay_sent_packets counter
-sora_cluster_relay_sent_packets{node_name="node-01"} 14
-sora_cluster_relay_sent_packets{node_name="node-02"} 24
+# HELP sora_cluster_relay_received_bytes_total The total number of bytes received by the cluster relay.
+# TYPE sora_cluster_relay_received_bytes_total counter
+sora_cluster_relay_received_bytes_total{node_name="node-01"} 11
+sora_cluster_relay_received_bytes_total{node_name="node-02"} 21
+# HELP sora_cluster_relay_received_packets_total The total number of packets received by the cluster relay.
+# TYPE sora_cluster_relay_received_packets_total counter
+sora_cluster_relay_received_packets_total{node_name="node-01"} 13
+sora_cluster_relay_received_packets_total{node_name="node-02"} 23
+# HELP sora_cluster_relay_sent_bytes_total The total number of bytes sent by the cluster relay.
+# TYPE sora_cluster_relay_sent_bytes_total counter
+sora_cluster_relay_sent_bytes_total{node_name="node-01"} 12
+sora_cluster_relay_sent_bytes_total{node_name="node-02"} 22
+# HELP sora_cluster_relay_sent_packets_total The total number of packets sent by the cluster relay.
+# TYPE sora_cluster_relay_sent_packets_total counter
+sora_cluster_relay_sent_packets_total{node_name="node-01"} 14
+sora_cluster_relay_sent_packets_total{node_name="node-02"} 24
 # HELP sora_connections_total The total number of connections created.
 # TYPE sora_connections_total counter
 sora_connections_total{state="created"} 2
