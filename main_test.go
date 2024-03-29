@@ -24,6 +24,22 @@ var (
                   "raft_state": "follower",
                   "raft_term": 3
                 },
+		"cluster_relay": [
+			{
+				"node_name": "node-01",
+				"total_received_byte_size": 11,
+				"total_sent_byte_size": 12,
+				"total_received": 13,
+				"total_sent": 14
+			},
+			{
+				"node_name": "node-02",
+				"total_received_byte_size": 21,
+				"total_sent_byte_size": 22,
+				"total_received": 23,
+				"total_sent": 24
+			}
+		],
 		"erlang_vm": {
 		  "memory": {
 			"total": 1234,
