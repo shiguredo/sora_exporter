@@ -1,5 +1,9 @@
 # CHANGES
 
+## 2024.3.0
+
+- [UPDATE] Go を 1.22 に上げる
+  - @tnamao
 - [ADD] `sora_client` の `obs_studio_whep` に対応する
   - @tnamao
 - [ADD] Sora のクラスターリレー機能のメトリクスを追加する
