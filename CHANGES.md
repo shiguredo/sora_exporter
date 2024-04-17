@@ -1,5 +1,10 @@
 # CHANGES
 
+## develop
+
+- [UPDATE] CI の `actions/setup-go` を `v5` に上げる
+  - @tnamao
+
 ## 2024.4.0
 
 - [CHANGE] クラスターリレーのメトリクス名を変更する
@@ -10,7 +15,7 @@
   - 送受信パケット数
     - `sora_cluster_relay_received_packets` を `sora_cluster_relay_recived_packets_total` に変更する
     - `sora_cluster_relay_sent_packets` を `sora_cluster_relay_sent_packets_total` に変更する
-  @tnamao
+  - @tnamao
 
 ## 2024.3.0
 
