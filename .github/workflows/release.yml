@@ -3,53 +3,52 @@ name: Release Build
 on:
   push:
     tags:
-      - '*'
+      - "*"
 
 jobs:
-
   build:
     name: build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version-file: "./go.mod"
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: "./go.mod"
 
-    - run: go install github.com/tcnksm/ghr@latest
+      - run: go install github.com/tcnksm/ghr@latest
 
-    - name: Build
-      run: |
-        VERSION=$(git describe --tag --abbrev=0)
-        REVISION=$(git rev-parse --short HEAD)
-        GOOS=linux GOARCH=amd64 go build \
-          -o dist/sora_exporter_linux_amd64-${VERSION} \
-          -ldflags "\
-            -X github.com/prometheus/common/version.Version=${VERSION} \
-            -X github.com/prometheus/common/version.Revision=${REVISION} \
-            -X github.com/prometheus/common/version.Branch=main \
-            -X github.com/prometheus/common/version.BuildUser=shiguredo \
-            -X github.com/prometheus/common/version.BuildDate=$(date -u "+%Y-%m-%dT%H:%M:%SZ") \
-          " \
-          main.go
-        GOOS=linux GOARCH=arm64 go build \
-          -o dist/sora_exporter_linux_arm64-${VERSION} \
-          -ldflags "\
-            -X github.com/prometheus/common/version.Version=${VERSION} \
-            -X github.com/prometheus/common/version.Revision=${REVISION} \
-            -X github.com/prometheus/common/version.Branch=main \
-            -X github.com/prometheus/common/version.BuildUser=shiguredo \
-            -X github.com/prometheus/common/version.BuildDate=$(date -u "+%Y-%m-%dT%H:%M:%SZ") \
-          " \
-          main.go
-        gzip dist/*
-    - name: Release
-      run: |
-        ghr -t "${{ secrets.GITHUB_TOKEN }}" \
-            -u "${{ github.repository_owner }}" \
-            -r "sora_exporter" \
-            -n "${{ github.ref }}" \
-            --replace "${GITHUB_REF##*/}" \
-            dist/
+      - name: Build
+        run: |
+          VERSION=$(git describe --tag --abbrev=0)
+          REVISION=$(git rev-parse --short HEAD)
+          GOOS=linux GOARCH=amd64 go build \
+            -o dist/sora_exporter_linux_amd64-${VERSION} \
+            -ldflags "\
+              -X github.com/prometheus/common/version.Version=${VERSION} \
+              -X github.com/prometheus/common/version.Revision=${REVISION} \
+              -X github.com/prometheus/common/version.Branch=main \
+              -X github.com/prometheus/common/version.BuildUser=shiguredo \
+              -X github.com/prometheus/common/version.BuildDate=$(date -u "+%Y-%m-%dT%H:%M:%SZ") \
+            " \
+            main.go
+          GOOS=linux GOARCH=arm64 go build \
+            -o dist/sora_exporter_linux_arm64-${VERSION} \
+            -ldflags "\
+              -X github.com/prometheus/common/version.Version=${VERSION} \
+              -X github.com/prometheus/common/version.Revision=${REVISION} \
+              -X github.com/prometheus/common/version.Branch=main \
+              -X github.com/prometheus/common/version.BuildUser=shiguredo \
+              -X github.com/prometheus/common/version.BuildDate=$(date -u "+%Y-%m-%dT%H:%M:%SZ") \
+            " \
+            main.go
+          gzip dist/*
+      - name: Release
+        run: |
+          ghr -t "${{ secrets.GITHUB_TOKEN }}" \
+              -u "${{ github.repository_owner }}" \
+              -r "sora_exporter" \
+              -n "${{ github.ref }}" \
+              --replace "${GITHUB_REF##*/}" \
+              dist/

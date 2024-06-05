@@ -1,5 +1,13 @@
 # CHANGES
 
+## 2024.5.0
+
+- [ADD] Sora の Stats Webhook の統計情報に対応する
+  - `sora_stats_webhook_total` メトリクスを追加し、ラベルに `successful` `failed` を設ける
+  - @tnamao
+- [UPDATE] CI の `actions/setup-go` を `v5` に上げる
+  - @tnamao
+
 ## 2024.4.0
 
 - [CHANGE] クラスターリレーのメトリクス名を変更する
@@ -10,7 +18,7 @@
   - 送受信パケット数
     - `sora_cluster_relay_received_packets` を `sora_cluster_relay_recived_packets_total` に変更する
     - `sora_cluster_relay_sent_packets` を `sora_cluster_relay_sent_packets_total` に変更する
-  @tnamao
+  - @tnamao
 
 ## 2024.3.0
 
