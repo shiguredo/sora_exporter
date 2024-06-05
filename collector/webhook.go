@@ -8,6 +8,7 @@ var (
 		totalAuthWebhook:           newDescWithLabel("auth_webhook_total", "The total number of auth webhook.", []string{"state"}),
 		totalSessionWebhook:        newDescWithLabel("session_webhook_total", "The total number of session webhook.", []string{"state"}),
 		totalEventWebhook:          newDescWithLabel("event_webhook_total", "The total number of event webhook.", []string{"state"}),
+		totalStatsWebhook:          newDescWithLabel("stats_webhook_total", "The total number of stats webhook.", []string{"state"}),
 	}
 )
 
@@ -16,6 +17,7 @@ type WebhookMetrics struct {
 	totalAuthWebhook           *prometheus.Desc
 	totalSessionWebhook        *prometheus.Desc
 	totalEventWebhook          *prometheus.Desc
+	totalStatsWebhook          *prometheus.Desc
 }
 
 func (m *WebhookMetrics) Describe(ch chan<- *prometheus.Desc) {
@@ -23,6 +25,7 @@ func (m *WebhookMetrics) Describe(ch chan<- *prometheus.Desc) {
 	ch <- m.totalAuthWebhook
 	ch <- m.totalSessionWebhook
 	ch <- m.totalEventWebhook
+	ch <- m.totalStatsWebhook
 }
 
 func (m *WebhookMetrics) Collect(ch chan<- prometheus.Metric, report soraWebhookReport) {
@@ -34,4 +37,6 @@ func (m *WebhookMetrics) Collect(ch chan<- prometheus.Metric, report soraWebhook
 	ch <- newCounter(m.totalSessionWebhook, float64(report.TotalFailedSessionWebhook), "failed")
 	ch <- newCounter(m.totalEventWebhook, float64(report.TotalSuccessfulEventWebhook), "successful")
 	ch <- newCounter(m.totalEventWebhook, float64(report.TotalFailedEventWebhook), "failed")
+	ch <- newCounter(m.totalStatsWebhook, float64(report.TotalSuccessfulStatsWebhook), "successful")
+	ch <- newCounter(m.totalStatsWebhook, float64(report.TotalFailedStatsWebhook), "failed")
 }

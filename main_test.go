@@ -153,6 +153,7 @@ var (
 		"total_failed_connections": 0,
 		"total_failed_event_webhook": 94,
 		"total_failed_session_webhook": 95,
+		"total_failed_stats_webhook": 99,
 		"total_ongoing_connections": 0,
 		"total_received_invalid_turn_tcp_packet": 0,
 		"total_session_created": 1,
@@ -161,6 +162,7 @@ var (
 		"total_successful_connections": 2,
 		"total_successful_event_webhook": 97,
 		"total_successful_session_webhook": 98,
+		"total_successful_stats_webhook": 100,
 		"total_turn_tcp_connections": 2,
 		"total_turn_udp_connections": 0,
 		"version": "2022.1.0-canary.28"
@@ -398,6 +400,7 @@ func TestMinimumMetrics(t *testing.T) {
 		"total_failed_connections": 100,
 		"total_failed_event_webhook": 94,
 		"total_failed_session_webhook": 95,
+		"total_failed_stats_webhook": 99,
 		"total_ongoing_connections": 88,
 		"total_received_invalid_turn_tcp_packet": 123,
 		"total_session_created": 111,
@@ -406,6 +409,7 @@ func TestMinimumMetrics(t *testing.T) {
 		"total_successful_connections": 333,
 		"total_successful_event_webhook": 97,
 		"total_successful_session_webhook": 98,
+		"total_successful_stats_webhook": 100,
 		"total_turn_tcp_connections": 444,
 		"total_turn_udp_connections": 555,
 		"version": "2022.1.0-canary.28"
