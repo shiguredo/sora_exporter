@@ -2,6 +2,9 @@
 
 ## develop
 
+- [ADD] Sora の Stats Webhook の統計情報に対応する
+  - `sora_stats_webhook_total` メトリクスを追加し、ラベルに `successful` `failed` を設ける
+  - @tnamao
 - [UPDATE] CI の `actions/setup-go` を `v5` に上げる
   - @tnamao
 
