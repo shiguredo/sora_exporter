@@ -37,6 +37,8 @@ type soraWebhookReport struct {
 	TotalFailedSessionWebhook     int64 `json:"total_failed_session_webhook"`
 	TotalSuccessfulEventWebhook   int64 `json:"total_successful_event_webhook"`
 	TotalFailedEventWebhook       int64 `json:"total_failed_event_webhook"`
+	TotalSuccessfulStatsWebhook   int64 `json:"total_successful_stats_webhook"`
+	TotalFailedStatsWebhook       int64 `json:"total_failed_stats_webhook"`
 }
 
 type soraClientStatistics struct {

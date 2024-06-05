@@ -129,6 +129,10 @@ sora_session_total{state="destroyed"} 0
 # TYPE sora_session_webhook_total counter
 sora_session_webhook_total{state="failed"} 95
 sora_session_webhook_total{state="successful"} 98
+# HELP sora_stats_webhook_total The total number of stats webhook.
+# TYPE sora_stats_webhook_total counter
+sora_stats_webhook_total{state="failed"} 99
+sora_stats_webhook_total{state="successful"} 100
 # HELP sora_successful_auth_webhook_total The total number of successful auth webhook.
 # TYPE sora_successful_auth_webhook_total counter
 sora_successful_auth_webhook_total{state="allowed"} 91
