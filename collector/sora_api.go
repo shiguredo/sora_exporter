@@ -144,6 +144,7 @@ type soraClusterNode struct {
 	NodeName        string `json:"node_name"`
 	Mode            string `json:"mode"`
 	Connected       bool   `json:"connected"`
+	TemporaryNode   bool   `json:"temporary_node"`
 }
 
 type soraClusterRelay struct {
