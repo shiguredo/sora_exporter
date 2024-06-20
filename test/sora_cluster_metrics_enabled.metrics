@@ -10,9 +10,9 @@ sora_average_duration_seconds 706
 sora_average_setup_time_seconds 0
 # HELP sora_cluster_node The sora server known cluster node.
 # TYPE sora_cluster_node gauge
-sora_cluster_node{mode="normal",node_name="node-03_canary_sora@10.211.55.41"} 1
-sora_cluster_node{mode="block_new_connection",node_name="node-02_canary_sora@10.211.55.40"} 1
-sora_cluster_node{mode="",node_name="node-01_canary_sora@10.211.55.42"} 0
+sora_cluster_node{mode="normal",node_name="node-03_canary_sora@10.211.55.41",node_type="temporary"} 1
+sora_cluster_node{mode="block_new_connection",node_name="node-02_canary_sora@10.211.55.40",node_type="regular"} 1
+sora_cluster_node{mode="",node_name="node-01_canary_sora@10.211.55.42",node_type="regular"} 0
 # HELP sora_cluster_raft_commit_index The latest committed Raft log index.
 # TYPE sora_cluster_raft_commit_index counter
 sora_cluster_raft_commit_index 10

@@ -184,7 +184,8 @@ var (
 		  "license_max_connections": 100,
 		  "license_serial_code": "SAMPLE-SRA-E001-202212-N10-100",
 		  "license_type": "Experimental",
-		  "connected": true
+		  "connected": true,
+		  "temporary_node": false
 		},
 		{
 			"node_name": "node-03_canary_sora@10.211.55.41",
@@ -198,7 +199,8 @@ var (
 			"license_max_connections": 100,
 			"license_serial_code": "SAMPLE-SRA-E001-202212-N10-100",
 			"license_type": "Experimental",
-			"connected": true
+			"connected": true,
+			"temporary_node": true
 		  }
 		]`
 	listClusterNodesCurrentJSONData = `[
@@ -217,7 +219,8 @@ var (
 		  "license_type": "Experimental",
 		  "cluster_signaling_url": "ws://127.0.0.1:5002/signaling",
 		  "cluster_api_url": "http://10.1.1.3:3000/",
-		  "connected": true
+		  "connected": true,
+		  "temporary_node": false
 		},
 		{
 			"node_name": "node-03_canary_sora@10.211.55.41",
@@ -231,7 +234,8 @@ var (
 			"license_max_connections": 100,
 			"license_serial_code": "SAMPLE-SRA-E001-202212-N10-100",
 			"license_type": "Experimental",
-			"connected": true
+			"connected": true,
+			"temporary_node": true
 		  }
 	  ]`
 	getLicenseJSONDATA = `{
