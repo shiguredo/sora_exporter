@@ -6,7 +6,7 @@ import (
 
 var (
 	soraClusterMetrics = SoraClusterMetrics{
-		clusterNode:     newDescWithLabel("cluster_node", "The sora server known cluster node.", []string{"node_name", "mode"}),
+		clusterNode:     newDescWithLabel("cluster_node", "The sora server known cluster node.", []string{"node_name", "mode", "node_type"}),
 		raftState:       newDescWithLabel("cluster_raft_state", "The current Raft state. The state name is indicated by the label 'state'. The value of this metric is always set to 1.", []string{"state"}),
 		raftTerm:        newDesc("cluster_raft_term", "The current Raft term."),
 		raftCommitIndex: newDesc("cluster_raft_commit_index", "The latest committed Raft log index."),
@@ -47,10 +47,16 @@ func (m *SoraClusterMetrics) Collect(ch chan<- prometheus.Metric, nodeList []sor
 		if node.Connected {
 			value = 1.0
 		}
+		// connected の状態によらず、基本の状態は regular
+		// temporary_node が true の場合だけ temporary になる
+		nodeType := "regular"
+		if node.TemporaryNode {
+			nodeType = "temporary"
+		}
 		if node.ClusterNodeName != "" {
-			ch <- newGauge(m.clusterNode, value, node.ClusterNodeName, node.Mode)
+			ch <- newGauge(m.clusterNode, value, node.ClusterNodeName, node.Mode, nodeType)
 		} else {
-			ch <- newGauge(m.clusterNode, value, node.NodeName, node.Mode)
+			ch <- newGauge(m.clusterNode, value, node.NodeName, node.Mode, nodeType)
 		}
 	}
 	ch <- newGauge(m.raftState, 1.0, report.RaftState)

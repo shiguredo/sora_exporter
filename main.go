@@ -12,11 +12,12 @@ import (
 	"github.com/shiguredo/sora_exporter/collector"
 
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors/version"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/prometheus/common/promlog"
 	"github.com/prometheus/common/promlog/flag"
-	"github.com/prometheus/common/version"
+	commonVersion "github.com/prometheus/common/version"
 
 	promcollectors "github.com/prometheus/client_golang/prometheus/collectors"
 
@@ -163,14 +164,14 @@ func (h *handler) innerHandler() http.Handler {
 func main() {
 	promlogConfig := &promlog.Config{}
 	flag.AddFlags(kingpin.CommandLine, promlogConfig)
-	kingpin.Version(version.Print("sora_exporter"))
+	kingpin.Version(commonVersion.Print("sora_exporter"))
 	kingpin.CommandLine.UsageWriter(os.Stdout)
 	kingpin.HelpFlag.Short('h')
 	kingpin.Parse()
 	logger := promlog.New(promlogConfig)
 
-	level.Info(logger).Log("msg", "Starting sora_exporter", "version", version.Info())
-	level.Info(logger).Log("msg", "Build context", "build_context", version.BuildContext())
+	level.Info(logger).Log("msg", "Starting sora_exporter", "version", commonVersion.Info())
+	level.Info(logger).Log("msg", "Build context", "build_context", commonVersion.BuildContext())
 
 	// root 権限で起動してたら warning を出す
 	if user, err := user.Current(); err == nil && user.Uid == "0" {
