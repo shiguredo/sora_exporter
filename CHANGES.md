@@ -5,6 +5,8 @@
 - [ADD] `sora_cluster_node` のメトリクスに `node_type` を追加する
   - `regular` または `temporary` のいずれかが入ります
   - @tnamao
+- [UPDATE] `prometheus/common` の `version.NewCollector` が `prometheus/client_golang` に移動したことに伴う参照関係の修正
+  - @tnamao
 - [UPDATE] 依存パッケージを更新する
   - alecthomas/kingpin 2.3.2 => 2.4.0
   - prometheus/client_golang 1.16.0 => 1.19.1
