@@ -1,5 +1,11 @@
 # CHANGES
 
+## develop
+
+- [ADD] `sora_cluster_node` のメトリクスに `node_type` を追加する
+  - `regular` または `temporary` のいずれかが入ります
+  - @tnamao
+
 ## 2024.5.0
 
 - [ADD] Sora の Stats Webhook の統計情報に対応する
