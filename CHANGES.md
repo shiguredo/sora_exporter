@@ -1,6 +1,6 @@
 # CHANGES
 
-## develop
+## 2024.6.0
 
 - [ADD] `sora_cluster_node` のメトリクスに `node_type` を追加する
   - `regular` または `temporary` のいずれかが入ります
