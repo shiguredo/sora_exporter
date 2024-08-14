@@ -8,16 +8,14 @@
   - 後方互換性がある追加
 - FIX
   - バグ修正
-- TEST
-  - テスト関連
-- DOC
-  - ドキュメント関連
 
 ## develop
 
+### misc
+
 ## 2024.6.0
 
-**日時**: 2024-06-20
+**リリース日**: 2024-06-20
 
 - [ADD] `sora_cluster_node` のメトリクスに `node_type` を追加する
   - `regular` または `temporary` のいずれかが入ります
@@ -33,7 +31,7 @@
 
 ## 2024.5.0
 
-**日時**: 2024-06-05
+**リリース日**: 2024-06-05
 
 - [ADD] Sora の Stats Webhook の統計情報に対応する
   - `sora_stats_webhook_total` メトリクスを追加し、ラベルに `successful` `failed` を設ける
