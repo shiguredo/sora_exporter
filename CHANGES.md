@@ -17,6 +17,8 @@
 
 ## 2024.6.0
 
+**日時**: 2024-06-20
+
 - [ADD] `sora_cluster_node` のメトリクスに `node_type` を追加する
   - `regular` または `temporary` のいずれかが入ります
   - @tnamao
@@ -30,6 +32,8 @@
   - @tnamao
 
 ## 2024.5.0
+
+**日時**: 2024-06-05
 
 - [ADD] Sora の Stats Webhook の統計情報に対応する
   - `sora_stats_webhook_total` メトリクスを追加し、ラベルに `successful` `failed` を設ける
