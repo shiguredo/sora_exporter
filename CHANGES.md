@@ -13,6 +13,7 @@
 
 - [CHANGE] ログライブラリの変更
   - `prometheus/exporter-toolkit` の依存ログライブラリが `go-kit/log` から Go 言語標準ライブラリの `log/slog` に変更されたため、Sora expoter 内で使用しているロガーも `log/slog` に切り替える
+  - 同様にテストコードで使用していた `NewNopLogger` は代替として `slog.New(slog.NewTextHandler(io.Discard, nil))` を使用する形に変更する
   - @tnamao
 - [UPDATE] 依存パッケージを更新する
   - prometheus/client_golang 1.19.1 => 1.20.4
