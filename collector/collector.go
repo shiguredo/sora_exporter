@@ -5,12 +5,11 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/json"
+	"log/slog"
 	"net/http"
 	"sync"
 	"time"
 
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -21,7 +20,7 @@ var (
 
 type Collector struct {
 	mutex                            sync.RWMutex
-	logger                           log.Logger
+	logger                           *slog.Logger
 	timeout                          time.Duration
 	URI                              string
 	skipSslVerify                    bool
@@ -49,7 +48,7 @@ type CollectorOptions struct {
 	SkipSslVerify                    bool
 	Timeout                          time.Duration
 	FreezeTimeSeconds                bool
-	Logger                           log.Logger
+	Logger                           *slog.Logger
 	EnableSoraClientMetrics          bool
 	EnableSoraConnectionErrorMetrics bool
 	EnableErlangVMMetrics            bool
@@ -103,7 +102,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
 	if err != nil {
-		level.Error(c.logger).Log("msg", "failed to create request to sora", "err", err)
+		c.logger.Error("failed to create request to sora", "err", err)
 		ch <- newGauge(c.soraUp, 0)
 		return
 	}
@@ -117,7 +116,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		level.Error(c.logger).Log("msg", "failed to request to Sora GetStatsReport API", "err", err)
+		c.logger.Error("failed to request to Sora GetStatsReport API", "err", err)
 		ch <- newGauge(c.soraUp, 0)
 		return
 	}
@@ -125,7 +124,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	var report soraGetStatsReport
 	if err := json.NewDecoder(resp.Body).Decode(&report); err != nil {
-		level.Error(c.logger).Log("msg", "failed to decode response body from Sora GetStatsReport API", "err", err)
+		c.logger.Error("failed to decode response body from Sora GetStatsReport API", "err", err)
 		ch <- newGauge(c.soraUp, 0)
 		return
 	}
@@ -137,14 +136,14 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		}
 		encodedParams, err := json.Marshal(requestParams)
 		if err != nil {
-			level.Error(c.logger).Log("msg", "failed to encode Sora ListClusterNodes API request parameters", "err", err)
+			c.logger.Error("failed to encode Sora ListClusterNodes API request parameters", "err", err)
 			ch <- newGauge(c.soraUp, 0)
 			return
 		}
 
 		req, err = http.NewRequestWithContext(ctx, http.MethodPost, c.URI, bytes.NewBuffer(encodedParams))
 		if err != nil {
-			level.Error(c.logger).Log("msg", "failed to create request to sora", "err", err)
+			c.logger.Error("failed to create request to sora", "err", err.Error())
 			ch <- newGauge(c.soraUp, 0)
 			return
 		}
@@ -152,14 +151,14 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 		nodeResp, err := client.Do(req)
 		if err != nil {
-			level.Error(c.logger).Log("msg", "failed to request to Sora ListClusterNodes API", "err", err)
+			c.logger.Error("failed to request to Sora ListClusterNodes API", "err", err)
 			ch <- newGauge(c.soraUp, 0)
 			return
 		}
 		defer nodeResp.Body.Close()
 
 		if err := json.NewDecoder(nodeResp.Body).Decode(&nodeList); err != nil {
-			level.Error(c.logger).Log("msg", "failed to decode response body from Sora ListClusterNodes API", "err", err)
+			c.logger.Error("failed to decode response body from Sora ListClusterNodes API", "err", err)
 			ch <- newGauge(c.soraUp, 0)
 			return
 		}
@@ -167,7 +166,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	req, err = http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
 	if err != nil {
-		level.Error(c.logger).Log("msg", "failed to create request to sora", "err", err)
+		c.logger.Error("failed to create request to sora", "err", err)
 		ch <- newGauge(c.soraUp, 0)
 		return
 	}
@@ -175,7 +174,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	licenseResp, err := client.Do(req)
 	if err != nil {
-		level.Error(c.logger).Log("msg", "failed to request to Sora GetLicense API", "err", err)
+		c.logger.Error("failed to request to Sora GetLicense API", "err", err)
 		ch <- newGauge(c.soraUp, 0)
 		return
 	}
@@ -183,7 +182,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	var licenseInfo soraLicenseInfo
 	if err := json.NewDecoder(licenseResp.Body).Decode(&licenseInfo); err != nil {
-		level.Error(c.logger).Log("msg", "failed to decode response body from Sora GetLicense API", "err", err)
+		c.logger.Error("failed to decode response body from Sora GetLicense API", "err", err)
 		ch <- newGauge(c.soraUp, 0)
 		return
 	}

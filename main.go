@@ -1,22 +1,20 @@
 package main
 
 import (
-	stdlog "log"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/user"
 	"time"
 
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 	"github.com/shiguredo/sora_exporter/collector"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors/version"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	"github.com/prometheus/common/promlog"
-	"github.com/prometheus/common/promlog/flag"
+	"github.com/prometheus/common/promslog"
+	"github.com/prometheus/common/promslog/flag"
 	commonVersion "github.com/prometheus/common/version"
 
 	promcollectors "github.com/prometheus/client_golang/prometheus/collectors"
@@ -83,7 +81,7 @@ type handler struct {
 	exporterMetricsRegistry          *prometheus.Registry
 	includeExporterMetrics           bool
 	maxRequests                      int
-	logger                           log.Logger
+	logger                           *slog.Logger
 	soraAPIURL                       string
 	soraSkipSslVeirfy                bool
 	soraTimeout                      time.Duration
@@ -95,7 +93,7 @@ type handler struct {
 }
 
 func newHandler(
-	includeExporterMetrics bool, maxRequests int, logger log.Logger,
+	includeExporterMetrics bool, maxRequests int, logger *slog.Logger,
 	soraAPIURL string, soraSkipSslVeirfy bool, soraTimeout time.Duration, soraFreezeTimeSeconds bool,
 	enableSoraClientMetrics bool, enableSoraConnectionErrorMetrics bool, enableErlangVMMetrics bool, enableSoraClusterMetrics bool) *handler {
 
@@ -145,7 +143,7 @@ func (h *handler) innerHandler() http.Handler {
 	handler := promhttp.HandlerFor(
 		prometheus.Gatherers{h.exporterMetricsRegistry, r},
 		promhttp.HandlerOpts{
-			ErrorLog:            stdlog.New(log.NewStdlibAdapter(level.Error(h.logger)), "", 0),
+			ErrorLog:            slog.NewLogLogger(h.logger.Handler(), slog.LevelError),
 			ErrorHandling:       promhttp.ContinueOnError,
 			MaxRequestsInFlight: h.maxRequests,
 			Registry:            h.exporterMetricsRegistry,
@@ -162,20 +160,20 @@ func (h *handler) innerHandler() http.Handler {
 }
 
 func main() {
-	promlogConfig := &promlog.Config{}
-	flag.AddFlags(kingpin.CommandLine, promlogConfig)
+	promslogConfig := &promslog.Config{}
+	flag.AddFlags(kingpin.CommandLine, promslogConfig)
 	kingpin.Version(commonVersion.Print("sora_exporter"))
 	kingpin.CommandLine.UsageWriter(os.Stdout)
 	kingpin.HelpFlag.Short('h')
 	kingpin.Parse()
-	logger := promlog.New(promlogConfig)
 
-	level.Info(logger).Log("msg", "Starting sora_exporter", "version", commonVersion.Info())
-	level.Info(logger).Log("msg", "Build context", "build_context", commonVersion.BuildContext())
+	logger := promslog.New(promslogConfig)
+	logger.Info("Starting sora_exporter", "version", commonVersion.Info())
+	logger.Info("Build context", "build_context", commonVersion.BuildContext())
 
 	// root 権限で起動してたら warning を出す
 	if user, err := user.Current(); err == nil && user.Uid == "0" {
-		level.Warn(logger).Log("msg", "Sora Exporter is running as root user. This exporter is designed to run as unpriviledged user, root is not required.")
+		logger.Warn("Sora Exporter は root ユーザーで実行されています。このエクスポーターは特権を必要としません。root で実行する必要はありません。")
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -193,7 +191,7 @@ func main() {
 		*enableSoraClientMetrics, *enableSoraConnectionErrorMetrics, *enableErlangVMMetrics, *enableSoraClusterMetrics)
 	http.Handle(*metricsPath, soraHandler)
 
-	level.Info(logger).Log("msg", "Listening on", "address", *listenAddress)
+	logger.Info("Listening on", "address", *listenAddress)
 	server := &http.Server{}
 	webSystemdSocket := false
 	webConfigFile := ""
@@ -203,7 +201,7 @@ func main() {
 		WebConfigFile:      &webConfigFile,
 	}
 	if err := web.ListenAndServe(server, webFlagConfig, logger); err != nil {
-		level.Error(logger).Log("err", err)
+		logger.Error("Error starting HTTP server", "err", err)
 		os.Exit(1)
 	}
 }
