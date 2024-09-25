@@ -11,7 +11,23 @@
 
 ## develop
 
+- [CHANGE] ログライブラリの変更
+  - `prometheus/exporter-toolkit` の依存ログライブラリが `go-kit/log` から Go 言語標準ライブラリの `log/slog` に変更されたため、Sora expoter 内で使用しているロガーも `log/slog` に切り替える
+  - @tnamao
+- [UPDATE] 依存パッケージを更新する
+  - prometheus/client_golang 1.19.1 => 1.20.4
+  - prometheus/common 0.54.0 => 0.59.1
+  - prometheus/exporter-toolkit 0.11.0 => 0.13.0
+  - `prometheus/exporter-toolkit` のログライブラリ切り替えにより `go-kit/log` への依存はなくなりました
+  - @tnamao
+
 ### misc
+
+- [UPDATE] Github Actions のイメージを更新する
+  - actions/setup-go v4 => v5
+  - dominikh/staticcheck-action v1.3.0 => v1.3.1
+- [UPDATE] CI で実行する staticcheck のバージョンを更新する
+  - 2023.1.6 => 2024.1.1
 
 ## 2024.6.0
 
