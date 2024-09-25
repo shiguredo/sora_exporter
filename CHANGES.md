@@ -21,6 +21,8 @@
   - prometheus/exporter-toolkit 0.11.0 => 0.13.0
   - `prometheus/exporter-toolkit` のログライブラリ切り替えにより `go-kit/log` への依存はなくなりました
   - @tnamao
+- [UPDATE] Go を 1.23 に上げる
+  - @tnamao
 
 ### misc
 
