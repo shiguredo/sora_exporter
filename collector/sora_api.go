@@ -35,10 +35,13 @@ type soraWebhookReport struct {
 	TotalFailedAuthWebhook        int64 `json:"total_failed_auth_webhook"`
 	TotalSuccessfulSessionWebhook int64 `json:"total_successful_session_webhook"`
 	TotalFailedSessionWebhook     int64 `json:"total_failed_session_webhook"`
+	TotalIgnoredSessionWebhook    int64 `json:"total_ignored_session_webhook"`
 	TotalSuccessfulEventWebhook   int64 `json:"total_successful_event_webhook"`
 	TotalFailedEventWebhook       int64 `json:"total_failed_event_webhook"`
+	TotalIgnoredEventWebhook      int64 `json:"total_ignored_event_webhook"`
 	TotalSuccessfulStatsWebhook   int64 `json:"total_successful_stats_webhook"`
 	TotalFailedStatsWebhook       int64 `json:"total_failed_stats_webhook"`
+	TotalIgnoredStatsWebhook      int64 `json:"total_ignored_stats_webhook"`
 }
 
 type soraClientStatistics struct {
