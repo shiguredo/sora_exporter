@@ -5,6 +5,7 @@ type soraGetStatsReport struct {
 	soraConnectionReport
 	soraWebhookReport
 	soraSrtpReport
+	soraSctpReport
 	SoraClientReport          soraClientReport          `json:"sora_client,omitempty"`
 	SoraConnectionErrorReport soraConnectionErrorReport `json:"error,omitempty"`
 	ErlangVMReport            erlangVMReport            `json:"erlang_vm,omitempty"`
@@ -52,6 +53,13 @@ type soraSrtpReport struct {
 	TotalSentSrtpByteSize      int64 `json:"total_sent_srtp_byte_size"`
 	TotalDecryptedSrtp         int64 `json:"total_decrypted_srtp"`
 	TotalDecryptedSrtpByteSize int64 `json:"total_decrypted_srtp_byte_size"`
+}
+
+type soraSctpReport struct {
+	TotalReceivedSctp         int64 `json:"total_received_sctp"`
+	TotalReceivedSctpByteSize int64 `json:"total_received_sctp_byte_size"`
+	TotalSentSctp             int64 `json:"total_sent_sctp"`
+	TotalSentSctpByteSize     int64 `json:"total_sent_sctp_byte_size"`
 }
 
 type soraClientStatistics struct {
