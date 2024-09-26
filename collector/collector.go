@@ -36,6 +36,7 @@ type Collector struct {
 
 	ConnectionMetrics
 	WebhookMetrics
+	SrtpMetrics
 	ClientMetrics
 	SoraConnectionErrorMetrics
 	ErlangVMMetrics
@@ -85,6 +86,7 @@ func NewCollector(options *CollectorOptions) *Collector {
 
 		ConnectionMetrics:          connectionMetrics,
 		WebhookMetrics:             webhookMetrics,
+		SrtpMetrics:                srtpMetrics,
 		ClientMetrics:              clientMetrics,
 		SoraConnectionErrorMetrics: soraConnectionErrorMetrics,
 		ErlangVMMetrics:            erlangVMMetrics,
@@ -200,6 +202,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	c.LicenseMetrics.Collect(ch, licenseInfo)
 	c.ConnectionMetrics.Collect(ch, report.soraConnectionReport)
 	c.WebhookMetrics.Collect(ch, report.soraWebhookReport)
+	c.SrtpMetrics.Collect(ch, report.soraSrtpReport)
 
 	if c.enableSoraClientMetrics {
 		c.ClientMetrics.Collect(ch, report.SoraClientReport)
@@ -222,6 +225,7 @@ func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 	c.LicenseMetrics.Describe(ch)
 	c.ConnectionMetrics.Describe(ch)
 	c.WebhookMetrics.Describe(ch)
+	c.SrtpMetrics.Describe(ch)
 
 	if c.enableSoraClientMetrics {
 		c.ClientMetrics.Describe(ch)
