@@ -80,6 +80,24 @@ sora_session_total{state="destroyed"} 0
 sora_session_webhook_total{state="failed"} 95
 sora_session_webhook_total{state="ignored"} 102
 sora_session_webhook_total{state="successful"} 98
+# HELP sora_srtp_decrpyted_bytes_total The total number of decrypted SRTP bytes.
+# TYPE sora_srtp_decrpyted_bytes_total counter
+sora_srtp_decrpyted_bytes_total 105
+# HELP sora_srtp_decrypted_packets_total The total number of decrpyted SRTP packets.
+# TYPE sora_srtp_decrypted_packets_total counter
+sora_srtp_decrypted_packets_total 104
+# HELP sora_srtp_received_bytes_total The total number of received SRTP bytes.
+# TYPE sora_srtp_received_bytes_total counter
+sora_srtp_received_bytes_total 109
+# HELP sora_srtp_received_packets_total The total number of received SRTP packets.
+# TYPE sora_srtp_received_packets_total counter
+sora_srtp_received_packets_total 108
+# HELP sora_srtp_sent_bytes_total The total number of sent SRTP bytes.
+# TYPE sora_srtp_sent_bytes_total counter
+sora_srtp_sent_bytes_total 107
+# HELP sora_srtp_sent_packets_total The total number of sent SRPT packets.
+# TYPE sora_srtp_sent_packets_total counter
+sora_srtp_sent_packets_total 106
 # HELP sora_stats_webhook_total The total number of stats webhook.
 # TYPE sora_stats_webhook_total counter
 sora_stats_webhook_total{state="failed"} 99
