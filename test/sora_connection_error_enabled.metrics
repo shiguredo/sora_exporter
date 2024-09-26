@@ -25,6 +25,7 @@ sora_duration_seconds_total 1412
 # HELP sora_event_webhook_total The total number of event webhook.
 # TYPE sora_event_webhook_total counter
 sora_event_webhook_total{state="failed"} 94
+sora_event_webhook_total{state="ignored"} 101
 sora_event_webhook_total{state="successful"} 97
 # HELP sora_license_expired_at_timestamp_seconds sora license file's expire seconds since epoch.
 # TYPE sora_license_expired_at_timestamp_seconds gauge
@@ -51,10 +52,12 @@ sora_session_total{state="destroyed"} 0
 # HELP sora_session_webhook_total The total number of session webhook.
 # TYPE sora_session_webhook_total counter
 sora_session_webhook_total{state="failed"} 95
+sora_session_webhook_total{state="ignored"} 102
 sora_session_webhook_total{state="successful"} 98
 # HELP sora_stats_webhook_total The total number of stats webhook.
 # TYPE sora_stats_webhook_total counter
 sora_stats_webhook_total{state="failed"} 99
+sora_stats_webhook_total{state="ignored"} 103
 sora_stats_webhook_total{state="successful"} 100
 # HELP sora_successful_auth_webhook_total The total number of successful auth webhook.
 # TYPE sora_successful_auth_webhook_total counter
