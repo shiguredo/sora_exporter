@@ -188,6 +188,18 @@ sora_received_invalid_turn_tcp_packet_total 0
 # TYPE sora_session_total counter
 sora_session_total{state="created"} 1
 sora_session_total{state="destroyed"} 0
+# HELP sora_sctp_received_bytes_total The total number of received SCTP bytes.
+# TYPE sora_sctp_received_bytes_total counter
+sora_sctp_received_bytes_total 113
+# HELP sora_sctp_received_packets_total The total number of received SCTP packets.
+# TYPE sora_sctp_received_packets_total counter
+sora_sctp_received_packets_total 112
+# HELP sora_sctp_sent_bytes_total The total number of sent SCTP bytes.
+# TYPE sora_sctp_sent_bytes_total counter
+sora_sctp_sent_bytes_total 111
+# HELP sora_sctp_sent_packets_total The total number of sent SRPT packets.
+# TYPE sora_sctp_sent_packets_total counter
+sora_sctp_sent_packets_total 110
 # HELP sora_session_webhook_total The total number of session webhook.
 # TYPE sora_session_webhook_total counter
 sora_session_webhook_total{state="failed"} 95
