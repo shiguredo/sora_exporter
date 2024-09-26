@@ -82,7 +82,7 @@ sora_sctp_received_packets_total 112
 # HELP sora_sctp_sent_bytes_total The total number of sent SCTP bytes.
 # TYPE sora_sctp_sent_bytes_total counter
 sora_sctp_sent_bytes_total 111
-# HELP sora_sctp_sent_packets_total The total number of sent SRPT packets.
+# HELP sora_sctp_sent_packets_total The total number of sent SCTP packets.
 # TYPE sora_sctp_sent_packets_total counter
 sora_sctp_sent_packets_total 110
 # HELP sora_session_webhook_total The total number of session webhook.
@@ -105,7 +105,7 @@ sora_srtp_received_packets_total 108
 # HELP sora_srtp_sent_bytes_total The total number of sent SRTP bytes.
 # TYPE sora_srtp_sent_bytes_total counter
 sora_srtp_sent_bytes_total 107
-# HELP sora_srtp_sent_packets_total The total number of sent SRPT packets.
+# HELP sora_srtp_sent_packets_total The total number of sent SRTP packets.
 # TYPE sora_srtp_sent_packets_total counter
 sora_srtp_sent_packets_total 106
 # HELP sora_stats_webhook_total The total number of stats webhook.

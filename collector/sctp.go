@@ -6,7 +6,7 @@ var (
 	sctpMetrics = SctpMetrics{
 		totalReceivedSctp:         newDesc("sctp_received_packets_total", "The total number of received SCTP packets."),
 		totalReceivedSctpByteSize: newDesc("sctp_received_bytes_total", "The total number of received SCTP bytes."),
-		totalSentSctp:             newDesc("sctp_sent_packets_total", "The total number of sent SRPT packets."),
+		totalSentSctp:             newDesc("sctp_sent_packets_total", "The total number of sent SCTP packets."),
 		totalSentSctpByteSize:     newDesc("sctp_sent_bytes_total", "The total number of sent SCTP bytes."),
 	}
 )

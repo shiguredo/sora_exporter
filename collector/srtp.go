@@ -6,7 +6,7 @@ var (
 	srtpMetrics = SrtpMetrics{
 		totalReceivedSrtp:          newDesc("srtp_received_packets_total", "The total number of received SRTP packets."),
 		totalReceivedSrtpByteSize:  newDesc("srtp_received_bytes_total", "The total number of received SRTP bytes."),
-		totalSentSrtp:              newDesc("srtp_sent_packets_total", "The total number of sent SRPT packets."),
+		totalSentSrtp:              newDesc("srtp_sent_packets_total", "The total number of sent SRTP packets."),
 		totalSentSrtpByteSize:      newDesc("srtp_sent_bytes_total", "The total number of sent SRTP bytes."),
 		totalDecryptedSrtp:         newDesc("srtp_decrypted_packets_total", "The total number of decrpyted SRTP packets."),
 		totalDecryptedSrtpByteSize: newDesc("srtp_decrpyted_bytes_total", "The total number of decrypted SRTP bytes."),
