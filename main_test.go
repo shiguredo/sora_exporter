@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -9,7 +11,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-kit/log"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/testutil"
 	"github.com/shiguredo/sora_exporter/collector"
@@ -299,13 +300,14 @@ func TestInvalidConfig(t *testing.T) {
 	s := newSora([]byte("invalid config parameter"), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
 		URI:                              s.URL,
 		SkipSslVerify:                    true,
 		Timeout:                          timeout,
 		FreezeTimeSeconds:                true,
-		Logger:                           log.NewNopLogger(),
+		Logger:                           nopLogger,
 		EnableSoraClientMetrics:          true,
 		EnableSoraConnectionErrorMetrics: true,
 		EnableErlangVMMetrics:            true,
@@ -318,13 +320,14 @@ func TestMaximumMetrics(t *testing.T) {
 	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
 		URI:                              s.URL,
 		SkipSslVerify:                    true,
 		Timeout:                          timeout,
 		FreezeTimeSeconds:                true,
-		Logger:                           log.NewNopLogger(),
+		Logger:                           nopLogger,
 		EnableSoraClientMetrics:          true,
 		EnableSoraConnectionErrorMetrics: true,
 		EnableErlangVMMetrics:            true,
@@ -337,13 +340,14 @@ func TestSoraErlangVMEnabledMetrics(t *testing.T) {
 	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
 		URI:                              s.URL,
 		SkipSslVerify:                    true,
 		Timeout:                          timeout,
 		FreezeTimeSeconds:                true,
-		Logger:                           log.NewNopLogger(),
+		Logger:                           nopLogger,
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: false,
 		EnableErlangVMMetrics:            true,
@@ -356,13 +360,14 @@ func TestSoraClientEnabledMetrics(t *testing.T) {
 	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
 		URI:                              s.URL,
 		SkipSslVerify:                    true,
 		Timeout:                          timeout,
 		FreezeTimeSeconds:                true,
-		Logger:                           log.NewNopLogger(),
+		Logger:                           nopLogger,
 		EnableSoraClientMetrics:          true,
 		EnableSoraConnectionErrorMetrics: false,
 		EnableErlangVMMetrics:            false,
@@ -375,13 +380,14 @@ func TestSoraConnectionErrorEnabledMetrics(t *testing.T) {
 	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
 		URI:                              s.URL,
 		SkipSslVerify:                    true,
 		Timeout:                          timeout,
 		FreezeTimeSeconds:                true,
-		Logger:                           log.NewNopLogger(),
+		Logger:                           nopLogger,
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: true,
 		EnableErlangVMMetrics:            false,
@@ -421,13 +427,14 @@ func TestMinimumMetrics(t *testing.T) {
 	s := newSora([]byte(resp), []byte(listClusterNodesJSONData), []byte(getLicenseWithoutMaxNodesJSONDATA))
 	defer s.Close()
 
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
 		URI:                              s.URL,
 		SkipSslVerify:                    true,
 		Timeout:                          timeout,
 		FreezeTimeSeconds:                true,
-		Logger:                           log.NewNopLogger(),
+		Logger:                           nopLogger,
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: false,
 		EnableErlangVMMetrics:            false,
@@ -440,13 +447,14 @@ func TestSoraClusterEnabledMetrics(t *testing.T) {
 	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
 		URI:                              s.URL,
 		SkipSslVerify:                    true,
 		Timeout:                          timeout,
 		FreezeTimeSeconds:                true,
-		Logger:                           log.NewNopLogger(),
+		Logger:                           nopLogger,
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: false,
 		EnableErlangVMMetrics:            false,
@@ -460,13 +468,14 @@ func TestSoraClusterEnabledMetricsCurrentJsonData(t *testing.T) {
 	s := newSora([]byte(testJSONData), []byte(listClusterNodesCurrentJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
 		URI:                              s.URL,
 		SkipSslVerify:                    true,
 		Timeout:                          timeout,
 		FreezeTimeSeconds:                true,
-		Logger:                           log.NewNopLogger(),
+		Logger:                           nopLogger,
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: false,
 		EnableErlangVMMetrics:            false,
