@@ -52,8 +52,12 @@
 - [UPDATE] Github Actions のイメージを更新する
   - actions/setup-go v4 => v5
   - dominikh/staticcheck-action v1.3.0 => v1.3.1
+  - @tnamao
 - [UPDATE] CI で実行する staticcheck のバージョンを更新する
   - 2023.1.6 => 2024.1.1
+  - @tnamao
+- [ADD] CI のリリースに canary リリースの対応を追加する
+  - @tnamao
 
 ## 2024.6.0
 
