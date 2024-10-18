@@ -11,6 +11,11 @@
 
 ## develop
 
+- [CHANGE] クラスターメトリクスを収集する際の `ListClusterNodes` API の呼び出し時にリクエストパラメータの指定を削除する
+  - 破壊的変更になるため、バージョンアップの際に注意してください
+  - Sora 2024.2.0 での `include_all_known_nodes` パラメータ廃止への対応です
+  - Sora 2023.2 以前と Sora 2024.1 以降で、exporter が返すメトリクスの結果が変わります
+  - @tnamao
 - [ADD] SRTP 統計情報を追加する
   - Sora API の GetStatsReport API から取得可能な SRTP 統計情報を以下のメトリクス名で追加する
     - `sora_srtp_received_packets_total`
