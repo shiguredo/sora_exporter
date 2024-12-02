@@ -44,9 +44,9 @@
   - 同様にテストコードで使用していた `NewNopLogger` は代替として `slog.New(slog.NewTextHandler(io.Discard, nil))` を使用する形に変更する
   - @tnamao
 - [UPDATE] 依存パッケージを更新する
-  - prometheus/client_golang 1.19.1 => 1.20.4
-  - prometheus/common 0.54.0 => 0.59.1
-  - prometheus/exporter-toolkit 0.11.0 => 0.13.0
+  - prometheus/client_golang 1.19.1 => 1.20.5
+  - prometheus/common 0.54.0 => 0.60.1
+  - prometheus/exporter-toolkit 0.11.0 => 0.13.1
   - `prometheus/exporter-toolkit` のログライブラリ切り替えにより `go-kit/log` への依存はなくなりました
   - @tnamao
 - [UPDATE] Go を 1.23 に上げる
