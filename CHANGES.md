@@ -45,7 +45,7 @@
   - @tnamao
 - [UPDATE] 依存パッケージを更新する
   - prometheus/client_golang 1.19.1 => 1.20.5
-  - prometheus/common 0.54.0 => 0.60.1
+  - prometheus/common 0.54.0 => 0.61.0
   - prometheus/exporter-toolkit 0.11.0 => 0.13.1
   - `prometheus/exporter-toolkit` のログライブラリ切り替えにより `go-kit/log` への依存はなくなりました
   - @tnamao
