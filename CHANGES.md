@@ -26,6 +26,8 @@
 
 ### misc
 
+- [CHANGE] GitHub Actions の ubuntu-latest を ubuntu-24.04 に変更する
+  - @voluntas
 - [UPDATE] Github Actions のイメージを更新する
   - actions/setup-go v4 => v5
   - dominikh/staticcheck-action v1.3.0 => v1.3.1
