@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     name: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -46,9 +46,22 @@ jobs:
           gzip dist/*
       - name: Release
         run: |
-          ghr -t "${{ secrets.GITHUB_TOKEN }}" \
-              -u "${{ github.repository_owner }}" \
-              -r "sora_exporter" \
-              -n "${{ github.ref }}" \
-              --replace "${GITHUB_REF##*/}" \
-              dist/
+          VERSION=$(git describe --tag --abbrev=0)
+          if [[ "${VERSION}" == *"canary"* ]]; then
+            ghr -t "${{ secrets.GITHUB_TOKEN }}" \
+                -u "${{ github.repository_owner }}" \
+                -r "sora_exporter" \
+                -n "${VERSION}" \
+                -replace \
+                -prerelease \
+                "${GITHUB_REF##*/}" \
+                dist/
+          else
+            ghr -t "${{ secrets.GITHUB_TOKEN }}" \
+                -u "${{ github.repository_owner }}" \
+                -r "sora_exporter" \
+                -n "${VERSION}" \
+                -replace \
+                "${GITHUB_REF##*/}" \
+                dist/
+          fi

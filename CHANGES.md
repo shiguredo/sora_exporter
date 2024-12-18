@@ -1,6 +1,76 @@
-# CHANGES
+# 変更履歴
+
+- CHANGE
+  - 後方互換性のない変更
+- UPDATE
+  - 後方互換性がある変更
+- ADD
+  - 後方互換性がある追加
+- FIX
+  - バグ修正
+
+## 2024.7.0
+
+**リリース日**: 2024-12-18
+
+- [CHANGE] クラスターメトリクスを収集する際の `ListClusterNodes` API の呼び出し時にリクエストパラメータの指定を削除する
+  - 破壊的変更になるため、バージョンアップの際に注意してください
+  - Sora 2024.2.0 での `include_all_known_nodes` パラメータ廃止への対応です
+  - Sora 2023.2 以前と Sora 2024.1 以降で、exporter が返すメトリクスの結果が変わります
+  - @tnamao
+- [ADD] SRTP 統計情報を追加する
+  - Sora API の GetStatsReport API から取得可能な SRTP 統計情報を以下のメトリクス名で追加する
+    - `sora_srtp_received_packets_total`
+    - `sora_srtp_received_bytes_total`
+    - `sora_srtp_sent_packets_total`
+    - `sora_srtp_sent_bytes_total`
+    - `sora_srtp_decrypted_packets_total`
+    - `sora_srtp_decrypted_bytes_total`
+  - @tnamao
+- [ADD] SCTP 統計情報を追加する
+  - Sora API の GetStatsReport API から取得可能な SCTP 統計情報を以下のメトリクス名で追加する
+    - `sora_sctp_received_packets_total`
+    - `sora_sctp_received_bytes_total`
+    - `sora_sctp_sent_packets_total`
+    - `sora_sctp_sent_bytes_total`
+  - @tnamao
+- [ADD] 無視されたウェブフック数の統計情報を追加する
+  - Sora API の GetStatsReport API から取得可能な無視されたウェブフック数を以下のメトリクス名で追加する
+  - 既存の以下のメトリクスの `state` ラベルに `ignored` で値を返す
+    - `sora_event_webhook_total`
+    - `sora_session_webhook_total`
+    - `sora_stats_webhook_total`
+  - @tnamao
+- [CHANGE] ログライブラリの変更
+  - `prometheus/exporter-toolkit` の依存ログライブラリが `go-kit/log` から Go 言語標準ライブラリの `log/slog` に変更されたため、Sora expoter 内で使用しているロガーも `log/slog` に切り替える
+  - 同様にテストコードで使用していた `NewNopLogger` は代替として `slog.New(slog.NewTextHandler(io.Discard, nil))` を使用する形に変更する
+  - @tnamao
+- [UPDATE] 依存パッケージを更新する
+  - prometheus/client_golang 1.19.1 => 1.20.5
+  - prometheus/common 0.54.0 => 0.61.0
+  - prometheus/exporter-toolkit 0.11.0 => 0.13.2
+  - `prometheus/exporter-toolkit` のログライブラリ切り替えにより `go-kit/log` への依存はなくなりました
+  - @tnamao
+- [UPDATE] Go を 1.23 に上げる
+  - @tnamao
+
+### misc
+
+- [CHANGE] GitHub Actions の ubuntu-latest を ubuntu-24.04 に変更する
+  - @voluntas
+- [UPDATE] Github Actions のイメージを更新する
+  - actions/setup-go v4 => v5
+  - dominikh/staticcheck-action v1.3.0 => v1.3.1
+  - @tnamao
+- [UPDATE] CI で実行する staticcheck のバージョンを更新する
+  - 2023.1.6 => 2024.1.1
+  - @tnamao
+- [ADD] CI のリリースに canary リリースの対応を追加する
+  - @tnamao
 
 ## 2024.6.0
+
+**リリース日**: 2024-06-20
 
 - [ADD] `sora_cluster_node` のメトリクスに `node_type` を追加する
   - `regular` または `temporary` のいずれかが入ります
@@ -15,6 +85,8 @@
   - @tnamao
 
 ## 2024.5.0
+
+**リリース日**: 2024-06-05
 
 - [ADD] Sora の Stats Webhook の統計情報に対応する
   - `sora_stats_webhook_total` メトリクスを追加し、ラベルに `successful` `failed` を設ける

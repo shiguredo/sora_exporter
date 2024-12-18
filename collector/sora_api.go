@@ -4,6 +4,8 @@ type soraGetStatsReport struct {
 	SoraVersion string `json:"version"`
 	soraConnectionReport
 	soraWebhookReport
+	soraSrtpReport
+	soraSctpReport
 	SoraClientReport          soraClientReport          `json:"sora_client,omitempty"`
 	SoraConnectionErrorReport soraConnectionErrorReport `json:"error,omitempty"`
 	ErlangVMReport            erlangVMReport            `json:"erlang_vm,omitempty"`
@@ -35,10 +37,29 @@ type soraWebhookReport struct {
 	TotalFailedAuthWebhook        int64 `json:"total_failed_auth_webhook"`
 	TotalSuccessfulSessionWebhook int64 `json:"total_successful_session_webhook"`
 	TotalFailedSessionWebhook     int64 `json:"total_failed_session_webhook"`
+	TotalIgnoredSessionWebhook    int64 `json:"total_ignored_session_webhook"`
 	TotalSuccessfulEventWebhook   int64 `json:"total_successful_event_webhook"`
 	TotalFailedEventWebhook       int64 `json:"total_failed_event_webhook"`
+	TotalIgnoredEventWebhook      int64 `json:"total_ignored_event_webhook"`
 	TotalSuccessfulStatsWebhook   int64 `json:"total_successful_stats_webhook"`
 	TotalFailedStatsWebhook       int64 `json:"total_failed_stats_webhook"`
+	TotalIgnoredStatsWebhook      int64 `json:"total_ignored_stats_webhook"`
+}
+
+type soraSrtpReport struct {
+	TotalReceivedSrtp          int64 `json:"total_received_srtp"`
+	TotalReceivedSrtpByteSize  int64 `json:"total_received_srtp_byte_size"`
+	TotalSentSrtp              int64 `json:"total_sent_srtp"`
+	TotalSentSrtpByteSize      int64 `json:"total_sent_srtp_byte_size"`
+	TotalDecryptedSrtp         int64 `json:"total_decrypted_srtp"`
+	TotalDecryptedSrtpByteSize int64 `json:"total_decrypted_srtp_byte_size"`
+}
+
+type soraSctpReport struct {
+	TotalReceivedSctp         int64 `json:"total_received_sctp"`
+	TotalReceivedSctpByteSize int64 `json:"total_received_sctp_byte_size"`
+	TotalSentSctp             int64 `json:"total_sent_sctp"`
+	TotalSentSctpByteSize     int64 `json:"total_sent_sctp_byte_size"`
 }
 
 type soraClientStatistics struct {

@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -9,7 +11,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-kit/log"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/testutil"
 	"github.com/shiguredo/sora_exporter/collector"
@@ -148,14 +149,23 @@ var (
 		"total_connection_created": 2,
 		"total_connection_destroyed": 2,
 		"total_connection_updated": 23,
+		"total_decrypted_srtp": 104,
+		"total_decrypted_srtp_byte_size": 105,
 		"total_duration_sec": 1412,
 		"total_failed_auth_webhook": 93,
 		"total_failed_connections": 0,
 		"total_failed_event_webhook": 94,
 		"total_failed_session_webhook": 95,
 		"total_failed_stats_webhook": 99,
+		"total_ignored_event_webhook": 101,
+		"total_ignored_session_webhook": 102,
+		"total_ignored_stats_webhook": 103,
 		"total_ongoing_connections": 0,
 		"total_received_invalid_turn_tcp_packet": 0,
+		"total_sent_sctp": 110,
+		"total_sent_sctp_byte_size": 111,
+		"total_sent_srtp": 106,
+		"total_sent_srtp_byte_size": 107,
 		"total_session_created": 1,
 		"total_session_destroyed": 0,
 		"total_successful_auth_webhook": 96,
@@ -163,6 +173,10 @@ var (
 		"total_successful_event_webhook": 97,
 		"total_successful_session_webhook": 98,
 		"total_successful_stats_webhook": 100,
+		"total_received_sctp": 112,
+		"total_received_sctp_byte_size": 113,
+		"total_received_srtp": 108,
+		"total_received_srtp_byte_size": 109,
 		"total_turn_tcp_connections": 2,
 		"total_turn_udp_connections": 0,
 		"version": "2022.1.0-canary.28"
@@ -299,13 +313,14 @@ func TestInvalidConfig(t *testing.T) {
 	s := newSora([]byte("invalid config parameter"), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
 		URI:                              s.URL,
 		SkipSslVerify:                    true,
 		Timeout:                          timeout,
 		FreezeTimeSeconds:                true,
-		Logger:                           log.NewNopLogger(),
+		Logger:                           nopLogger,
 		EnableSoraClientMetrics:          true,
 		EnableSoraConnectionErrorMetrics: true,
 		EnableErlangVMMetrics:            true,
@@ -318,13 +333,14 @@ func TestMaximumMetrics(t *testing.T) {
 	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
 		URI:                              s.URL,
 		SkipSslVerify:                    true,
 		Timeout:                          timeout,
 		FreezeTimeSeconds:                true,
-		Logger:                           log.NewNopLogger(),
+		Logger:                           nopLogger,
 		EnableSoraClientMetrics:          true,
 		EnableSoraConnectionErrorMetrics: true,
 		EnableErlangVMMetrics:            true,
@@ -337,13 +353,14 @@ func TestSoraErlangVMEnabledMetrics(t *testing.T) {
 	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
 		URI:                              s.URL,
 		SkipSslVerify:                    true,
 		Timeout:                          timeout,
 		FreezeTimeSeconds:                true,
-		Logger:                           log.NewNopLogger(),
+		Logger:                           nopLogger,
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: false,
 		EnableErlangVMMetrics:            true,
@@ -356,13 +373,14 @@ func TestSoraClientEnabledMetrics(t *testing.T) {
 	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
 		URI:                              s.URL,
 		SkipSslVerify:                    true,
 		Timeout:                          timeout,
 		FreezeTimeSeconds:                true,
-		Logger:                           log.NewNopLogger(),
+		Logger:                           nopLogger,
 		EnableSoraClientMetrics:          true,
 		EnableSoraConnectionErrorMetrics: false,
 		EnableErlangVMMetrics:            false,
@@ -375,13 +393,14 @@ func TestSoraConnectionErrorEnabledMetrics(t *testing.T) {
 	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
 		URI:                              s.URL,
 		SkipSslVerify:                    true,
 		Timeout:                          timeout,
 		FreezeTimeSeconds:                true,
-		Logger:                           log.NewNopLogger(),
+		Logger:                           nopLogger,
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: true,
 		EnableErlangVMMetrics:            false,
@@ -399,14 +418,23 @@ func TestMinimumMetrics(t *testing.T) {
 		"total_connection_created": 3,
 		"total_connection_destroyed": 2,
 		"total_connection_updated": 23,
+		"total_decrypted_srtp": 104,
+		"total_decrypted_srtp_byte_size": 105,
 		"total_duration_sec": 1412,
 		"total_failed_auth_webhook": 93,
 		"total_failed_connections": 100,
 		"total_failed_event_webhook": 94,
 		"total_failed_session_webhook": 95,
 		"total_failed_stats_webhook": 99,
+		"total_ignored_event_webhook": 101,
+		"total_ignored_session_webhook": 102,
+		"total_ignored_stats_webhook": 103,
 		"total_ongoing_connections": 88,
 		"total_received_invalid_turn_tcp_packet": 123,
+		"total_sent_sctp": 110,
+		"total_sent_sctp_byte_size": 111,
+		"total_sent_srtp": 106,
+		"total_sent_srtp_byte_size": 107,
 		"total_session_created": 111,
 		"total_session_destroyed": 222,
 		"total_successful_auth_webhook": 96,
@@ -414,6 +442,10 @@ func TestMinimumMetrics(t *testing.T) {
 		"total_successful_event_webhook": 97,
 		"total_successful_session_webhook": 98,
 		"total_successful_stats_webhook": 100,
+		"total_received_sctp": 112,
+		"total_received_sctp_byte_size": 113,
+		"total_received_srtp": 108,
+		"total_received_srtp_byte_size": 109,
 		"total_turn_tcp_connections": 444,
 		"total_turn_udp_connections": 555,
 		"version": "2022.1.0-canary.28"
@@ -421,13 +453,14 @@ func TestMinimumMetrics(t *testing.T) {
 	s := newSora([]byte(resp), []byte(listClusterNodesJSONData), []byte(getLicenseWithoutMaxNodesJSONDATA))
 	defer s.Close()
 
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
 		URI:                              s.URL,
 		SkipSslVerify:                    true,
 		Timeout:                          timeout,
 		FreezeTimeSeconds:                true,
-		Logger:                           log.NewNopLogger(),
+		Logger:                           nopLogger,
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: false,
 		EnableErlangVMMetrics:            false,
@@ -440,13 +473,14 @@ func TestSoraClusterEnabledMetrics(t *testing.T) {
 	s := newSora([]byte(testJSONData), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
 		URI:                              s.URL,
 		SkipSslVerify:                    true,
 		Timeout:                          timeout,
 		FreezeTimeSeconds:                true,
-		Logger:                           log.NewNopLogger(),
+		Logger:                           nopLogger,
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: false,
 		EnableErlangVMMetrics:            false,
@@ -460,13 +494,14 @@ func TestSoraClusterEnabledMetricsCurrentJsonData(t *testing.T) {
 	s := newSora([]byte(testJSONData), []byte(listClusterNodesCurrentJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	timeout, _ := time.ParseDuration("5s")
 	h := collector.NewCollector(&collector.CollectorOptions{
 		URI:                              s.URL,
 		SkipSslVerify:                    true,
 		Timeout:                          timeout,
 		FreezeTimeSeconds:                true,
-		Logger:                           log.NewNopLogger(),
+		Logger:                           nopLogger,
 		EnableSoraClientMetrics:          false,
 		EnableSoraConnectionErrorMetrics: false,
 		EnableErlangVMMetrics:            false,

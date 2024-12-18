@@ -1,16 +1,14 @@
 package collector
 
 import (
-	"bytes"
 	"context"
 	"crypto/tls"
 	"encoding/json"
+	"log/slog"
 	"net/http"
 	"sync"
 	"time"
 
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -21,7 +19,7 @@ var (
 
 type Collector struct {
 	mutex                            sync.RWMutex
-	logger                           log.Logger
+	logger                           *slog.Logger
 	timeout                          time.Duration
 	URI                              string
 	skipSslVerify                    bool
@@ -37,6 +35,8 @@ type Collector struct {
 
 	ConnectionMetrics
 	WebhookMetrics
+	SrtpMetrics
+	SctpMetrics
 	ClientMetrics
 	SoraConnectionErrorMetrics
 	ErlangVMMetrics
@@ -49,7 +49,7 @@ type CollectorOptions struct {
 	SkipSslVerify                    bool
 	Timeout                          time.Duration
 	FreezeTimeSeconds                bool
-	Logger                           log.Logger
+	Logger                           *slog.Logger
 	EnableSoraClientMetrics          bool
 	EnableSoraConnectionErrorMetrics bool
 	EnableErlangVMMetrics            bool
@@ -58,10 +58,6 @@ type CollectorOptions struct {
 
 type HTTPClient interface {
 	Do(*http.Request) (*http.Response, error)
-}
-
-type SoraListClusterNodesRequest struct {
-	IncludeAllKnownNodes bool `json:"include_all_known_nodes"`
 }
 
 func NewCollector(options *CollectorOptions) *Collector {
@@ -86,6 +82,8 @@ func NewCollector(options *CollectorOptions) *Collector {
 
 		ConnectionMetrics:          connectionMetrics,
 		WebhookMetrics:             webhookMetrics,
+		SrtpMetrics:                srtpMetrics,
+		SctpMetrics:                sctpMetrics,
 		ClientMetrics:              clientMetrics,
 		SoraConnectionErrorMetrics: soraConnectionErrorMetrics,
 		ErlangVMMetrics:            erlangVMMetrics,
@@ -103,7 +101,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
 	if err != nil {
-		level.Error(c.logger).Log("msg", "failed to create request to sora", "err", err)
+		c.logger.Error("failed to create request to sora", "err", err)
 		ch <- newGauge(c.soraUp, 0)
 		return
 	}
@@ -117,7 +115,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		level.Error(c.logger).Log("msg", "failed to request to Sora GetStatsReport API", "err", err)
+		c.logger.Error("failed to request to Sora GetStatsReport API", "err", err)
 		ch <- newGauge(c.soraUp, 0)
 		return
 	}
@@ -125,26 +123,16 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	var report soraGetStatsReport
 	if err := json.NewDecoder(resp.Body).Decode(&report); err != nil {
-		level.Error(c.logger).Log("msg", "failed to decode response body from Sora GetStatsReport API", "err", err)
+		c.logger.Error("failed to decode response body from Sora GetStatsReport API", "err", err)
 		ch <- newGauge(c.soraUp, 0)
 		return
 	}
 
 	var nodeList []soraClusterNode
 	if c.EnableSoraClusterMetrics {
-		requestParams := SoraListClusterNodesRequest{
-			IncludeAllKnownNodes: true,
-		}
-		encodedParams, err := json.Marshal(requestParams)
+		req, err = http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
 		if err != nil {
-			level.Error(c.logger).Log("msg", "failed to encode Sora ListClusterNodes API request parameters", "err", err)
-			ch <- newGauge(c.soraUp, 0)
-			return
-		}
-
-		req, err = http.NewRequestWithContext(ctx, http.MethodPost, c.URI, bytes.NewBuffer(encodedParams))
-		if err != nil {
-			level.Error(c.logger).Log("msg", "failed to create request to sora", "err", err)
+			c.logger.Error("failed to create request to sora", "err", err.Error())
 			ch <- newGauge(c.soraUp, 0)
 			return
 		}
@@ -152,14 +140,14 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 		nodeResp, err := client.Do(req)
 		if err != nil {
-			level.Error(c.logger).Log("msg", "failed to request to Sora ListClusterNodes API", "err", err)
+			c.logger.Error("failed to request to Sora ListClusterNodes API", "err", err)
 			ch <- newGauge(c.soraUp, 0)
 			return
 		}
 		defer nodeResp.Body.Close()
 
 		if err := json.NewDecoder(nodeResp.Body).Decode(&nodeList); err != nil {
-			level.Error(c.logger).Log("msg", "failed to decode response body from Sora ListClusterNodes API", "err", err)
+			c.logger.Error("failed to decode response body from Sora ListClusterNodes API", "err", err)
 			ch <- newGauge(c.soraUp, 0)
 			return
 		}
@@ -167,7 +155,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	req, err = http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
 	if err != nil {
-		level.Error(c.logger).Log("msg", "failed to create request to sora", "err", err)
+		c.logger.Error("failed to create request to sora", "err", err)
 		ch <- newGauge(c.soraUp, 0)
 		return
 	}
@@ -175,7 +163,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	licenseResp, err := client.Do(req)
 	if err != nil {
-		level.Error(c.logger).Log("msg", "failed to request to Sora GetLicense API", "err", err)
+		c.logger.Error("failed to request to Sora GetLicense API", "err", err)
 		ch <- newGauge(c.soraUp, 0)
 		return
 	}
@@ -183,7 +171,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	var licenseInfo soraLicenseInfo
 	if err := json.NewDecoder(licenseResp.Body).Decode(&licenseInfo); err != nil {
-		level.Error(c.logger).Log("msg", "failed to decode response body from Sora GetLicense API", "err", err)
+		c.logger.Error("failed to decode response body from Sora GetLicense API", "err", err)
 		ch <- newGauge(c.soraUp, 0)
 		return
 	}
@@ -201,6 +189,8 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	c.LicenseMetrics.Collect(ch, licenseInfo)
 	c.ConnectionMetrics.Collect(ch, report.soraConnectionReport)
 	c.WebhookMetrics.Collect(ch, report.soraWebhookReport)
+	c.SrtpMetrics.Collect(ch, report.soraSrtpReport)
+	c.SctpMetrics.Collect(ch, report.soraSctpReport)
 
 	if c.enableSoraClientMetrics {
 		c.ClientMetrics.Collect(ch, report.SoraClientReport)
@@ -223,6 +213,8 @@ func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 	c.LicenseMetrics.Describe(ch)
 	c.ConnectionMetrics.Describe(ch)
 	c.WebhookMetrics.Describe(ch)
+	c.SrtpMetrics.Describe(ch)
+	c.SctpMetrics.Describe(ch)
 
 	if c.enableSoraClientMetrics {
 		c.ClientMetrics.Describe(ch)

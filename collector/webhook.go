@@ -35,8 +35,11 @@ func (m *WebhookMetrics) Collect(ch chan<- prometheus.Metric, report soraWebhook
 	ch <- newCounter(m.totalAuthWebhook, float64(report.TotalFailedAuthWebhook), "failed")
 	ch <- newCounter(m.totalSessionWebhook, float64(report.TotalSuccessfulSessionWebhook), "successful")
 	ch <- newCounter(m.totalSessionWebhook, float64(report.TotalFailedSessionWebhook), "failed")
+	ch <- newCounter(m.totalSessionWebhook, float64(report.TotalIgnoredSessionWebhook), "ignored")
 	ch <- newCounter(m.totalEventWebhook, float64(report.TotalSuccessfulEventWebhook), "successful")
 	ch <- newCounter(m.totalEventWebhook, float64(report.TotalFailedEventWebhook), "failed")
+	ch <- newCounter(m.totalEventWebhook, float64(report.TotalIgnoredEventWebhook), "ignored")
 	ch <- newCounter(m.totalStatsWebhook, float64(report.TotalSuccessfulStatsWebhook), "successful")
 	ch <- newCounter(m.totalStatsWebhook, float64(report.TotalFailedStatsWebhook), "failed")
+	ch <- newCounter(m.totalStatsWebhook, float64(report.TotalIgnoredStatsWebhook), "ignored")
 }
