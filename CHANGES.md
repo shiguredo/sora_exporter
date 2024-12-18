@@ -11,14 +11,42 @@
 
 ## develop
 
+- [CHANGE] クラスターメトリクスを収集する際の `ListClusterNodes` API の呼び出し時にリクエストパラメータの指定を削除する
+  - 破壊的変更になるため、バージョンアップの際に注意してください
+  - Sora 2024.2.0 での `include_all_known_nodes` パラメータ廃止への対応です
+  - Sora 2023.2 以前と Sora 2024.1 以降で、exporter が返すメトリクスの結果が変わります
+  - @tnamao
+- [ADD] SRTP 統計情報を追加する
+  - Sora API の GetStatsReport API から取得可能な SRTP 統計情報を以下のメトリクス名で追加する
+    - `sora_srtp_received_packets_total`
+    - `sora_srtp_received_bytes_total`
+    - `sora_srtp_sent_packets_total`
+    - `sora_srtp_sent_bytes_total`
+    - `sora_srtp_decrypted_packets_total`
+    - `sora_srtp_decrypted_bytes_total`
+  - @tnamao
+- [ADD] SCTP 統計情報を追加する
+  - Sora API の GetStatsReport API から取得可能な SCTP 統計情報を以下のメトリクス名で追加する
+    - `sora_sctp_received_packets_total`
+    - `sora_sctp_received_bytes_total`
+    - `sora_sctp_sent_packets_total`
+    - `sora_sctp_sent_bytes_total`
+  - @tnamao
+- [ADD] 無視されたウェブフック数の統計情報を追加する
+  - Sora API の GetStatsReport API から取得可能な無視されたウェブフック数を以下のメトリクス名で追加する
+  - 既存の以下のメトリクスの `state` ラベルに `ignored` で値を返す
+    - `sora_event_webhook_total`
+    - `sora_session_webhook_total`
+    - `sora_stats_webhook_total`
+  - @tnamao
 - [CHANGE] ログライブラリの変更
   - `prometheus/exporter-toolkit` の依存ログライブラリが `go-kit/log` から Go 言語標準ライブラリの `log/slog` に変更されたため、Sora expoter 内で使用しているロガーも `log/slog` に切り替える
   - 同様にテストコードで使用していた `NewNopLogger` は代替として `slog.New(slog.NewTextHandler(io.Discard, nil))` を使用する形に変更する
   - @tnamao
 - [UPDATE] 依存パッケージを更新する
-  - prometheus/client_golang 1.19.1 => 1.20.4
-  - prometheus/common 0.54.0 => 0.59.1
-  - prometheus/exporter-toolkit 0.11.0 => 0.13.0
+  - prometheus/client_golang 1.19.1 => 1.20.5
+  - prometheus/common 0.54.0 => 0.61.0
+  - prometheus/exporter-toolkit 0.11.0 => 0.13.2
   - `prometheus/exporter-toolkit` のログライブラリ切り替えにより `go-kit/log` への依存はなくなりました
   - @tnamao
 - [UPDATE] Go を 1.23 に上げる

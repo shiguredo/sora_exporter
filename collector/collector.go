@@ -1,7 +1,6 @@
 package collector
 
 import (
-	"bytes"
 	"context"
 	"crypto/tls"
 	"encoding/json"
@@ -36,6 +35,8 @@ type Collector struct {
 
 	ConnectionMetrics
 	WebhookMetrics
+	SrtpMetrics
+	SctpMetrics
 	ClientMetrics
 	SoraConnectionErrorMetrics
 	ErlangVMMetrics
@@ -57,10 +58,6 @@ type CollectorOptions struct {
 
 type HTTPClient interface {
 	Do(*http.Request) (*http.Response, error)
-}
-
-type SoraListClusterNodesRequest struct {
-	IncludeAllKnownNodes bool `json:"include_all_known_nodes"`
 }
 
 func NewCollector(options *CollectorOptions) *Collector {
@@ -85,6 +82,8 @@ func NewCollector(options *CollectorOptions) *Collector {
 
 		ConnectionMetrics:          connectionMetrics,
 		WebhookMetrics:             webhookMetrics,
+		SrtpMetrics:                srtpMetrics,
+		SctpMetrics:                sctpMetrics,
 		ClientMetrics:              clientMetrics,
 		SoraConnectionErrorMetrics: soraConnectionErrorMetrics,
 		ErlangVMMetrics:            erlangVMMetrics,
@@ -131,17 +130,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 
 	var nodeList []soraClusterNode
 	if c.EnableSoraClusterMetrics {
-		requestParams := SoraListClusterNodesRequest{
-			IncludeAllKnownNodes: true,
-		}
-		encodedParams, err := json.Marshal(requestParams)
-		if err != nil {
-			c.logger.Error("failed to encode Sora ListClusterNodes API request parameters", "err", err)
-			ch <- newGauge(c.soraUp, 0)
-			return
-		}
-
-		req, err = http.NewRequestWithContext(ctx, http.MethodPost, c.URI, bytes.NewBuffer(encodedParams))
+		req, err = http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
 		if err != nil {
 			c.logger.Error("failed to create request to sora", "err", err.Error())
 			ch <- newGauge(c.soraUp, 0)
@@ -200,6 +189,8 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	c.LicenseMetrics.Collect(ch, licenseInfo)
 	c.ConnectionMetrics.Collect(ch, report.soraConnectionReport)
 	c.WebhookMetrics.Collect(ch, report.soraWebhookReport)
+	c.SrtpMetrics.Collect(ch, report.soraSrtpReport)
+	c.SctpMetrics.Collect(ch, report.soraSctpReport)
 
 	if c.enableSoraClientMetrics {
 		c.ClientMetrics.Collect(ch, report.SoraClientReport)
@@ -222,6 +213,8 @@ func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 	c.LicenseMetrics.Describe(ch)
 	c.ConnectionMetrics.Describe(ch)
 	c.WebhookMetrics.Describe(ch)
+	c.SrtpMetrics.Describe(ch)
+	c.SctpMetrics.Describe(ch)
 
 	if c.enableSoraClientMetrics {
 		c.ClientMetrics.Describe(ch)
