@@ -9,6 +9,26 @@
 - FIX
   - バグ修正
 
+## develop
+
+- [ADD] 多段リレー（Plumtree） 関連のメトリクスを追加する
+  - Sora 2025.1.0 で Sora API の GetStatsReport API に追加される予定の多段リレー関連の以下のメトリクスを追加する
+    - `cluster_relay_plumtree_sent_gossip_total`
+    - `cluster_relay_plumtree_received_gossip_total`
+    - `cluster_relay_plumtree_sent_ihave_total`
+    - `cluster_relay_plumtree_received_ihave_total`
+    - `cluster_relay_plumtree_sent_graft_total`
+    - `cluster_relay_plumtree_received_graft_total`
+    - `cluster_relay_plumtree_sent_prune_total`
+    - `cluster_relay_plumtree_received_prune_total`
+    - `cluster_relay_plumtree_graft_miss_total`
+    - `cluster_relay_plumtree_skipped_send_total`
+    - `cluster_relay_plumtree_ignored_total`
+  - @sile
+- [ADD] `sora_srtp_sent_sfu_delay_us_total` メトリクスを追加する
+  - Sora 2025.1.0 で Sora API の GetStatsReport API に追加される予定のメトリクス
+  - @sile
+
 ## 2024.7.0
 
 **リリース日**: 2024-12-18
