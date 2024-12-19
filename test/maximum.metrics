@@ -220,6 +220,9 @@ sora_srtp_received_packets_total 108
 # HELP sora_srtp_sent_bytes_total The total number of sent SRTP bytes.
 # TYPE sora_srtp_sent_bytes_total counter
 sora_srtp_sent_bytes_total 107
+# HELP sora_srtp_sent_sfu_delay_us_total The total delay introduced by the SFU during the transfer of SRTP packets.
+# TYPE sora_srtp_sent_sfu_delay_us_total counter
+sora_srtp_sent_sfu_delay_us_total 123456
 # HELP sora_srtp_sent_packets_total The total number of sent SRTP packets.
 # TYPE sora_srtp_sent_packets_total counter
 sora_srtp_sent_packets_total 106

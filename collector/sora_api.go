@@ -51,6 +51,7 @@ type soraSrtpReport struct {
 	TotalReceivedSrtpByteSize  int64 `json:"total_received_srtp_byte_size"`
 	TotalSentSrtp              int64 `json:"total_sent_srtp"`
 	TotalSentSrtpByteSize      int64 `json:"total_sent_srtp_byte_size"`
+	TotalSentSrtpSfuDelayUs    int64 `json:"total_sent_srtp_sfu_delay_us"`
 	TotalDecryptedSrtp         int64 `json:"total_decrypted_srtp"`
 	TotalDecryptedSrtpByteSize int64 `json:"total_decrypted_srtp_byte_size"`
 }
