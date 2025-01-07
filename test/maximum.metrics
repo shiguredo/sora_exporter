@@ -50,6 +50,10 @@ sora_cluster_relay_plumtree_ignored_total{node_name="node-02"} 111
 # TYPE sora_cluster_relay_plumtree_received_gossip_total counter
 sora_cluster_relay_plumtree_received_gossip_total{node_name="node-01"} 2
 sora_cluster_relay_plumtree_received_gossip_total{node_name="node-02"} 102
+# HELP sora_cluster_relay_plumtree_received_gossip_hop_total The total number of hop count of Plumtree GOSSIP messages received by the cluster relay.
+# TYPE sora_cluster_relay_plumtree_received_gossip_hop_total counter
+sora_cluster_relay_plumtree_received_gossip_hop_total{node_name="node-01"} 4
+sora_cluster_relay_plumtree_received_gossip_hop_total{node_name="node-02"} 150
 # HELP sora_cluster_relay_plumtree_received_graft_total The total number of Plumtree GRAFT messages received by the cluster relay.
 # TYPE sora_cluster_relay_plumtree_received_graft_total counter
 sora_cluster_relay_plumtree_received_graft_total{node_name="node-01"} 6
