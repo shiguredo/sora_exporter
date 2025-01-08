@@ -15,6 +15,7 @@
   - Sora 2025.1.0 で Sora API の GetStatsReport API に追加される予定の多段リレー関連の以下のメトリクスを追加する
     - `cluster_relay_plumtree_sent_gossip_total`
     - `cluster_relay_plumtree_received_gossip_total`
+    - `cluster_relay_plumtree_received_gossip_hop_total`
     - `cluster_relay_plumtree_sent_ihave_total`
     - `cluster_relay_plumtree_received_ihave_total`
     - `cluster_relay_plumtree_sent_graft_total`

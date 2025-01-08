@@ -18,6 +18,7 @@ var (
 
 		clusterRelayPlumtreeSentGossipTotal:   newDescWithLabel("cluster_relay_plumtree_sent_gossip_total", "The total number of Plumtree GOSSIP messages sent by the cluster relay.", []string{"node_name"}),
 		clusterRelayPlumtreeReceivedGossipTotal:   newDescWithLabel("cluster_relay_plumtree_received_gossip_total", "The total number of Plumtree GOSSIP messages received by the cluster relay.", []string{"node_name"}),
+		clusterRelayPlumtreeReceivedGossipHopTotal:   newDescWithLabel("cluster_relay_plumtree_received_gossip_hop_total", "The total number of hop count of Plumtree GOSSIP messages received by the cluster relay.", []string{"node_name"}),
 		clusterRelayPlumtreeSentIhaveTotal:   newDescWithLabel("cluster_relay_plumtree_sent_ihave_total", "The total number of Plumtree IHAVE messages sent by the cluster relay.", []string{"node_name"}),
 		clusterRelayPlumtreeReceivedIhaveTotal:   newDescWithLabel("cluster_relay_plumtree_received_ihave_total", "The total number of Plumtree IHAVE messages received by the cluster relay.", []string{"node_name"}),
 		clusterRelayPlumtreeSentGraftTotal:   newDescWithLabel("cluster_relay_plumtree_sent_graft_total", "The total number of Plumtree GRAFT messages sent by the cluster relay.", []string{"node_name"}),
@@ -41,17 +42,18 @@ type SoraClusterMetrics struct {
 	clusterRelayReceivedPacketsTotal *prometheus.Desc
 	clusterRelaySentPacketsTotal     *prometheus.Desc
 
-	clusterRelayPlumtreeSentGossipTotal     *prometheus.Desc
-	clusterRelayPlumtreeReceivedGossipTotal *prometheus.Desc
-	clusterRelayPlumtreeSentIhaveTotal      *prometheus.Desc
-	clusterRelayPlumtreeReceivedIhaveTotal  *prometheus.Desc
-	clusterRelayPlumtreeSentGraftTotal      *prometheus.Desc
-	clusterRelayPlumtreeReceivedGraftTotal  *prometheus.Desc
-	clusterRelayPlumtreeSentPruneTotal      *prometheus.Desc
-	clusterRelayPlumtreeReceivedPruneTotal  *prometheus.Desc
-	clusterRelayPlumtreeGraftMissTotal      *prometheus.Desc
-	clusterRelayPlumtreeSkippedSendTotal    *prometheus.Desc
-	clusterRelayPlumtreeIgnoredTotal        *prometheus.Desc
+	clusterRelayPlumtreeSentGossipTotal        *prometheus.Desc
+	clusterRelayPlumtreeReceivedGossipTotal    *prometheus.Desc
+	clusterRelayPlumtreeReceivedGossipHopTotal *prometheus.Desc
+	clusterRelayPlumtreeSentIhaveTotal         *prometheus.Desc
+	clusterRelayPlumtreeReceivedIhaveTotal     *prometheus.Desc
+	clusterRelayPlumtreeSentGraftTotal         *prometheus.Desc
+	clusterRelayPlumtreeReceivedGraftTotal     *prometheus.Desc
+	clusterRelayPlumtreeSentPruneTotal         *prometheus.Desc
+	clusterRelayPlumtreeReceivedPruneTotal     *prometheus.Desc
+	clusterRelayPlumtreeGraftMissTotal         *prometheus.Desc
+	clusterRelayPlumtreeSkippedSendTotal       *prometheus.Desc
+	clusterRelayPlumtreeIgnoredTotal           *prometheus.Desc
 }
 
 func (m *SoraClusterMetrics) Describe(ch chan<- *prometheus.Desc) {
@@ -65,6 +67,7 @@ func (m *SoraClusterMetrics) Describe(ch chan<- *prometheus.Desc) {
 	ch <- m.clusterRelaySentPacketsTotal
 	ch <- m.clusterRelayPlumtreeSentGossipTotal
 	ch <- m.clusterRelayPlumtreeReceivedGossipTotal
+	ch <- m.clusterRelayPlumtreeReceivedGossipHopTotal
 	ch <- m.clusterRelayPlumtreeSentIhaveTotal
 	ch <- m.clusterRelayPlumtreeReceivedIhaveTotal
 	ch <- m.clusterRelayPlumtreeSentGraftTotal
@@ -106,6 +109,7 @@ func (m *SoraClusterMetrics) Collect(ch chan<- prometheus.Metric, nodeList []sor
 
 		ch <- newCounter(m.clusterRelayPlumtreeSentGossipTotal, float64(relayNode.Plumtree.TotalSentGossip), relayNode.NodeName)
 		ch <- newCounter(m.clusterRelayPlumtreeReceivedGossipTotal, float64(relayNode.Plumtree.TotalReceivedGossip), relayNode.NodeName)
+		ch <- newCounter(m.clusterRelayPlumtreeReceivedGossipHopTotal, float64(relayNode.Plumtree.TotalReceivedGossipHop), relayNode.NodeName)
 		ch <- newCounter(m.clusterRelayPlumtreeSentIhaveTotal, float64(relayNode.Plumtree.TotalSentIhave), relayNode.NodeName)
 		ch <- newCounter(m.clusterRelayPlumtreeReceivedIhaveTotal, float64(relayNode.Plumtree.TotalReceivedIhave), relayNode.NodeName)
 		ch <- newCounter(m.clusterRelayPlumtreeSentGraftTotal, float64(relayNode.Plumtree.TotalSentGraft), relayNode.NodeName)

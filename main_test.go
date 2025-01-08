@@ -35,6 +35,7 @@ var (
 				"plumtree": {
 					"total_sent_gossip": 1,
 					"total_received_gossip": 2,
+					"total_received_gossip_hop": 4,
 					"total_sent_ihave": 3,
 					"total_received_ihave": 4,
 					"total_sent_graft": 5,
@@ -55,6 +56,7 @@ var (
 				"plumtree": {
 					"total_sent_gossip": 101,
 					"total_received_gossip": 102,
+					"total_received_gossip_hop": 150,
 					"total_sent_ihave": 103,
 					"total_received_ihave": 104,
 					"total_sent_graft": 105,

@@ -179,17 +179,18 @@ type soraClusterRelay struct {
 }
 
 type soraClusterRelayPlumtree struct {
-        TotalSentGossip     int64 `json:"total_sent_gossip"`
-        TotalReceivedGossip int64 `json:"total_received_gossip"`
-        TotalSentIhave      int64 `json:"total_sent_ihave"`
-        TotalReceivedIhave  int64 `json:"total_received_ihave"`
-        TotalSentGraft      int64 `json:"total_sent_graft"`
-        TotalReceivedGraft  int64 `json:"total_received_graft"`
-        TotalSentPrune      int64 `json:"total_sent_prune"`
-        TotalReceivedPrune  int64 `json:"total_received_prune"`
-        TotalGraftMiss      int64 `json:"total_graft_miss"`
-        TotalSkippedSend    int64 `json:"total_skipped_send"`
-        TotalIgnored        int64 `json:"total_ignored"`
+        TotalSentGossip        int64 `json:"total_sent_gossip"`
+        TotalReceivedGossip    int64 `json:"total_received_gossip"`
+        TotalReceivedGossipHop int64 `json:"total_received_gossip_hop"`
+        TotalSentIhave         int64 `json:"total_sent_ihave"`
+        TotalReceivedIhave     int64 `json:"total_received_ihave"`
+        TotalSentGraft         int64 `json:"total_sent_graft"`
+        TotalReceivedGraft     int64 `json:"total_received_graft"`
+        TotalSentPrune         int64 `json:"total_sent_prune"`
+        TotalReceivedPrune     int64 `json:"total_received_prune"`
+        TotalGraftMiss         int64 `json:"total_graft_miss"`
+        TotalSkippedSend       int64 `json:"total_skipped_send"`
+        TotalIgnored           int64 `json:"total_ignored"`
 }
 
 type soraLicenseInfo struct {
