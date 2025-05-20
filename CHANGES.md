@@ -34,6 +34,9 @@
 
 ### misc
 
+- [UPDATE] CI の staticcheck のバージョンを更新する
+  - 2024.1.1 => 2025.1.1
+  - @tnamao
 - [UPDATE] 依存パッケージを更新する
   - prometheus/client_golang 1.20.5 => 1.22.0
   - prometheus/common 0.61.0 => 0.64.0
