@@ -29,6 +29,16 @@
 - [ADD] `sora_srtp_sent_sfu_delay_us_total` メトリクスを追加する
   - Sora 2025.1.0 で Sora API の GetStatsReport API に追加される予定のメトリクス
   - @sile
+- [UPDATE] Go を 1.24.3 に上げる
+  - @tnamao
+
+### misc
+
+- [UPDATE] 依存パッケージを更新する
+  - prometheus/client_golang 1.20.5 => 1.22.0
+  - prometheus/common 0.61.0 => 0.64.0
+  - prometheus/exporter-toolkit 0.13.2 => 0.14.0
+  - @tnamao
 
 ## 2024.7.0
 
