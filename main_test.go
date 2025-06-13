@@ -44,6 +44,7 @@ var (
 					"total_received_prune": 8,
 					"total_graft_miss": 9,
 					"total_skipped_send": 10,
+					"total_ihave_overflow": 2,
 					"total_ignored": 11
                                 }
 			},
@@ -65,6 +66,7 @@ var (
 					"total_received_prune": 108,
 					"total_graft_miss": 109,
 					"total_skipped_send": 110,
+					"total_ihave_overflow": 3,
 					"total_ignored": 111
                                 }
 			}

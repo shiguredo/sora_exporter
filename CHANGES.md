@@ -24,6 +24,7 @@
     - `cluster_relay_plumtree_received_prune_total`
     - `cluster_relay_plumtree_graft_miss_total`
     - `cluster_relay_plumtree_skipped_send_total`
+    - `cluster_relay_plumtree_ihave_overflow_total`
     - `cluster_relay_plumtree_ignored_total`
   - @sile
 - [ADD] `sora_srtp_sent_sfu_delay_us_total` メトリクスを追加する
