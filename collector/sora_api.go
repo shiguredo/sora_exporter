@@ -190,6 +190,7 @@ type soraClusterRelayPlumtree struct {
         TotalReceivedPrune     int64 `json:"total_received_prune"`
         TotalGraftMiss         int64 `json:"total_graft_miss"`
         TotalSkippedSend       int64 `json:"total_skipped_send"`
+        TotalIhaveOverflow     int64 `json:"total_ihave_overflow"`
         TotalIgnored           int64 `json:"total_ignored"`
 }
 

@@ -27,6 +27,7 @@ var (
 		clusterRelayPlumtreeReceivedPruneTotal:   newDescWithLabel("cluster_relay_plumtree_received_prune_total", "The total number of Plumtree PRUNE messages received by the cluster relay.", []string{"node_name"}),
 		clusterRelayPlumtreeGraftMissTotal:   newDescWithLabel("cluster_relay_plumtree_graft_miss_total", "The total number of Plumtree GRAFT messages missed by the cluster relay.", []string{"node_name"}),
 		clusterRelayPlumtreeSkippedSendTotal:   newDescWithLabel("cluster_relay_plumtree_skipped_send_total", "The total number of Plumtree messages whose sending was skipped by the cluster relay.", []string{"node_name"}),
+		clusterRelayPlumtreeIhaveOverflowTotal:   newDescWithLabel("cluster_relay_plumtree_ihave_overflow_total", "The total number of Plumtree IHAVE messages that were discarded upon reception by the cluster relay due to exceeding the maximum queue size.", []string{"node_name"}),
 		clusterRelayPlumtreeIgnoredTotal:   newDescWithLabel("cluster_relay_plumtree_ignored_total", "The total number of Plumtree messages received but ignored by the cluster relay.", []string{"node_name"}),
 	}
 )
@@ -53,6 +54,7 @@ type SoraClusterMetrics struct {
 	clusterRelayPlumtreeReceivedPruneTotal     *prometheus.Desc
 	clusterRelayPlumtreeGraftMissTotal         *prometheus.Desc
 	clusterRelayPlumtreeSkippedSendTotal       *prometheus.Desc
+	clusterRelayPlumtreeIhaveOverflowTotal     *prometheus.Desc
 	clusterRelayPlumtreeIgnoredTotal           *prometheus.Desc
 }
 
@@ -76,6 +78,7 @@ func (m *SoraClusterMetrics) Describe(ch chan<- *prometheus.Desc) {
 	ch <- m.clusterRelayPlumtreeReceivedPruneTotal
 	ch <- m.clusterRelayPlumtreeGraftMissTotal
 	ch <- m.clusterRelayPlumtreeSkippedSendTotal
+	ch <- m.clusterRelayPlumtreeIhaveOverflowTotal
 	ch <- m.clusterRelayPlumtreeIgnoredTotal
 }
 
@@ -118,6 +121,7 @@ func (m *SoraClusterMetrics) Collect(ch chan<- prometheus.Metric, nodeList []sor
 		ch <- newCounter(m.clusterRelayPlumtreeReceivedPruneTotal, float64(relayNode.Plumtree.TotalReceivedPrune), relayNode.NodeName)
 		ch <- newCounter(m.clusterRelayPlumtreeGraftMissTotal, float64(relayNode.Plumtree.TotalGraftMiss), relayNode.NodeName)
 		ch <- newCounter(m.clusterRelayPlumtreeSkippedSendTotal, float64(relayNode.Plumtree.TotalSkippedSend), relayNode.NodeName)
+		ch <- newCounter(m.clusterRelayPlumtreeIhaveOverflowTotal, float64(relayNode.Plumtree.TotalIhaveOverflow), relayNode.NodeName)
 		ch <- newCounter(m.clusterRelayPlumtreeIgnoredTotal, float64(relayNode.Plumtree.TotalIgnored), relayNode.NodeName)
 	}
 }

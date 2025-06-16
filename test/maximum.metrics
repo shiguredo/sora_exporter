@@ -86,6 +86,10 @@ sora_cluster_relay_plumtree_sent_prune_total{node_name="node-02"} 107
 # TYPE sora_cluster_relay_plumtree_skipped_send_total counter
 sora_cluster_relay_plumtree_skipped_send_total{node_name="node-01"} 10
 sora_cluster_relay_plumtree_skipped_send_total{node_name="node-02"} 110
+# HELP sora_cluster_relay_plumtree_ihave_overflow_total The total number of Plumtree IHAVE messages that were discarded upon reception by the cluster relay due to exceeding the maximum queue size.
+# TYPE sora_cluster_relay_plumtree_ihave_overflow_total counter
+sora_cluster_relay_plumtree_ihave_overflow_total{node_name="node-01"} 2
+sora_cluster_relay_plumtree_ihave_overflow_total{node_name="node-02"} 3
 # HELP sora_client_type_total The total number of connections by Sora client types
 # TYPE sora_client_type_total counter
 sora_client_type_total{client="android_sdk",state="failed"} 1
