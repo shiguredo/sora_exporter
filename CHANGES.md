@@ -40,7 +40,7 @@
   - @tnamao
 - [UPDATE] 依存パッケージを更新する
   - prometheus/client_golang 1.20.5 => 1.22.0
-  - prometheus/common 0.61.0 => 0.64.0
+  - prometheus/common 0.61.0 => 0.65.0
   - prometheus/exporter-toolkit 0.13.2 => 0.14.0
   - @tnamao
 
