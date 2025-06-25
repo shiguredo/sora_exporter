@@ -51,6 +51,7 @@ type soraSrtpReport struct {
 	TotalReceivedSrtpByteSize  int64 `json:"total_received_srtp_byte_size"`
 	TotalSentSrtp              int64 `json:"total_sent_srtp"`
 	TotalSentSrtpByteSize      int64 `json:"total_sent_srtp_byte_size"`
+	TotalSentSrtpSfuDelayUs    int64 `json:"total_sent_srtp_sfu_delay_us"`
 	TotalDecryptedSrtp         int64 `json:"total_decrypted_srtp"`
 	TotalDecryptedSrtpByteSize int64 `json:"total_decrypted_srtp_byte_size"`
 }
@@ -169,11 +170,28 @@ type soraClusterNode struct {
 }
 
 type soraClusterRelay struct {
-	NodeName              string `json:"node_name"`
-	TotalReceivedByteSize int64  `json:"total_received_byte_size"`
-	TotalSentByteSize     int64  `json:"total_sent_byte_size"`
-	TotalReceived         int64  `json:"total_received"`
-	TotalSent             int64  `json:"total_sent"`
+	NodeName              string                   `json:"node_name"`
+	TotalReceivedByteSize int64                    `json:"total_received_byte_size"`
+	TotalSentByteSize     int64                    `json:"total_sent_byte_size"`
+	TotalReceived         int64                    `json:"total_received"`
+	TotalSent             int64                    `json:"total_sent"`
+	Plumtree              soraClusterRelayPlumtree `json:"plumtree"`
+}
+
+type soraClusterRelayPlumtree struct {
+        TotalSentGossip        int64 `json:"total_sent_gossip"`
+        TotalReceivedGossip    int64 `json:"total_received_gossip"`
+        TotalReceivedGossipHop int64 `json:"total_received_gossip_hop"`
+        TotalSentIhave         int64 `json:"total_sent_ihave"`
+        TotalReceivedIhave     int64 `json:"total_received_ihave"`
+        TotalSentGraft         int64 `json:"total_sent_graft"`
+        TotalReceivedGraft     int64 `json:"total_received_graft"`
+        TotalSentPrune         int64 `json:"total_sent_prune"`
+        TotalReceivedPrune     int64 `json:"total_received_prune"`
+        TotalGraftMiss         int64 `json:"total_graft_miss"`
+        TotalSkippedSend       int64 `json:"total_skipped_send"`
+        TotalIhaveOverflow     int64 `json:"total_ihave_overflow"`
+        TotalIgnored           int64 `json:"total_ignored"`
 }
 
 type soraLicenseInfo struct {

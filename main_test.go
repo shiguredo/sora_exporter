@@ -31,14 +31,44 @@ var (
 				"total_received_byte_size": 11,
 				"total_sent_byte_size": 12,
 				"total_received": 13,
-				"total_sent": 14
+				"total_sent": 14,
+				"plumtree": {
+					"total_sent_gossip": 1,
+					"total_received_gossip": 2,
+					"total_received_gossip_hop": 4,
+					"total_sent_ihave": 3,
+					"total_received_ihave": 4,
+					"total_sent_graft": 5,
+					"total_received_graft": 6,
+					"total_sent_prune": 7,
+					"total_received_prune": 8,
+					"total_graft_miss": 9,
+					"total_skipped_send": 10,
+					"total_ihave_overflow": 2,
+					"total_ignored": 11
+                                }
 			},
 			{
 				"node_name": "node-02",
 				"total_received_byte_size": 21,
 				"total_sent_byte_size": 22,
 				"total_received": 23,
-				"total_sent": 24
+				"total_sent": 24,
+				"plumtree": {
+					"total_sent_gossip": 101,
+					"total_received_gossip": 102,
+					"total_received_gossip_hop": 150,
+					"total_sent_ihave": 103,
+					"total_received_ihave": 104,
+					"total_sent_graft": 105,
+					"total_received_graft": 106,
+					"total_sent_prune": 107,
+					"total_received_prune": 108,
+					"total_graft_miss": 109,
+					"total_skipped_send": 110,
+					"total_ihave_overflow": 3,
+					"total_ignored": 111
+                                }
 			}
 		],
 		"erlang_vm": {
@@ -166,6 +196,7 @@ var (
 		"total_sent_sctp_byte_size": 111,
 		"total_sent_srtp": 106,
 		"total_sent_srtp_byte_size": 107,
+		"total_sent_srtp_sfu_delay_us": 123456,
 		"total_session_created": 1,
 		"total_session_destroyed": 0,
 		"total_successful_auth_webhook": 96,
@@ -435,6 +466,7 @@ func TestMinimumMetrics(t *testing.T) {
 		"total_sent_sctp_byte_size": 111,
 		"total_sent_srtp": 106,
 		"total_sent_srtp_byte_size": 107,
+		"total_sent_srtp_sfu_delay_us": 123456,
 		"total_session_created": 111,
 		"total_session_destroyed": 222,
 		"total_successful_auth_webhook": 96,

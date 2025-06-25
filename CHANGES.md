@@ -9,6 +9,43 @@
 - FIX
   - バグ修正
 
+## 2025.1.0
+
+**リリース日**: 2025-06-25
+
+- [ADD] 多段リレー（Plumtree） 関連のメトリクスを追加する
+  - Sora 2025.1.0 で Sora API の GetStatsReport API に追加される予定の多段リレー関連の以下のメトリクスを追加する
+    - `cluster_relay_plumtree_sent_gossip_total`
+    - `cluster_relay_plumtree_received_gossip_total`
+    - `cluster_relay_plumtree_received_gossip_hop_total`
+    - `cluster_relay_plumtree_sent_ihave_total`
+    - `cluster_relay_plumtree_received_ihave_total`
+    - `cluster_relay_plumtree_sent_graft_total`
+    - `cluster_relay_plumtree_received_graft_total`
+    - `cluster_relay_plumtree_sent_prune_total`
+    - `cluster_relay_plumtree_received_prune_total`
+    - `cluster_relay_plumtree_graft_miss_total`
+    - `cluster_relay_plumtree_skipped_send_total`
+    - `cluster_relay_plumtree_ihave_overflow_total`
+    - `cluster_relay_plumtree_ignored_total`
+  - @sile
+- [ADD] `sora_srtp_sent_sfu_delay_us_total` メトリクスを追加する
+  - Sora 2025.1.0 で Sora API の GetStatsReport API に追加される予定のメトリクス
+  - @sile
+- [UPDATE] Go を 1.24.4 に上げる
+  - @tnamao
+
+### misc
+
+- [UPDATE] CI の staticcheck のバージョンを更新する
+  - 2024.1.1 => 2025.1.1
+  - @tnamao
+- [UPDATE] 依存パッケージを更新する
+  - prometheus/client_golang 1.20.5 => 1.22.0
+  - prometheus/common 0.61.0 => 0.65.0
+  - prometheus/exporter-toolkit 0.13.2 => 0.14.0
+  - @tnamao
+
 ## 2024.7.0
 
 **リリース日**: 2024-12-18
