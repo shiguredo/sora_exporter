@@ -9,6 +9,13 @@
 - FIX
   - バグ修正
 
+## develop
+
+### misc
+
+- [UPDATE] actions/checkout を v5 に上げる
+  - @miosakuma
+
 ## 2025.1.0
 
 **リリース日**: 2025-06-25
