@@ -21,8 +21,12 @@
   - prometheus/common 0.65.0 => 0.67.4
   - prometheus/exporter-toolkit 0.14.0 => 0.15.0
   - @tnamao
-- [UPDATE] actions/checkout を v5 に上げる
+- [UPDATE] GitHub Actions のイメージを更新する
+  - actions/setup-go v5 => v6
+  - actions/checkout v4 => v5
+  - dominikh/staticcheck-action v1.3.1 => v1.4.0
   - @miosakuma
+  - @tnamao
 
 ## 2025.1.0
 
