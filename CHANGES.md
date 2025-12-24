@@ -11,8 +11,16 @@
 
 ## develop
 
+- [UPDATE] Go を 1.25.5 に上げる
+  - @tnamao
+
 ### misc
 
+- [UPDATE] 依存パッケージを更新する
+  - prometheus/client_golang 1.22.0 => 1.23.2
+  - prometheus/common 0.65.0 => 0.67.4
+  - prometheus/exporter-toolkit 0.14.0 => 0.15.0
+  - @tnamao
 - [UPDATE] actions/checkout を v5 に上げる
   - @miosakuma
 
