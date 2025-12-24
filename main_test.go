@@ -330,6 +330,14 @@ func soraHandler(s *sora) http.HandlerFunc {
 	}
 }
 
+func newSoraAPIFailed() *sora {
+	s := &sora{}
+	s.Server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+	}))
+	return s
+}
+
 func expectMetrics(t *testing.T, c prometheus.Collector, fixture string) {
 	exp, err := os.Open(path.Join("test", fixture))
 	if err != nil {
@@ -341,7 +349,8 @@ func expectMetrics(t *testing.T, c prometheus.Collector, fixture string) {
 }
 
 func TestInvalidConfig(t *testing.T) {
-	s := newSora([]byte("invalid config parameter"), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
+	s := newSoraAPIFailed()
+	// s := newSora([]byte("invalid config parameter"), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
 
 	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))

@@ -120,7 +120,6 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	} else {
 		ch <- newGauge(c.soraUp, 0)
 	}
-	ch <- newGauge(c.soraVersionInfo, 1, report.SoraVersion)
 
 	if c.freezeTimeSeconds {
 		ch <- newGauge(c.soraTimeSeconds, freezedTimeSeconds)
@@ -129,21 +128,28 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		ch <- newGauge(c.soraTimeSeconds, nowSec)
 	}
 
-	c.LicenseMetrics.Collect(ch, *licenseInfo)
-	c.ConnectionMetrics.Collect(ch, report.soraConnectionReport)
-	c.WebhookMetrics.Collect(ch, report.soraWebhookReport)
-	c.SrtpMetrics.Collect(ch, report.soraSrtpReport)
-	c.SctpMetrics.Collect(ch, report.soraSctpReport)
+	if report != nil {
+		ch <- newGauge(c.soraVersionInfo, 1, report.SoraVersion)
+		c.ConnectionMetrics.Collect(ch, report.soraConnectionReport)
+		c.WebhookMetrics.Collect(ch, report.soraWebhookReport)
+		c.SrtpMetrics.Collect(ch, report.soraSrtpReport)
+		c.SctpMetrics.Collect(ch, report.soraSctpReport)
 
-	if c.enableSoraClientMetrics {
-		c.ClientMetrics.Collect(ch, report.SoraClientReport)
+		if c.enableSoraClientMetrics {
+			c.ClientMetrics.Collect(ch, report.SoraClientReport)
+		}
+		if c.enableSoraConnectionErrorMetrics {
+			c.SoraConnectionErrorMetrics.Collect(ch, report.SoraConnectionErrorReport)
+		}
+		if c.enableErlangVMMetrics {
+			c.ErlangVMMetrics.Collect(ch, report.ErlangVMReport)
+		}
 	}
-	if c.enableSoraConnectionErrorMetrics {
-		c.SoraConnectionErrorMetrics.Collect(ch, report.SoraConnectionErrorReport)
+
+	if licenseInfo != nil {
+		c.LicenseMetrics.Collect(ch, licenseInfo)
 	}
-	if c.enableErlangVMMetrics {
-		c.ErlangVMMetrics.Collect(ch, report.ErlangVMReport)
-	}
+
 	if c.EnableSoraClusterMetrics {
 		if errFetchGetStatsReport == nil {
 			// クラスター API の呼び出しが成功した場合は Sora クラスターは up とみなす
@@ -151,7 +157,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		} else {
 			ch <- newGauge(c.soraClusterUp, 0)
 		}
-		c.SoraClusterMetrics.Collect(ch, nodeList, report.ClusterReport, report.ClusterRelay)
+		c.SoraClusterMetrics.Collect(ch, nodeList, report)
 	}
 }
 
@@ -203,7 +209,7 @@ func (c *Collector) fetchGetLicense(ctx context.Context, client *http.Client) (*
 	return &licenseInfo, nil
 }
 
-func (c *Collector) fetchListClusterNodes(ctx context.Context, client *http.Client) ([]soraClusterNode, error) {
+func (c *Collector) fetchListClusterNodes(ctx context.Context, client *http.Client) (*[]soraClusterNode, error) {
 	if !c.EnableSoraClusterMetrics {
 		return nil, nil
 	}
@@ -228,7 +234,7 @@ func (c *Collector) fetchListClusterNodes(ctx context.Context, client *http.Clie
 		return nil, err
 	}
 
-	return nodeList, nil
+	return &nodeList, nil
 }
 
 func (c *Collector) Describe(ch chan<- *prometheus.Desc) {

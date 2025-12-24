@@ -16,19 +16,19 @@ var (
 		clusterRelayReceivedPacketsTotal: newDescWithLabel("cluster_relay_received_packets_total", "The total number of packets received by the cluster relay.", []string{"node_name"}),
 		clusterRelaySentPacketsTotal:     newDescWithLabel("cluster_relay_sent_packets_total", "The total number of packets sent by the cluster relay.", []string{"node_name"}),
 
-		clusterRelayPlumtreeSentGossipTotal:   newDescWithLabel("cluster_relay_plumtree_sent_gossip_total", "The total number of Plumtree GOSSIP messages sent by the cluster relay.", []string{"node_name"}),
-		clusterRelayPlumtreeReceivedGossipTotal:   newDescWithLabel("cluster_relay_plumtree_received_gossip_total", "The total number of Plumtree GOSSIP messages received by the cluster relay.", []string{"node_name"}),
-		clusterRelayPlumtreeReceivedGossipHopTotal:   newDescWithLabel("cluster_relay_plumtree_received_gossip_hop_total", "The total number of hop count of Plumtree GOSSIP messages received by the cluster relay.", []string{"node_name"}),
-		clusterRelayPlumtreeSentIhaveTotal:   newDescWithLabel("cluster_relay_plumtree_sent_ihave_total", "The total number of Plumtree IHAVE messages sent by the cluster relay.", []string{"node_name"}),
-		clusterRelayPlumtreeReceivedIhaveTotal:   newDescWithLabel("cluster_relay_plumtree_received_ihave_total", "The total number of Plumtree IHAVE messages received by the cluster relay.", []string{"node_name"}),
-		clusterRelayPlumtreeSentGraftTotal:   newDescWithLabel("cluster_relay_plumtree_sent_graft_total", "The total number of Plumtree GRAFT messages sent by the cluster relay.", []string{"node_name"}),
-		clusterRelayPlumtreeReceivedGraftTotal:   newDescWithLabel("cluster_relay_plumtree_received_graft_total", "The total number of Plumtree GRAFT messages received by the cluster relay.", []string{"node_name"}),
-		clusterRelayPlumtreeSentPruneTotal:   newDescWithLabel("cluster_relay_plumtree_sent_prune_total", "The total number of Plumtree PRUNE messages sent by the cluster relay.", []string{"node_name"}),
-		clusterRelayPlumtreeReceivedPruneTotal:   newDescWithLabel("cluster_relay_plumtree_received_prune_total", "The total number of Plumtree PRUNE messages received by the cluster relay.", []string{"node_name"}),
-		clusterRelayPlumtreeGraftMissTotal:   newDescWithLabel("cluster_relay_plumtree_graft_miss_total", "The total number of Plumtree GRAFT messages missed by the cluster relay.", []string{"node_name"}),
-		clusterRelayPlumtreeSkippedSendTotal:   newDescWithLabel("cluster_relay_plumtree_skipped_send_total", "The total number of Plumtree messages whose sending was skipped by the cluster relay.", []string{"node_name"}),
-		clusterRelayPlumtreeIhaveOverflowTotal:   newDescWithLabel("cluster_relay_plumtree_ihave_overflow_total", "The total number of Plumtree IHAVE messages that were discarded upon reception by the cluster relay due to exceeding the maximum queue size.", []string{"node_name"}),
-		clusterRelayPlumtreeIgnoredTotal:   newDescWithLabel("cluster_relay_plumtree_ignored_total", "The total number of Plumtree messages received but ignored by the cluster relay.", []string{"node_name"}),
+		clusterRelayPlumtreeSentGossipTotal:        newDescWithLabel("cluster_relay_plumtree_sent_gossip_total", "The total number of Plumtree GOSSIP messages sent by the cluster relay.", []string{"node_name"}),
+		clusterRelayPlumtreeReceivedGossipTotal:    newDescWithLabel("cluster_relay_plumtree_received_gossip_total", "The total number of Plumtree GOSSIP messages received by the cluster relay.", []string{"node_name"}),
+		clusterRelayPlumtreeReceivedGossipHopTotal: newDescWithLabel("cluster_relay_plumtree_received_gossip_hop_total", "The total number of hop count of Plumtree GOSSIP messages received by the cluster relay.", []string{"node_name"}),
+		clusterRelayPlumtreeSentIhaveTotal:         newDescWithLabel("cluster_relay_plumtree_sent_ihave_total", "The total number of Plumtree IHAVE messages sent by the cluster relay.", []string{"node_name"}),
+		clusterRelayPlumtreeReceivedIhaveTotal:     newDescWithLabel("cluster_relay_plumtree_received_ihave_total", "The total number of Plumtree IHAVE messages received by the cluster relay.", []string{"node_name"}),
+		clusterRelayPlumtreeSentGraftTotal:         newDescWithLabel("cluster_relay_plumtree_sent_graft_total", "The total number of Plumtree GRAFT messages sent by the cluster relay.", []string{"node_name"}),
+		clusterRelayPlumtreeReceivedGraftTotal:     newDescWithLabel("cluster_relay_plumtree_received_graft_total", "The total number of Plumtree GRAFT messages received by the cluster relay.", []string{"node_name"}),
+		clusterRelayPlumtreeSentPruneTotal:         newDescWithLabel("cluster_relay_plumtree_sent_prune_total", "The total number of Plumtree PRUNE messages sent by the cluster relay.", []string{"node_name"}),
+		clusterRelayPlumtreeReceivedPruneTotal:     newDescWithLabel("cluster_relay_plumtree_received_prune_total", "The total number of Plumtree PRUNE messages received by the cluster relay.", []string{"node_name"}),
+		clusterRelayPlumtreeGraftMissTotal:         newDescWithLabel("cluster_relay_plumtree_graft_miss_total", "The total number of Plumtree GRAFT messages missed by the cluster relay.", []string{"node_name"}),
+		clusterRelayPlumtreeSkippedSendTotal:       newDescWithLabel("cluster_relay_plumtree_skipped_send_total", "The total number of Plumtree messages whose sending was skipped by the cluster relay.", []string{"node_name"}),
+		clusterRelayPlumtreeIhaveOverflowTotal:     newDescWithLabel("cluster_relay_plumtree_ihave_overflow_total", "The total number of Plumtree IHAVE messages that were discarded upon reception by the cluster relay due to exceeding the maximum queue size.", []string{"node_name"}),
+		clusterRelayPlumtreeIgnoredTotal:           newDescWithLabel("cluster_relay_plumtree_ignored_total", "The total number of Plumtree messages received but ignored by the cluster relay.", []string{"node_name"}),
 	}
 )
 
@@ -82,24 +82,33 @@ func (m *SoraClusterMetrics) Describe(ch chan<- *prometheus.Desc) {
 	ch <- m.clusterRelayPlumtreeIgnoredTotal
 }
 
-func (m *SoraClusterMetrics) Collect(ch chan<- prometheus.Metric, nodeList []soraClusterNode, report soraClusterReport, clusterRelaies []soraClusterRelay) {
-	for _, node := range nodeList {
-		value := 0.0
-		if node.Connected {
-			value = 1.0
-		}
-		// connected の状態によらず、基本の状態は regular
-		// temporary_node が true の場合だけ temporary になる
-		nodeType := "regular"
-		if node.TemporaryNode {
-			nodeType = "temporary"
-		}
-		if node.ClusterNodeName != "" {
-			ch <- newGauge(m.clusterNode, value, node.ClusterNodeName, node.Mode, nodeType)
-		} else {
-			ch <- newGauge(m.clusterNode, value, node.NodeName, node.Mode, nodeType)
+func (m *SoraClusterMetrics) Collect(ch chan<- prometheus.Metric, nodeList *[]soraClusterNode, statsReport *soraGetStatsReport) {
+	if nodeList != nil {
+		for _, node := range *nodeList {
+			value := 0.0
+			if node.Connected {
+				value = 1.0
+			}
+			// connected の状態によらず、基本の状態は regular
+			// temporary_node が true の場合だけ temporary になる
+			nodeType := "regular"
+			if node.TemporaryNode {
+				nodeType = "temporary"
+			}
+			if node.ClusterNodeName != "" {
+				ch <- newGauge(m.clusterNode, value, node.ClusterNodeName, node.Mode, nodeType)
+			} else {
+				ch <- newGauge(m.clusterNode, value, node.NodeName, node.Mode, nodeType)
+			}
 		}
 	}
+
+	if statsReport == nil {
+		return
+	}
+
+	report := statsReport.ClusterReport
+	clusterRelaies := statsReport.ClusterRelay
 	ch <- newGauge(m.raftState, 1.0, report.RaftState)
 	ch <- newCounter(m.raftTerm, float64(report.RaftTerm))
 	ch <- newCounter(m.raftCommitIndex, float64(report.RaftCommitIndex))
