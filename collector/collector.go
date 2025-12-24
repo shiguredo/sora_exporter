@@ -33,6 +33,8 @@ type Collector struct {
 	soraVersionInfo *prometheus.Desc
 	soraTimeSeconds *prometheus.Desc
 
+	soraClusterUp *prometheus.Desc
+
 	ConnectionMetrics
 	WebhookMetrics
 	SrtpMetrics
@@ -79,6 +81,9 @@ func NewCollector(options *CollectorOptions) *Collector {
 		soraVersionInfo: newDescWithLabel("version_info", "sora version info.", []string{"version"}),
 		// same as node expoter's node_time_seconds
 		soraTimeSeconds: newDesc("time_seconds", "System time in seconds since epoch."),
+
+		// クラスター API の呼び出しの成否により Sora クラスターの状態を示す指標
+		soraClusterUp: newDesc("cluster_up", "Whether the Sora cluster is up (1 for yes, 0 for no)."),
 
 		ConnectionMetrics:          connectionMetrics,
 		WebhookMetrics:             webhookMetrics,
@@ -140,6 +145,12 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		c.ErlangVMMetrics.Collect(ch, report.ErlangVMReport)
 	}
 	if c.EnableSoraClusterMetrics {
+		if errFetchGetStatsReport == nil {
+			// クラスター API の呼び出しが成功した場合は Sora クラスターは up とみなす
+			ch <- newGauge(c.soraClusterUp, 1)
+		} else {
+			ch <- newGauge(c.soraClusterUp, 0)
+		}
 		c.SoraClusterMetrics.Collect(ch, nodeList, report.ClusterReport, report.ClusterRelay)
 	}
 }
@@ -240,6 +251,7 @@ func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 		c.ErlangVMMetrics.Describe(ch)
 	}
 	if c.EnableSoraClusterMetrics {
+		ch <- c.soraClusterUp
 		c.SoraClusterMetrics.Describe(ch)
 	}
 }

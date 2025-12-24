@@ -90,6 +90,9 @@ sora_cluster_relay_plumtree_skipped_send_total{node_name="node-02"} 110
 # TYPE sora_cluster_relay_plumtree_ihave_overflow_total counter
 sora_cluster_relay_plumtree_ihave_overflow_total{node_name="node-01"} 2
 sora_cluster_relay_plumtree_ihave_overflow_total{node_name="node-02"} 3
+# HELP sora_cluster_up Whether the Sora cluster is up (1 for yes, 0 for no).
+# TYPE sora_cluster_up gauge
+sora_cluster_up 1
 # HELP sora_client_type_total The total number of connections by Sora client types
 # TYPE sora_client_type_total counter
 sora_client_type_total{client="android_sdk",state="failed"} 1
