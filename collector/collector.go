@@ -99,84 +99,22 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
 	defer cancel()
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
-	if err != nil {
-		c.logger.Error("failed to create request to sora", "err", err)
-		ch <- newGauge(c.soraUp, 0)
-		return
-	}
-	req.Header.Set("x-sora-target", "Sora_20171010.GetStatsReport")
-
 	tr := &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: c.skipSslVerify}}
-	client := http.Client{
+	client := &http.Client{
 		Timeout:   c.timeout,
 		Transport: tr,
 	}
 
-	resp, err := client.Do(req)
-	if err != nil {
-		c.logger.Error("failed to request to Sora GetStatsReport API", "err", err)
+	report, errFetchGetStatsReport := c.fetchGetStatsReport(ctx, client)
+	licenseInfo, errFetchGetLicense := c.fetchGetLicense(ctx, client)
+	nodeList, _ := c.fetchListClusterNodes(ctx, client)
+
+	if errFetchGetStatsReport == nil && errFetchGetLicense == nil {
+		// GetStatsReport と GetLicense の両方が成功した場合のみ Sora は up とみなす
+		ch <- newGauge(c.soraUp, 1)
+	} else {
 		ch <- newGauge(c.soraUp, 0)
-		return
 	}
-	defer resp.Body.Close()
-
-	var report soraGetStatsReport
-	if err := json.NewDecoder(resp.Body).Decode(&report); err != nil {
-		c.logger.Error("failed to decode response body from Sora GetStatsReport API", "err", err)
-		ch <- newGauge(c.soraUp, 0)
-		return
-	}
-
-	var nodeList []soraClusterNode
-	if c.EnableSoraClusterMetrics {
-		req, err = http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
-		if err != nil {
-			c.logger.Error("failed to create request to sora", "err", err.Error())
-			ch <- newGauge(c.soraUp, 0)
-			return
-		}
-		req.Header.Set("x-sora-target", "Sora_20211215.ListClusterNodes")
-
-		nodeResp, err := client.Do(req)
-		if err != nil {
-			c.logger.Error("failed to request to Sora ListClusterNodes API", "err", err)
-			ch <- newGauge(c.soraUp, 0)
-			return
-		}
-		defer nodeResp.Body.Close()
-
-		if err := json.NewDecoder(nodeResp.Body).Decode(&nodeList); err != nil {
-			c.logger.Error("failed to decode response body from Sora ListClusterNodes API", "err", err)
-			ch <- newGauge(c.soraUp, 0)
-			return
-		}
-	}
-
-	req, err = http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
-	if err != nil {
-		c.logger.Error("failed to create request to sora", "err", err)
-		ch <- newGauge(c.soraUp, 0)
-		return
-	}
-	req.Header.Set("x-sora-target", "Sora_20171218.GetLicense")
-
-	licenseResp, err := client.Do(req)
-	if err != nil {
-		c.logger.Error("failed to request to Sora GetLicense API", "err", err)
-		ch <- newGauge(c.soraUp, 0)
-		return
-	}
-	defer licenseResp.Body.Close()
-
-	var licenseInfo soraLicenseInfo
-	if err := json.NewDecoder(licenseResp.Body).Decode(&licenseInfo); err != nil {
-		c.logger.Error("failed to decode response body from Sora GetLicense API", "err", err)
-		ch <- newGauge(c.soraUp, 0)
-		return
-	}
-
-	ch <- newGauge(c.soraUp, 1)
 	ch <- newGauge(c.soraVersionInfo, 1, report.SoraVersion)
 
 	if c.freezeTimeSeconds {
@@ -186,7 +124,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		ch <- newGauge(c.soraTimeSeconds, nowSec)
 	}
 
-	c.LicenseMetrics.Collect(ch, licenseInfo)
+	c.LicenseMetrics.Collect(ch, *licenseInfo)
 	c.ConnectionMetrics.Collect(ch, report.soraConnectionReport)
 	c.WebhookMetrics.Collect(ch, report.soraWebhookReport)
 	c.SrtpMetrics.Collect(ch, report.soraSrtpReport)
@@ -204,6 +142,82 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	if c.EnableSoraClusterMetrics {
 		c.SoraClusterMetrics.Collect(ch, nodeList, report.ClusterReport, report.ClusterRelay)
 	}
+}
+
+func (c *Collector) fetchGetStatsReport(ctx context.Context, client *http.Client) (*soraGetStatsReport, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
+	if err != nil {
+		c.logger.Error("failed to create request to sora", "err", err)
+		return nil, err
+	}
+	req.Header.Set("x-sora-target", "Sora_20171010.GetStatsReport")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		c.logger.Error("failed to request to Sora GetStatsReport API", "err", err)
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var report soraGetStatsReport
+	if err := json.NewDecoder(resp.Body).Decode(&report); err != nil {
+		c.logger.Error("failed to decode response body from Sora GetStatsReport API", "err", err)
+		return nil, err
+	}
+
+	return &report, nil
+}
+
+func (c *Collector) fetchGetLicense(ctx context.Context, client *http.Client) (*soraLicenseInfo, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
+	if err != nil {
+		c.logger.Error("failed to create request to sora", "err", err)
+		return nil, err
+	}
+	req.Header.Set("x-sora-target", "Sora_20171218.GetLicense")
+
+	licenseResp, err := client.Do(req)
+	if err != nil {
+		c.logger.Error("failed to request to Sora GetLicense API", "err", err)
+		return nil, err
+	}
+	defer licenseResp.Body.Close()
+
+	var licenseInfo soraLicenseInfo
+	if err := json.NewDecoder(licenseResp.Body).Decode(&licenseInfo); err != nil {
+		c.logger.Error("failed to decode response body from Sora GetLicense API", "err", err)
+		return nil, err
+	}
+
+	return &licenseInfo, nil
+}
+
+func (c *Collector) fetchListClusterNodes(ctx context.Context, client *http.Client) ([]soraClusterNode, error) {
+	if !c.EnableSoraClusterMetrics {
+		return nil, nil
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
+	if err != nil {
+		c.logger.Error("failed to create request to sora", "err", err.Error())
+		return nil, err
+	}
+	req.Header.Set("x-sora-target", "Sora_20211215.ListClusterNodes")
+
+	nodeResp, err := client.Do(req)
+	if err != nil {
+		c.logger.Error("failed to request to Sora ListClusterNodes API", "err", err)
+		return nil, err
+	}
+	defer nodeResp.Body.Close()
+
+	var nodeList []soraClusterNode
+	if err := json.NewDecoder(nodeResp.Body).Decode(&nodeList); err != nil {
+		c.logger.Error("failed to decode response body from Sora ListClusterNodes API", "err", err)
+		return nil, err
+	}
+
+	return nodeList, nil
 }
 
 func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
