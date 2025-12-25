@@ -421,7 +421,7 @@ func TestSoraUp(t *testing.T) {
 		"Sora_20171010.GetStatsReport",
 		"Sora_20211215.ListClusterNodes",
 	}
-	expectMetrics(t, h, "sora_up_stats_report.metrics")
+	expectMetrics(t, h, "sora_up_license_failed.metrics")
 
 	// GetStatsReport が失敗する場合
 	// sora_up が 0 で、GetStatsReport に依存するメトリクスが出力されない
@@ -429,7 +429,7 @@ func TestSoraUp(t *testing.T) {
 		"Sora_20171218.GetLicense",
 		"Sora_20211215.ListClusterNodes",
 	}
-	expectMetrics(t, h, "sora_up_license.metrics")
+	expectMetrics(t, h, "sora_up_stats_report_failed.metrics")
 
 	// GetStatsReport と GetLicense が失敗する場合
 	// sora_up が 0 になり、クラスターのノード情報のメトリクス以外は出力されない
