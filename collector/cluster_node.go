@@ -82,33 +82,27 @@ func (m *SoraClusterMetrics) Describe(ch chan<- *prometheus.Desc) {
 	ch <- m.clusterRelayPlumtreeIgnoredTotal
 }
 
-func (m *SoraClusterMetrics) Collect(ch chan<- prometheus.Metric, nodeList *[]soraClusterNode, statsReport *soraGetStatsReport) {
-	if nodeList != nil {
-		for _, node := range *nodeList {
-			value := 0.0
-			if node.Connected {
-				value = 1.0
-			}
-			// connected の状態によらず、基本の状態は regular
-			// temporary_node が true の場合だけ temporary になる
-			nodeType := "regular"
-			if node.TemporaryNode {
-				nodeType = "temporary"
-			}
-			if node.ClusterNodeName != "" {
-				ch <- newGauge(m.clusterNode, value, node.ClusterNodeName, node.Mode, nodeType)
-			} else {
-				ch <- newGauge(m.clusterNode, value, node.NodeName, node.Mode, nodeType)
-			}
+func (m *SoraClusterMetrics) CollectClusterNodes(ch chan<- prometheus.Metric, nodeList *[]soraClusterNode) {
+	for _, node := range *nodeList {
+		value := 0.0
+		if node.Connected {
+			value = 1.0
+		}
+		// connected の状態によらず、基本の状態は regular
+		// temporary_node が true の場合だけ temporary になる
+		nodeType := "regular"
+		if node.TemporaryNode {
+			nodeType = "temporary"
+		}
+		if node.ClusterNodeName != "" {
+			ch <- newGauge(m.clusterNode, value, node.ClusterNodeName, node.Mode, nodeType)
+		} else {
+			ch <- newGauge(m.clusterNode, value, node.NodeName, node.Mode, nodeType)
 		}
 	}
+}
 
-	if statsReport == nil {
-		return
-	}
-
-	report := statsReport.ClusterReport
-	clusterRelaies := statsReport.ClusterRelay
+func (m *SoraClusterMetrics) CollectClusterReport(ch chan<- prometheus.Metric, report soraClusterReport, clusterRelaies []soraClusterRelay) {
 	ch <- newGauge(m.raftState, 1.0, report.RaftState)
 	ch <- newCounter(m.raftTerm, float64(report.RaftTerm))
 	ch <- newCounter(m.raftCommitIndex, float64(report.RaftCommitIndex))
