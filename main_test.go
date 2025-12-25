@@ -365,6 +365,8 @@ func TestInvalidConfig(t *testing.T) {
 }
 
 func TestSoraUp(t *testing.T) {
+	// Sora API の各種呼び出しの成功・失敗パターンを網羅しながら
+	// sora_up と sora_cluster_up の組み合わせを確認するテストです
 	type apiControlledSora struct {
 		*httptest.Server
 		AllowedSoraAPI           []string
