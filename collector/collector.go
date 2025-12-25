@@ -128,6 +128,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		ch <- newGauge(c.soraTimeSeconds, nowSec)
 	}
 
+	// GetStatsReport が成功し、結果を取得できている場合のみ各種指標を収集する
 	if report != nil {
 		ch <- newGauge(c.soraVersionInfo, 1, report.SoraVersion)
 		c.ConnectionMetrics.Collect(ch, report.soraConnectionReport)
@@ -146,6 +147,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		}
 	}
 
+	// GetLicense が成功し、結果を取得できている場合のみライセンス指標を収集する
 	if licenseInfo != nil {
 		c.LicenseMetrics.Collect(ch, licenseInfo)
 	}
@@ -155,6 +157,8 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		if errFetchListClusterNodes == nil {
 			// クラスター API の呼び出しが成功した場合は Sora クラスターは up とみなす
 			ch <- newGauge(c.soraClusterUp, 1)
+
+			// ListClusterNodes の結果からクラスター情報を収集する
 			if nodeList != nil {
 				c.SoraClusterMetrics.CollectClusterNodes(ch, nodeList)
 			}
