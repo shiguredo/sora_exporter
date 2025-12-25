@@ -113,7 +113,11 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	report, errFetchGetStatsReport := c.fetchGetStatsReport(ctx, client)
 	licenseInfo, errFetchGetLicense := c.fetchGetLicense(ctx, client)
 	// exporter の起動オプションで `--sora.cluster-metrics` を有効にしている場合はクラスター情報を収集する
-	nodeList, errFetchListClusterNodes := c.fetchListClusterNodes(ctx, client)
+	var nodeList *[]soraClusterNode
+	var errFetchListClusterNodes error
+	if c.EnableSoraClusterMetrics {
+		nodeList, errFetchListClusterNodes = c.fetchListClusterNodes(ctx, client)
+	}
 
 	if errFetchGetStatsReport == nil && errFetchGetLicense == nil {
 		// GetStatsReport と GetLicense の両方が成功した場合のみ Sora は up とみなす
@@ -219,10 +223,6 @@ func (c *Collector) fetchGetLicense(ctx context.Context, client *http.Client) (*
 }
 
 func (c *Collector) fetchListClusterNodes(ctx context.Context, client *http.Client) (*[]soraClusterNode, error) {
-	if !c.EnableSoraClusterMetrics {
-		return nil, nil
-	}
-
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
 	if err != nil {
 		c.logger.Error("failed to create request to sora", "err", err.Error())
