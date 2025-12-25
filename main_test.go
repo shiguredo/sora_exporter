@@ -423,6 +423,14 @@ func TestSoraUp(t *testing.T) {
 	}
 	expectMetrics(t, h, "sora_up_stats_report.metrics")
 
+	// GetStatsReport が失敗する場合
+	// sora_up が 0 で、GetStatsReport に依存するメトリクスが出力されない
+	s.AllowedSoraAPI = []string{
+		"Sora_20171218.GetLicense",
+		"Sora_20211215.ListClusterNodes",
+	}
+	expectMetrics(t, h, "sora_up_license.metrics")
+
 	// GetStatsReport と GetLicense が失敗する場合
 	// sora_up が 0 になり、クラスターのノード情報のメトリクス以外は出力されない
 	// sora_cluster_up は 1 のままになる
@@ -430,6 +438,15 @@ func TestSoraUp(t *testing.T) {
 		"Sora_20211215.ListClusterNodes",
 	}
 	expectMetrics(t, h, "sora_up_cluster_nodes_only.metrics")
+
+	// ListClusterNodes が失敗する場合
+	// sora_up が 1 になる
+	// sora_cluster_up は 0 になり、クラスターノード情報のメトリクスは出力されない
+	s.AllowedSoraAPI = []string{
+		"Sora_20171010.GetStatsReport",
+		"Sora_20171218.GetLicense",
+	}
+	expectMetrics(t, h, "sora_up_cluster_nodes_failed.metrics")
 
 	s.AllowedSoraAPI = []string{} // API 呼び出しを全て失敗させる
 	expectMetrics(t, h, "invalid_config.metrics")
