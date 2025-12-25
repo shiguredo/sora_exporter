@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path"
+	"slices"
 	"testing"
 	"time"
 
@@ -330,14 +331,6 @@ func soraHandler(s *sora) http.HandlerFunc {
 	}
 }
 
-func newSoraAPIFailed() *sora {
-	s := &sora{}
-	s.Server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		http.Error(w, "internal server error", http.StatusInternalServerError)
-	}))
-	return s
-}
-
 func expectMetrics(t *testing.T, c prometheus.Collector, fixture string) {
 	exp, err := os.Open(path.Join("test", fixture))
 	if err != nil {
@@ -349,8 +342,10 @@ func expectMetrics(t *testing.T, c prometheus.Collector, fixture string) {
 }
 
 func TestInvalidConfig(t *testing.T) {
-	s := newSoraAPIFailed()
-	// s := newSora([]byte("invalid config parameter"), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
+	s := &sora{}
+	s.Server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+	}))
 	defer s.Close()
 
 	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
@@ -366,6 +361,61 @@ func TestInvalidConfig(t *testing.T) {
 		EnableErlangVMMetrics:            true,
 		EnableSoraClusterMetrics:         true,
 	})
+	expectMetrics(t, h, "invalid_config.metrics")
+}
+
+func TestSoraUp(t *testing.T) {
+	type apiControlledSora struct {
+		*httptest.Server
+		AllowedSoraAPI           []string
+		response                 []byte
+		listClusterNodesResponse []byte
+		getLicenseResponse       []byte
+	}
+	s := &apiControlledSora{
+		response:                 []byte(testJSONData),
+		listClusterNodesResponse: []byte(listClusterNodesJSONData),
+		getLicenseResponse:       []byte(getLicenseJSONDATA),
+		AllowedSoraAPI: []string{
+			"Sora_20171010.GetStatsReport",
+			"Sora_20171218.GetLicense",
+			"Sora_20211215.ListClusterNodes",
+		},
+	}
+	s.Server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		soraTarget := r.Header.Get("x-sora-target")
+		found := slices.Contains(s.AllowedSoraAPI, soraTarget)
+		if !found {
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return
+		}
+		switch soraTarget {
+		case "Sora_20171010.GetStatsReport":
+			w.Write(s.response)
+		case "Sora_20211215.ListClusterNodes":
+			w.Write(s.listClusterNodesResponse)
+		case "Sora_20171218.GetLicense":
+			w.Write(s.getLicenseResponse)
+		}
+	}))
+	defer s.Close()
+
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
+	timeout, _ := time.ParseDuration("5s")
+	h := collector.NewCollector(&collector.CollectorOptions{
+		URI:                              s.URL,
+		SkipSslVerify:                    true,
+		Timeout:                          timeout,
+		FreezeTimeSeconds:                true,
+		Logger:                           nopLogger,
+		EnableSoraClientMetrics:          true,
+		EnableSoraConnectionErrorMetrics: true,
+		EnableErlangVMMetrics:            true,
+		EnableSoraClusterMetrics:         true,
+	})
+	expectMetrics(t, h, "maximum.metrics")
+
+	s.AllowedSoraAPI = []string{} // API 呼び出しを全て失敗させる
 	expectMetrics(t, h, "invalid_config.metrics")
 }
 
