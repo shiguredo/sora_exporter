@@ -166,7 +166,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 			ch <- newGauge(c.soraClusterUp, 0)
 		}
 		// ListClusterNodes の呼び出しが失敗しても、GetStatsReport が成功していればレポートは存在する可能性があり
-		// その場合は GetStatsReport の結果からクラスター情報を収集する
+		// GetStatsReport の結果からもクラスター情報を収集する
 		if report != nil {
 			c.SoraClusterMetrics.CollectClusterReport(ch, report.ClusterReport, report.ClusterRelay)
 		}

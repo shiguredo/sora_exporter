@@ -18,7 +18,7 @@
   - Sora クラスターのノード情報を取得する `ListClusterNodes` API の呼び出しの成否は `sora_up` メトリクスには影響しなくなりました
     - `ListClusterNodes` API の呼び出しの成否は新たに追加した `sora_cluster_up` メトリクスで返します
   - @tnamao
-- [CHANGE] 一部の Sora API 呼び出しが失敗した場合でも、他の API 呼び出しに成功した場合は、その API 呼び出しに対応するメトリクスを返すように変更する
+- [FIX] 一部の Sora API 呼び出しが失敗した場合でも、他の API 呼び出しに成功した場合は、その API 呼び出しに対応するメトリクスを返すように変更する
   - 例えば、`GetStatsReport` API の呼び出しに成功し、`GetLicense` API の呼び出しに失敗した場合は、ライセンス情報に関するメトリクスは返しませんが、その他の統計情報に関するメトリクスは返します
   - この修正により `sora_up` メトリクスが 0 であっても、他のメトリクスが返される場合があります
   - 同様に `sora_cluster_up` メトリクスが 0 であっても、`sora_cluster_node` メトリクスは返しませんが、`GetStatsReport` API に由来するクラスター統計情報のメトリクスは返すようになりました

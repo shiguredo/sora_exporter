@@ -6,7 +6,9 @@ import (
 
 var (
 	soraClusterMetrics = SoraClusterMetrics{
-		// クラスター API の呼び出しの成否により Sora クラスターの状態を示す指標
+		// sora_cluster_up は ListClusterNodes API の呼び出しの成否により Sora クラスターの状態を示す指標です
+		// ListClusterNodes API の呼び出しが失敗しても、必ずしも Sora クラスター全体が利用不可能になっているとは限りません
+		// sora_cluster_up が 0 の場合は、Sora クラスターの状態を確認すべきで、その参考値として利用してください
 		soraClusterUp: newDesc("cluster_up", "Whether the Sora cluster is up (1 for yes, 0 for no)."),
 
 		clusterNode:     newDescWithLabel("cluster_node", "The sora server known cluster node.", []string{"node_name", "mode", "node_type"}),
