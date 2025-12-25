@@ -221,18 +221,6 @@ sora_erlang_vm_wall_clock_wallclock_time_since_last_call 9090
 sora_event_webhook_total{state="failed"} 94
 sora_event_webhook_total{state="ignored"} 101
 sora_event_webhook_total{state="successful"} 97
-# HELP sora_license_expired_at_timestamp_seconds sora license file's expire seconds since epoch.
-# TYPE sora_license_expired_at_timestamp_seconds gauge
-sora_license_expired_at_timestamp_seconds 1.759276799e+09
-# HELP sora_license_info sora license info.
-# TYPE sora_license_info gauge
-sora_license_info{expired_at="2025-09",product_name="Sora",serial_code="EXPORTER-SRA-E001-202509-N10-100",type="Experimental"} 1
-# HELP sora_license_max_connections sora license file's max_connections.
-# TYPE sora_license_max_connections gauge
-sora_license_max_connections 100
-# HELP sora_license_max_nodes sora license file's max_nodes.
-# TYPE sora_license_max_nodes gauge
-sora_license_max_nodes 10
 # HELP sora_ongoing_connections_total The total number of ongoing connections.
 # TYPE sora_ongoing_connections_total gauge
 sora_ongoing_connections_total 0
@@ -299,7 +287,7 @@ sora_turn_connections_total{proto="tcp"} 2
 sora_turn_connections_total{proto="udp"} 0
 # HELP sora_up Whether the last scrape of metrics from Sora was able to connect to the server (1 for yes, 0 for no).
 # TYPE sora_up gauge
-sora_up 1
+sora_up 0
 # HELP sora_version_info sora version info.
 # TYPE sora_version_info gauge
 sora_version_info{version="2022.1.0-canary.28"} 1

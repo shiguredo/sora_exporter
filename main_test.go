@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path"
+	"slices"
 	"testing"
 	"time"
 
@@ -341,7 +342,10 @@ func expectMetrics(t *testing.T, c prometheus.Collector, fixture string) {
 }
 
 func TestInvalidConfig(t *testing.T) {
-	s := newSora([]byte("invalid config parameter"), []byte(listClusterNodesJSONData), []byte(getLicenseJSONDATA))
+	s := &sora{}
+	s.Server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+	}))
 	defer s.Close()
 
 	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
@@ -357,6 +361,96 @@ func TestInvalidConfig(t *testing.T) {
 		EnableErlangVMMetrics:            true,
 		EnableSoraClusterMetrics:         true,
 	})
+	expectMetrics(t, h, "invalid_config.metrics")
+}
+
+func TestSoraUp(t *testing.T) {
+	// Sora API の各種呼び出しの成功・失敗パターンを網羅しながら
+	// sora_up と sora_cluster_up の組み合わせを確認するテストです
+	type apiControlledSora struct {
+		*httptest.Server
+		AllowedSoraAPI           []string
+		response                 []byte
+		listClusterNodesResponse []byte
+		getLicenseResponse       []byte
+	}
+	s := &apiControlledSora{
+		response:                 []byte(testJSONData),
+		listClusterNodesResponse: []byte(listClusterNodesJSONData),
+		getLicenseResponse:       []byte(getLicenseJSONDATA),
+		AllowedSoraAPI: []string{
+			"Sora_20171010.GetStatsReport",
+			"Sora_20171218.GetLicense",
+			"Sora_20211215.ListClusterNodes",
+		},
+	}
+	s.Server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		soraTarget := r.Header.Get("x-sora-target")
+		found := slices.Contains(s.AllowedSoraAPI, soraTarget)
+		if !found {
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return
+		}
+		switch soraTarget {
+		case "Sora_20171010.GetStatsReport":
+			w.Write(s.response)
+		case "Sora_20211215.ListClusterNodes":
+			w.Write(s.listClusterNodesResponse)
+		case "Sora_20171218.GetLicense":
+			w.Write(s.getLicenseResponse)
+		}
+	}))
+	defer s.Close()
+
+	nopLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
+	timeout, _ := time.ParseDuration("5s")
+	h := collector.NewCollector(&collector.CollectorOptions{
+		URI:                              s.URL,
+		SkipSslVerify:                    true,
+		Timeout:                          timeout,
+		FreezeTimeSeconds:                true,
+		Logger:                           nopLogger,
+		EnableSoraClientMetrics:          true,
+		EnableSoraConnectionErrorMetrics: true,
+		EnableErlangVMMetrics:            true,
+		EnableSoraClusterMetrics:         true,
+	})
+	expectMetrics(t, h, "maximum.metrics")
+
+	// GetLicense が失敗する場合
+	// sora_up が 0 で、ライセンス情報のメトリクスが出力されない
+	s.AllowedSoraAPI = []string{
+		"Sora_20171010.GetStatsReport",
+		"Sora_20211215.ListClusterNodes",
+	}
+	expectMetrics(t, h, "sora_up_license_failed.metrics")
+
+	// GetStatsReport が失敗する場合
+	// sora_up が 0 で、GetStatsReport に依存するメトリクスが出力されない
+	s.AllowedSoraAPI = []string{
+		"Sora_20171218.GetLicense",
+		"Sora_20211215.ListClusterNodes",
+	}
+	expectMetrics(t, h, "sora_up_stats_report_failed.metrics")
+
+	// GetStatsReport と GetLicense が失敗する場合
+	// sora_up が 0 になり、クラスターのノード情報のメトリクス以外は出力されない
+	// sora_cluster_up は 1 のままになる
+	s.AllowedSoraAPI = []string{
+		"Sora_20211215.ListClusterNodes",
+	}
+	expectMetrics(t, h, "sora_up_cluster_nodes_only.metrics")
+
+	// ListClusterNodes が失敗する場合
+	// sora_up が 1 になる
+	// sora_cluster_up は 0 になり、クラスターノード情報のメトリクスは出力されない
+	s.AllowedSoraAPI = []string{
+		"Sora_20171010.GetStatsReport",
+		"Sora_20171218.GetLicense",
+	}
+	expectMetrics(t, h, "sora_up_cluster_nodes_failed.metrics")
+
+	s.AllowedSoraAPI = []string{} // API 呼び出しを全て失敗させる
 	expectMetrics(t, h, "invalid_config.metrics")
 }
 
@@ -521,7 +615,7 @@ func TestSoraClusterEnabledMetrics(t *testing.T) {
 	expectMetrics(t, h, "sora_cluster_metrics_enabled.metrics")
 }
 
-// Sora-2021.9.x 系の JSON レスポンスデータでのテスト
+// Sora-2021.2.x 系の JSON レスポンスデータでのテスト
 func TestSoraClusterEnabledMetricsCurrentJsonData(t *testing.T) {
 	s := newSora([]byte(testJSONData), []byte(listClusterNodesCurrentJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()

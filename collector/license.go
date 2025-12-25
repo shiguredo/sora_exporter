@@ -29,7 +29,7 @@ func (m *LicenseMetrics) Describe(ch chan<- *prometheus.Desc) {
 	ch <- m.licenseExpiredAtTimestampSeconds
 }
 
-func (m *LicenseMetrics) Collect(ch chan<- prometheus.Metric, info soraLicenseInfo) {
+func (m *LicenseMetrics) Collect(ch chan<- prometheus.Metric, info *soraLicenseInfo) {
 	ch <- newGauge(m.licenseInfo, 1, info.ExpiredAt, info.ProductName, info.SerialCode, info.Type)
 	ch <- newGauge(m.licenseMaxConnections, float64(info.MaxConnections))
 	if info.MaxNodes != nil {

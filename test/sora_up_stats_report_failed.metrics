@@ -1,0 +1,26 @@
+# HELP sora_cluster_node The sora server known cluster node.
+# TYPE sora_cluster_node gauge
+sora_cluster_node{mode="",node_name="node-01_canary_sora@10.211.55.42",node_type="regular"} 0
+sora_cluster_node{mode="block_new_connection",node_name="node-02_canary_sora@10.211.55.40",node_type="regular"} 1
+sora_cluster_node{mode="normal",node_name="node-03_canary_sora@10.211.55.41",node_type="temporary"} 1
+# HELP sora_cluster_up Whether the Sora cluster is up (1 for yes, 0 for no).
+# TYPE sora_cluster_up gauge
+sora_cluster_up 1
+# HELP sora_license_expired_at_timestamp_seconds sora license file's expire seconds since epoch.
+# TYPE sora_license_expired_at_timestamp_seconds gauge
+sora_license_expired_at_timestamp_seconds 1.759276799e+09
+# HELP sora_license_info sora license info.
+# TYPE sora_license_info gauge
+sora_license_info{expired_at="2025-09",product_name="Sora",serial_code="EXPORTER-SRA-E001-202509-N10-100",type="Experimental"} 1
+# HELP sora_license_max_connections sora license file's max_connections.
+# TYPE sora_license_max_connections gauge
+sora_license_max_connections 100
+# HELP sora_license_max_nodes sora license file's max_nodes.
+# TYPE sora_license_max_nodes gauge
+sora_license_max_nodes 10
+# HELP sora_time_seconds System time in seconds since epoch.
+# TYPE sora_time_seconds gauge
+sora_time_seconds 1.7046492910003123e+09
+# HELP sora_up Whether the last scrape of metrics from Sora was able to connect to the server (1 for yes, 0 for no).
+# TYPE sora_up gauge
+sora_up 0
