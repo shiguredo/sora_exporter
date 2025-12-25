@@ -6,6 +6,9 @@ import (
 
 var (
 	soraClusterMetrics = SoraClusterMetrics{
+		// クラスター API の呼び出しの成否により Sora クラスターの状態を示す指標
+		soraClusterUp: newDesc("cluster_up", "Whether the Sora cluster is up (1 for yes, 0 for no)."),
+
 		clusterNode:     newDescWithLabel("cluster_node", "The sora server known cluster node.", []string{"node_name", "mode", "node_type"}),
 		raftState:       newDescWithLabel("cluster_raft_state", "The current Raft state. The state name is indicated by the label 'state'. The value of this metric is always set to 1.", []string{"state"}),
 		raftTerm:        newDesc("cluster_raft_term", "The current Raft term."),
@@ -33,6 +36,8 @@ var (
 )
 
 type SoraClusterMetrics struct {
+	soraClusterUp *prometheus.Desc
+
 	clusterNode     *prometheus.Desc
 	raftState       *prometheus.Desc
 	raftTerm        *prometheus.Desc

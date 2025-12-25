@@ -33,8 +33,6 @@ type Collector struct {
 	soraVersionInfo *prometheus.Desc
 	soraTimeSeconds *prometheus.Desc
 
-	soraClusterUp *prometheus.Desc
-
 	ConnectionMetrics
 	WebhookMetrics
 	SrtpMetrics
@@ -81,9 +79,6 @@ func NewCollector(options *CollectorOptions) *Collector {
 		soraVersionInfo: newDescWithLabel("version_info", "sora version info.", []string{"version"}),
 		// same as node expoter's node_time_seconds
 		soraTimeSeconds: newDesc("time_seconds", "System time in seconds since epoch."),
-
-		// クラスター API の呼び出しの成否により Sora クラスターの状態を示す指標
-		soraClusterUp: newDesc("cluster_up", "Whether the Sora cluster is up (1 for yes, 0 for no)."),
 
 		ConnectionMetrics:          connectionMetrics,
 		WebhookMetrics:             webhookMetrics,
