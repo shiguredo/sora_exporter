@@ -530,7 +530,7 @@ func TestSoraClusterEnabledMetrics(t *testing.T) {
 	expectMetrics(t, h, "sora_cluster_metrics_enabled.metrics")
 }
 
-// Sora-2021.9.x 系の JSON レスポンスデータでのテスト
+// Sora-2021.2.x 系の JSON レスポンスデータでのテスト
 func TestSoraClusterEnabledMetricsCurrentJsonData(t *testing.T) {
 	s := newSora([]byte(testJSONData), []byte(listClusterNodesCurrentJSONData), []byte(getLicenseJSONDATA))
 	defer s.Close()
