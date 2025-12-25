@@ -220,7 +220,7 @@ func (c *Collector) fetchGetLicense(ctx context.Context, client *http.Client) (*
 func (c *Collector) fetchListClusterNodes(ctx context.Context, client *http.Client) (*[]soraClusterNode, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.URI, nil)
 	if err != nil {
-		c.logger.Error("failed to create request to sora", "err", err.Error())
+		c.logger.Error("failed to create request to sora", "err", err)
 		return nil, err
 	}
 	req.Header.Set("x-sora-target", "Sora_20211215.ListClusterNodes")
