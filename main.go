@@ -64,7 +64,7 @@ var (
 		"sora.cluster-metrics",
 		"Include metrics about Sora cluster stats.",
 	).Bool()
-	soraSkipSslVeirfy = kingpin.Flag(
+	soraSkipSslVerify = kingpin.Flag(
 		"sora.skip-ssl-verify",
 		"Flag that enables SSL certificate verification for the Sora URL",
 	).Bool()
@@ -83,7 +83,7 @@ type handler struct {
 	maxRequests                      int
 	logger                           *slog.Logger
 	soraAPIURL                       string
-	soraSkipSslVeirfy                bool
+	soraSkipSslVerify                bool
 	soraTimeout                      time.Duration
 	soraFreezeTimeSeconds            bool
 	enableSoraClientMetrics          bool
@@ -94,7 +94,7 @@ type handler struct {
 
 func newHandler(
 	includeExporterMetrics bool, maxRequests int, logger *slog.Logger,
-	soraAPIURL string, soraSkipSslVeirfy bool, soraTimeout time.Duration, soraFreezeTimeSeconds bool,
+	soraAPIURL string, soraSkipSslVerify bool, soraTimeout time.Duration, soraFreezeTimeSeconds bool,
 	enableSoraClientMetrics bool, enableSoraConnectionErrorMetrics bool, enableErlangVMMetrics bool, enableSoraClusterMetrics bool) *handler {
 
 	h := &handler{
@@ -103,7 +103,7 @@ func newHandler(
 		maxRequests:                      maxRequests,
 		logger:                           logger,
 		soraAPIURL:                       soraAPIURL,
-		soraSkipSslVeirfy:                soraSkipSslVeirfy,
+		soraSkipSslVerify:                soraSkipSslVerify,
 		soraTimeout:                      soraTimeout,
 		soraFreezeTimeSeconds:            soraFreezeTimeSeconds,
 		enableSoraClientMetrics:          enableSoraClientMetrics,
@@ -131,7 +131,7 @@ func (h *handler) innerHandler() http.Handler {
 	r.MustRegister(version.NewCollector("sora_exporter"))
 	r.MustRegister(collector.NewCollector(&collector.CollectorOptions{
 		URI:                              h.soraAPIURL,
-		SkipSslVerify:                    h.soraSkipSslVeirfy,
+		SkipSslVerify:                    h.soraSkipSslVerify,
 		Timeout:                          h.soraTimeout,
 		FreezeTimeSeconds:                h.soraFreezeTimeSeconds,
 		Logger:                           h.logger,
@@ -187,7 +187,7 @@ func main() {
 	})
 	soraHandler := newHandler(
 		!*disableExporterMetrics, *maxRequests, logger,
-		*soraAPIURL, *soraSkipSslVeirfy, *soraTimeout, false,
+		*soraAPIURL, *soraSkipSslVerify, *soraTimeout, false,
 		*enableSoraClientMetrics, *enableSoraConnectionErrorMetrics, *enableErlangVMMetrics, *enableSoraClusterMetrics)
 	http.Handle(*metricsPath, soraHandler)
 
