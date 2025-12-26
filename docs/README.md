@@ -52,7 +52,9 @@ sora_average_duration_seconds 44
 
 以上のようにメトリクスが取得できれば、Sora exporter の起動は成功しています。
 
-Sora exporter はデフォルト設定では Sora の API エンドポイントが `http://127.0.0.1:3000/` となっているため、引数指定なしでも Sora API に接続できます。
+Sora exporter が接続する Sora API のデフォルト URL は `http://127.0.0.1:3000/` です。
+
+Sora が同一ホスト上で、API ポートをデフォルト設定の 3000 番ポートで待ち受けている場合は、引数指定なしでも Sora API に接続できます。
 
 もし、Sora API が別のホストやポートで待ち受けている場合は、`--sora.api-url` 引数でエンドポイント URL を指定します。
 
