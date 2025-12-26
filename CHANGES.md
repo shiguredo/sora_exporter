@@ -26,6 +26,10 @@
 - [CHANGE] `sora_cluster_up` メトリクスを追加する
   - Sora のクラスターノードの情報を取得する `ListClusterNodes` API の呼び出しに成功した場合に 1、失敗した場合に 0 を返すメトリクスです
   - @tnamao
+- [FIX] typo を修正する
+  - `srtp_decrpyted_bytes_total` から `srtp_decrypted_bytes_total` にメトリクス名を修正しました
+  - `srtp_decrypted_packets_total` の説明文の typo を修正しました
+  - @tnamao
 - [UPDATE] Go を 1.25.5 に上げる
   - @tnamao
 
