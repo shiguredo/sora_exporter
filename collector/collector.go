@@ -27,7 +27,7 @@ type Collector struct {
 	enableSoraClientMetrics          bool
 	enableSoraConnectionErrorMetrics bool
 	enableErlangVMMetrics            bool
-	EnableSoraClusterMetrics         bool
+	enableSoraClusterMetrics         bool
 
 	soraUp          *prometheus.Desc
 	soraVersionInfo *prometheus.Desc
@@ -73,7 +73,7 @@ func NewCollector(options *CollectorOptions) *Collector {
 		enableSoraClientMetrics:          options.EnableSoraClientMetrics,
 		enableSoraConnectionErrorMetrics: options.EnableSoraConnectionErrorMetrics,
 		enableErlangVMMetrics:            options.EnableErlangVMMetrics,
-		EnableSoraClusterMetrics:         options.EnableSoraClusterMetrics,
+		enableSoraClusterMetrics:         options.EnableSoraClusterMetrics,
 
 		soraUp:          newDesc("up", "Whether the last scrape of metrics from Sora was able to connect to the server (1 for yes, 0 for no)."),
 		soraVersionInfo: newDescWithLabel("version_info", "sora version info.", []string{"version"}),
@@ -110,7 +110,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	// exporter の起動オプションで `--sora.cluster-metrics` を有効にしている場合はクラスター情報を収集する
 	var nodeList *[]soraClusterNode
 	var errFetchListClusterNodes error
-	if c.EnableSoraClusterMetrics {
+	if c.enableSoraClusterMetrics {
 		nodeList, errFetchListClusterNodes = c.fetchListClusterNodes(ctx, client)
 	}
 
@@ -153,7 +153,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	// exporter 起動時に EnableSoraClusterMetrics が有効であればクラスター情報を収集する
-	if c.EnableSoraClusterMetrics {
+	if c.enableSoraClusterMetrics {
 		if errFetchListClusterNodes == nil {
 			// クラスター API の呼び出しが成功した場合は Sora クラスターは up とみなす
 			ch <- newGauge(c.soraClusterUp, 1)
@@ -264,7 +264,7 @@ func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 	if c.enableErlangVMMetrics {
 		c.ErlangVMMetrics.Describe(ch)
 	}
-	if c.EnableSoraClusterMetrics {
+	if c.enableSoraClusterMetrics {
 		ch <- c.soraClusterUp
 		c.SoraClusterMetrics.Describe(ch)
 	}

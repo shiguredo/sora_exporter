@@ -101,7 +101,7 @@ type erlangVMMemory struct {
 	Ets           int64 `json:"ets"`
 }
 
-type exatReducations struct {
+type exactReducations struct {
 	ExactReductionsSinceLastCall int64 `json:"exact_reductions_since_last_call"`
 	TotalExactReductions         int64 `json:"total_exact_reductions"`
 }
@@ -133,7 +133,7 @@ type wallClock struct {
 
 type erlangVMStatistics struct {
 	ContextSwitches         int64             `json:"context_switches"`
-	ExactReductions         exatReducations   `json:"exact_reductions"`
+	ExactReductions         exactReducations  `json:"exact_reductions"`
 	GarbageCollection       garbageCollection `json:"garbage_collection"`
 	Io                      erlangIO          `json:"io"`
 	Reductions              reductions        `json:"reductions"`
@@ -179,19 +179,19 @@ type soraClusterRelay struct {
 }
 
 type soraClusterRelayPlumtree struct {
-        TotalSentGossip        int64 `json:"total_sent_gossip"`
-        TotalReceivedGossip    int64 `json:"total_received_gossip"`
-        TotalReceivedGossipHop int64 `json:"total_received_gossip_hop"`
-        TotalSentIhave         int64 `json:"total_sent_ihave"`
-        TotalReceivedIhave     int64 `json:"total_received_ihave"`
-        TotalSentGraft         int64 `json:"total_sent_graft"`
-        TotalReceivedGraft     int64 `json:"total_received_graft"`
-        TotalSentPrune         int64 `json:"total_sent_prune"`
-        TotalReceivedPrune     int64 `json:"total_received_prune"`
-        TotalGraftMiss         int64 `json:"total_graft_miss"`
-        TotalSkippedSend       int64 `json:"total_skipped_send"`
-        TotalIhaveOverflow     int64 `json:"total_ihave_overflow"`
-        TotalIgnored           int64 `json:"total_ignored"`
+	TotalSentGossip        int64 `json:"total_sent_gossip"`
+	TotalReceivedGossip    int64 `json:"total_received_gossip"`
+	TotalReceivedGossipHop int64 `json:"total_received_gossip_hop"`
+	TotalSentIhave         int64 `json:"total_sent_ihave"`
+	TotalReceivedIhave     int64 `json:"total_received_ihave"`
+	TotalSentGraft         int64 `json:"total_sent_graft"`
+	TotalReceivedGraft     int64 `json:"total_received_graft"`
+	TotalSentPrune         int64 `json:"total_sent_prune"`
+	TotalReceivedPrune     int64 `json:"total_received_prune"`
+	TotalGraftMiss         int64 `json:"total_graft_miss"`
+	TotalSkippedSend       int64 `json:"total_skipped_send"`
+	TotalIhaveOverflow     int64 `json:"total_ihave_overflow"`
+	TotalIgnored           int64 `json:"total_ignored"`
 }
 
 type soraLicenseInfo struct {
