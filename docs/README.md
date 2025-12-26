@@ -91,4 +91,35 @@ Sora exporter は以下のような Sora のメトリクスを収集できます
 ./sora_exporter --sora.cluster-metrics
 ```
 
+このオプションを追加することで、Sora クラスターが認識している他のノードの状態や、各ノード間の転送バイト数などのメトリクスも収集できるようになります。
 
+## Sora の起動状態の確認について
+
+### sora_up メトリクス
+
+Sora exporter では Sora の起動状態を表すメトリクス `sora_up` を提供しています。
+
+Sora exporter はリクエストを受け取ると、次の Sora API を呼び出します。
+
+- `Sora_20171010.GetStatsReport`
+- `Sora_20171218.GetLicense`
+
+すべての API 呼び出しが成功した場合は `sora_up` メトリクスに `1` を返します。
+
+いずれかの API 呼び出しが失敗した場合は `sora_up` を `0` を返します。この値が返された場合は、Sora exporter から Sora への接続に問題が発生している可能性があります。
+
+また、`sora_up` メトリクスが `0` を返したとしても、Sora API から必要な情報が取得できた部分だけ、レスポンスのメトリクスに反映されます。
+
+例えば `Sora_20171218.GetLicense` API の呼び出しが失敗した場合は、ライセンス情報のメトリクスのみ欠落しますが、それ以外のメトリクスはレスポンスに反映されます。
+
+### sora_cluster_up メトリクス
+
+Sora クラスターのメトリクス収集を有効にしている場合は `sora_cluster_up` メトリクスも提供されます。
+
+この `sora_cluster_up` メトリクスは次の Sora API を呼び出し、成功した場合に `1` を設定して返します。
+
+- `Sora_20211215.ListClusterNodes`
+
+`sora_cluster_up` メトリクスは `0` を返したとしても、Sora クラスター全体が必ずしもアクセス不可となっているわけではありません。この値が返された場合には、Sora クラスターの状態を確認する必要があると理解してください。
+
+また、 `Sora_20211215.ListClusterNodes` API の呼び出しに失敗し、`sora_cluster_up` メトリクスが `0` を返した場合でも、 `Sora_20171010.GetStatsReport` API に含まれるクラスター関連のメトリクスはレスポンスに反映されます。
