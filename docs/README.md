@@ -12,7 +12,7 @@ chmod +x sora_exporter
 
 ## 起動方法
 
-Sora exporter はコマンドライン引数で Sora の管理 API エンドポイントを指定して起動します。
+Sora exporter はコマンドライン引数で Sora の管理 API エンドポイントを指定して起動できます。
 
 ここでは Sora が同一ホスト上に起動しており、Sora の API が 127.0.0.1 の 3000 番ポートで待ち受けている場合の例を示します。
 
