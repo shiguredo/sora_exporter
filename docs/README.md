@@ -4,6 +4,10 @@
 
 Sora exporter は [Releases](https://github.com/shiguredo/sora_exporter/releases) より環境に合わせてビルド済みバイナリをダウンロードして利用できます。
 
+`{CPU_ARCH}` と `{VERSION}` は実際のバージョンとアーキテクチャに置き換えてください。
+
+例: `amd64` と `2025.2.0`
+
 ```sh
 curl -L https://github.com/shiguredo/sora_exporter/releases/download/{VERSION}/sora_exporter_linux_{CPU_ARCH}-{VERSION}.gz -o sora_exporter.gz
 gzip -d sora_exporter.gz
