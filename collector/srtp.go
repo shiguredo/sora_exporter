@@ -9,8 +9,8 @@ var (
 		totalSentSrtp:              newDesc("srtp_sent_packets_total", "The total number of sent SRTP packets."),
 		totalSentSrtpByteSize:      newDesc("srtp_sent_bytes_total", "The total number of sent SRTP bytes."),
 		totalSentSrtpSfuDelayUs:    newDesc("srtp_sent_sfu_delay_us_total", "The total delay introduced by the SFU during the transfer of SRTP packets."),
-		totalDecryptedSrtp:         newDesc("srtp_decrypted_packets_total", "The total number of decrpyted SRTP packets."),
-		totalDecryptedSrtpByteSize: newDesc("srtp_decrpyted_bytes_total", "The total number of decrypted SRTP bytes."),
+		totalDecryptedSrtp:         newDesc("srtp_decrypted_packets_total", "The total number of decrypted SRTP packets."),
+		totalDecryptedSrtpByteSize: newDesc("srtp_decrypted_bytes_total", "The total number of decrypted SRTP bytes."),
 	}
 )
 

@@ -90,6 +90,9 @@ sora_cluster_relay_plumtree_skipped_send_total{node_name="node-02"} 110
 # TYPE sora_cluster_relay_plumtree_ihave_overflow_total counter
 sora_cluster_relay_plumtree_ihave_overflow_total{node_name="node-01"} 2
 sora_cluster_relay_plumtree_ihave_overflow_total{node_name="node-02"} 3
+# HELP sora_cluster_up Whether the Sora cluster is up (1 for yes, 0 for no).
+# TYPE sora_cluster_up gauge
+sora_cluster_up 1
 # HELP sora_client_type_total The total number of connections by Sora client types
 # TYPE sora_client_type_total counter
 sora_client_type_total{client="android_sdk",state="failed"} 1
@@ -257,10 +260,10 @@ sora_sctp_sent_packets_total 110
 sora_session_webhook_total{state="failed"} 95
 sora_session_webhook_total{state="ignored"} 102
 sora_session_webhook_total{state="successful"} 98
-# HELP sora_srtp_decrpyted_bytes_total The total number of decrypted SRTP bytes.
-# TYPE sora_srtp_decrpyted_bytes_total counter
-sora_srtp_decrpyted_bytes_total 105
-# HELP sora_srtp_decrypted_packets_total The total number of decrpyted SRTP packets.
+# HELP sora_srtp_decrypted_bytes_total The total number of decrypted SRTP bytes.
+# TYPE sora_srtp_decrypted_bytes_total counter
+sora_srtp_decrypted_bytes_total 105
+# HELP sora_srtp_decrypted_packets_total The total number of decrypted SRTP packets.
 # TYPE sora_srtp_decrypted_packets_total counter
 sora_srtp_decrypted_packets_total 104
 # HELP sora_srtp_received_bytes_total The total number of received SRTP bytes.

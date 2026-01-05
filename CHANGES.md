@@ -9,6 +9,46 @@
 - FIX
   - バグ修正
 
+## 2025.2.0
+
+**リリース日**: 2026-01-05
+
+***破壊的変更*** が含まれています。バージョンアップの際に注意してください。
+
+- [CHANGE] `sora_up` メトリクスの挙動を変更する
+  - `sora_up` メトリクスは Sora exporter が Sora API の `GetStatsReport` と `GetLicense` の両方の API 呼び出しに成功した場合に 1、いずれかが失敗した場合に 0 を返すメトリクスに変更しました
+  - Sora クラスターのノード情報を取得する `ListClusterNodes` API の呼び出しの成否は `sora_up` メトリクスには影響しなくなりました
+    - `ListClusterNodes` API の呼び出しの成否は新たに追加した `sora_cluster_up` メトリクスで返します
+  - @tnamao
+- [FIX] 一部の Sora API 呼び出しが失敗した場合でも、他の API 呼び出しに成功した場合は、その API 呼び出しに対応するメトリクスを返すように変更する
+  - 例えば、`GetStatsReport` API の呼び出しに成功し、`GetLicense` API の呼び出しに失敗した場合は、ライセンス情報に関するメトリクスは返しませんが、その他の統計情報に関するメトリクスは返します
+  - この修正により `sora_up` メトリクスが 0 であっても、他のメトリクスが返される場合があります
+  - 同様に `sora_cluster_up` メトリクスが 0 であっても、`sora_cluster_node` メトリクスは返しませんが、`GetStatsReport` API に由来するクラスター統計情報のメトリクスは返すようになりました
+  - @tnamao
+- [CHANGE] `sora_cluster_up` メトリクスを追加する
+  - Sora のクラスターノードの情報を取得する `ListClusterNodes` API の呼び出しに成功した場合に 1、失敗した場合に 0 を返すメトリクスです
+  - @tnamao
+- [FIX] typo を修正する
+  - `srtp_decrpyted_bytes_total` から `srtp_decrypted_bytes_total` にメトリクス名を修正しました
+  - `srtp_decrypted_packets_total` の説明文の typo を修正しました
+  - @tnamao
+- [UPDATE] Go を 1.25.5 に上げる
+  - @tnamao
+
+### misc
+
+- [UPDATE] 依存パッケージを更新する
+  - prometheus/client_golang 1.22.0 => 1.23.2
+  - prometheus/common 0.65.0 => 0.67.4
+  - prometheus/exporter-toolkit 0.14.0 => 0.15.0
+  - @tnamao
+- [UPDATE] GitHub Actions のイメージを更新する
+  - actions/setup-go v5 => v6
+  - actions/checkout v4 => v5
+  - dominikh/staticcheck-action v1.3.1 => v1.4.0
+  - @miosakuma
+  - @tnamao
+
 ## 2025.1.0
 
 **リリース日**: 2025-06-25

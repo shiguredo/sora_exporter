@@ -10,9 +10,9 @@ sora_average_duration_seconds 706
 sora_average_setup_time_seconds 0
 # HELP sora_cluster_node The sora server known cluster node.
 # TYPE sora_cluster_node gauge
-sora_cluster_node{mode="normal",node_name="node-03_canary_sora@10.211.55.41",node_type="temporary"} 1
-sora_cluster_node{mode="block_new_connection",node_name="node-02_canary_sora@10.211.55.40",node_type="regular"} 1
 sora_cluster_node{mode="",node_name="node-01_canary_sora@10.211.55.42",node_type="regular"} 0
+sora_cluster_node{mode="block_new_connection",node_name="node-02_canary_sora@10.211.55.40",node_type="regular"} 1
+sora_cluster_node{mode="normal",node_name="node-03_canary_sora@10.211.55.41",node_type="temporary"} 1
 # HELP sora_cluster_raft_commit_index The latest committed Raft log index.
 # TYPE sora_cluster_raft_commit_index counter
 sora_cluster_raft_commit_index 10
@@ -93,6 +93,38 @@ sora_cluster_relay_plumtree_ihave_overflow_total{node_name="node-02"} 3
 # HELP sora_cluster_up Whether the Sora cluster is up (1 for yes, 0 for no).
 # TYPE sora_cluster_up gauge
 sora_cluster_up 1
+# HELP sora_client_type_total The total number of connections by Sora client types
+# TYPE sora_client_type_total counter
+sora_client_type_total{client="android_sdk",state="failed"} 1
+sora_client_type_total{client="android_sdk",state="successful"} 11
+sora_client_type_total{client="c_sdk",state="failed"} 12
+sora_client_type_total{client="c_sdk",state="successful"} 1212
+sora_client_type_total{client="cpp_sdk",state="failed"} 7
+sora_client_type_total{client="cpp_sdk",state="successful"} 77
+sora_client_type_total{client="flutter_sdk",state="failed"} 9
+sora_client_type_total{client="flutter_sdk",state="successful"} 99
+sora_client_type_total{client="ios_sdk",state="failed"} 2
+sora_client_type_total{client="ios_sdk",state="successful"} 22
+sora_client_type_total{client="js_sdk",state="failed"} 3
+sora_client_type_total{client="js_sdk",state="successful"} 33
+sora_client_type_total{client="momo",state="failed"} 6
+sora_client_type_total{client="momo",state="successful"} 66
+sora_client_type_total{client="unity_sdk",state="failed"} 4
+sora_client_type_total{client="unity_sdk",state="successful"} 44
+sora_client_type_total{client="obs_studio_whep",state="failed"} 13
+sora_client_type_total{client="obs_studio_whep",state="successful"} 1313
+sora_client_type_total{client="obs_studio_whip",state="failed"} 10
+sora_client_type_total{client="obs_studio_whip",state="successful"} 1010
+sora_client_type_total{client="python_sdk",state="failed"} 11
+sora_client_type_total{client="python_sdk",state="successful"} 1111
+sora_client_type_total{client="unknown",state="failed"} 5
+sora_client_type_total{client="unknown",state="successful"} 55
+sora_client_type_total{client="zakuro",state="failed"} 8
+sora_client_type_total{client="zakuro",state="successful"} 88
+# HELP sora_connection_error_total The total number of connection error.
+# TYPE sora_connection_error_total counter
+sora_connection_error_total{reason="sdp"} 3
+sora_connection_error_total{reason="signaling"} 4
 # HELP sora_connections_total The total number of connections created.
 # TYPE sora_connections_total counter
 sora_connections_total{state="created"} 2
@@ -103,23 +135,92 @@ sora_connections_total{state="updated"} 23
 # HELP sora_duration_seconds_total The total duration of connections.
 # TYPE sora_duration_seconds_total counter
 sora_duration_seconds_total 1412
+# HELP sora_erlang_vm_context_switches The total number of context switches since the system started.
+# TYPE sora_erlang_vm_context_switches counter
+sora_erlang_vm_context_switches 321
+# HELP sora_erlang_vm_exact_reductions_exact_reductions_since_last_call The number of exact reductions since last call.
+# TYPE sora_erlang_vm_exact_reductions_exact_reductions_since_last_call gauge
+sora_erlang_vm_exact_reductions_exact_reductions_since_last_call 213
+# HELP sora_erlang_vm_exact_reductions_total_exact_reductions The total number of exact reductions.
+# TYPE sora_erlang_vm_exact_reductions_total_exact_reductions counter
+sora_erlang_vm_exact_reductions_total_exact_reductions 432
+# HELP sora_erlang_vm_garbage_collection_number_of_gcs The number of information about garbage collection.
+# TYPE sora_erlang_vm_garbage_collection_number_of_gcs gauge
+sora_erlang_vm_garbage_collection_number_of_gcs 912
+# HELP sora_erlang_vm_garbage_collection_words_reclaimed The number of information about garbage collection word reclaimed.
+# TYPE sora_erlang_vm_garbage_collection_words_reclaimed gauge
+sora_erlang_vm_garbage_collection_words_reclaimed 345
+# HELP sora_erlang_vm_io_input The total number of bytes received through ports.
+# TYPE sora_erlang_vm_io_input counter
+sora_erlang_vm_io_input 769
+# HELP sora_erlang_vm_io_output The total number of bytes output through ports.
+# TYPE sora_erlang_vm_io_output counter
+sora_erlang_vm_io_output 331
+# HELP sora_erlang_vm_memory_atom The total amount of memory currently allocated for atoms. This memory is part of the memory presented as system memory.
+# TYPE sora_erlang_vm_memory_atom gauge
+sora_erlang_vm_memory_atom 3333
+# HELP sora_erlang_vm_memory_atom_used The total amount of memory currently used for atoms. This memory is part of the memory presented as atom memory.
+# TYPE sora_erlang_vm_memory_atom_used gauge
+sora_erlang_vm_memory_atom_used 2222
+# HELP sora_erlang_vm_memory_binary The total amount of memory currently allocated for binaries. This memory is part of the memory presented as system memory.
+# TYPE sora_erlang_vm_memory_binary gauge
+sora_erlang_vm_memory_binary 1111
+# HELP sora_erlang_vm_memory_code The total amount of memory currently allocated for Erlang code. This memory is part of the memory presented as system memory.
+# TYPE sora_erlang_vm_memory_code gauge
+sora_erlang_vm_memory_code 777
+# HELP sora_erlang_vm_memory_ets The total amount of memory currently allocated for ETS tables. This memory is part of the memory presented as system memory.
+# TYPE sora_erlang_vm_memory_ets gauge
+sora_erlang_vm_memory_ets 888
+# HELP sora_erlang_vm_memory_processes The total amount of memory currently allocated for the Erlang processes.
+# TYPE sora_erlang_vm_memory_processes gauge
+sora_erlang_vm_memory_processes 5678
+# HELP sora_erlang_vm_memory_processes_used The total amount of memory currently used by the Erlang processes. This is part of the memory presented as processes memory.
+# TYPE sora_erlang_vm_memory_processes_used gauge
+sora_erlang_vm_memory_processes_used 6666
+# HELP sora_erlang_vm_memory_system The total amount of memory currently allocated for the emulator that is not directly related to any Erlang process. Memory presented as processes is not included in this memory. instrument(3) can be used to get a more detailed breakdown of what memory is part of this type.
+# TYPE sora_erlang_vm_memory_system gauge
+sora_erlang_vm_memory_system 4444
+# HELP sora_erlang_vm_memory_total The total amount of memory currently allocated. This is the same as the sum of the memory size for processes and system.
+# TYPE sora_erlang_vm_memory_total gauge
+sora_erlang_vm_memory_total 1234
+# HELP sora_erlang_vm_reductions_reductions_since_last_call The number of information about reductions.
+# TYPE sora_erlang_vm_reductions_reductions_since_last_call gauge
+sora_erlang_vm_reductions_reductions_since_last_call 443
+# HELP sora_erlang_vm_reductions_total_reductions The total number of information about reductions.
+# TYPE sora_erlang_vm_reductions_total_reductions counter
+sora_erlang_vm_reductions_total_reductions 8080
+# HELP sora_erlang_vm_run_queue The total length of all normal and dirty CPU run queues.
+# TYPE sora_erlang_vm_run_queue gauge
+sora_erlang_vm_run_queue 0
+# HELP sora_erlang_vm_runtime_time_since_last_call The number of information about runtime since last call, in milliseconds.
+# TYPE sora_erlang_vm_runtime_time_since_last_call gauge
+sora_erlang_vm_runtime_time_since_last_call 100
+# HELP sora_erlang_vm_runtime_total_run_time The number of information about runtime, in milliseconds.
+# TYPE sora_erlang_vm_runtime_total_run_time gauge
+sora_erlang_vm_runtime_total_run_time 200
+# HELP sora_erlang_vm_total_active_tasks The number of active processes and ports on each run queue and its associated schedulers. (only tasks that are expected to be CPU bound are part of the result.)
+# TYPE sora_erlang_vm_total_active_tasks gauge
+sora_erlang_vm_total_active_tasks 1
+# HELP sora_erlang_vm_total_active_tasks_all The number of active processes and ports on each run queue and its associated schedulers.
+# TYPE sora_erlang_vm_total_active_tasks_all gauge
+sora_erlang_vm_total_active_tasks_all 1
+# HELP sora_erlang_vm_total_run_queue_lengths The number of processes and ports ready to run for each run queue. (only run queues with work that is expected to be CPU bound is part of the result.)
+# TYPE sora_erlang_vm_total_run_queue_lengths gauge
+sora_erlang_vm_total_run_queue_lengths 0
+# HELP sora_erlang_vm_total_run_queue_lengths_all The number of processes and ports ready to run for each run queue.
+# TYPE sora_erlang_vm_total_run_queue_lengths_all gauge
+sora_erlang_vm_total_run_queue_lengths_all 0
+# HELP sora_erlang_vm_wall_clock_total_wallclock_time The number of information about wall clock.
+# TYPE sora_erlang_vm_wall_clock_total_wallclock_time gauge
+sora_erlang_vm_wall_clock_total_wallclock_time 994
+# HELP sora_erlang_vm_wall_clock_wallclock_time_since_last_call The number of information about wall clock since last call.
+# TYPE sora_erlang_vm_wall_clock_wallclock_time_since_last_call gauge
+sora_erlang_vm_wall_clock_wallclock_time_since_last_call 9090
 # HELP sora_event_webhook_total The total number of event webhook.
 # TYPE sora_event_webhook_total counter
 sora_event_webhook_total{state="failed"} 94
 sora_event_webhook_total{state="ignored"} 101
 sora_event_webhook_total{state="successful"} 97
-# HELP sora_license_expired_at_timestamp_seconds sora license file's expire seconds since epoch.
-# TYPE sora_license_expired_at_timestamp_seconds gauge
-sora_license_expired_at_timestamp_seconds 1.759276799e+09
-# HELP sora_license_info sora license info.
-# TYPE sora_license_info gauge
-sora_license_info{expired_at="2025-09",product_name="Sora",serial_code="EXPORTER-SRA-E001-202509-N10-100",type="Experimental"} 1
-# HELP sora_license_max_connections sora license file's max_connections.
-# TYPE sora_license_max_connections gauge
-sora_license_max_connections 100
-# HELP sora_license_max_nodes sora license file's max_nodes.
-# TYPE sora_license_max_nodes gauge
-sora_license_max_nodes 10
 # HELP sora_ongoing_connections_total The total number of ongoing connections.
 # TYPE sora_ongoing_connections_total gauge
 sora_ongoing_connections_total 0
@@ -186,7 +287,7 @@ sora_turn_connections_total{proto="tcp"} 2
 sora_turn_connections_total{proto="udp"} 0
 # HELP sora_up Whether the last scrape of metrics from Sora was able to connect to the server (1 for yes, 0 for no).
 # TYPE sora_up gauge
-sora_up 1
+sora_up 0
 # HELP sora_version_info sora version info.
 # TYPE sora_version_info gauge
 sora_version_info{version="2022.1.0-canary.28"} 1

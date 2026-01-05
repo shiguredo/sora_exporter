@@ -20,6 +20,10 @@ Please read https://github.com/shiguredo/oss/blob/master/README.en.md before use
 
 時雨堂のサービスである [Sora Labo](https://sora-labo.shiguredo.app/) と [Sora Cloud](https://sora-cloud.shiguredo.jp) で利用するために開発、メンテナンスをしています。
 
+## ドキュメント
+
+Sora exporter の利用方法は [docs/README.md](./docs/README.md) をご確認ください。
+
 ## Discord
 
 最新の状況などは Discord で共有しています。質問や相談も Discord でのみ受け付けています。
