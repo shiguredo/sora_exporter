@@ -9,6 +9,17 @@
 - FIX
   - バグ修正
 
+## 2025.2.1
+
+**リリース日**: 2026-02-16
+
+- [UPDATE] go のバージョンを 1.26.0 に上げる
+  - @voluntas
+- [UPDATE] actions/checkout@v6 に上げる
+  - @voluntas
+- [UPDATE] dominikh/staticcheck-action の staticcheck を 2026.1 に上げる
+  - @voluntas
+
 ## 2025.2.0
 
 **リリース日**: 2026-01-05

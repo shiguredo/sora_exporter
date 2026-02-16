@@ -3,9 +3,9 @@ name: Go Test
 on:
   push:
     branches-ignore:
-      - 'main'
+      - "main"
     tags-ignore:
-      - '*'
+      - "*"
     paths:
       - "**.go"
       - "test/**"
@@ -13,18 +13,17 @@ on:
       - "go.sum"
 
 jobs:
-
   build:
     name: go test
     runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
-    - name: Set up Go
-      uses: actions/setup-go@v6
-      with:
-        go-version-file: "./go.mod"
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: "./go.mod"
 
-    - run: go version
+      - run: go version
 
-    - run: go test -v
+      - run: go test -v
