@@ -13,6 +13,9 @@
 
 - [UPDATE] go のバージョンを 1.26.2 に上げる
   - @tnamao
+- [UPDATE] 依存パッケージを更新する
+  - prometheus/exporter-toolkit 0.15.1 => 0.16.0
+  - @tnamao
 
 ## 2025.2.2
 
