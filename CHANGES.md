@@ -13,6 +13,8 @@
 
 - [UPDATE] go のバージョンを 1.26.3 に上げる
   - @tnamao
+- [CHANGE] GitHub Actions のリリースワークフローを変更し、 `VERSION` ファイルからバージョン番号を取得するように変更する
+  - @tnamao
 
 ## 2025.2.3
 
