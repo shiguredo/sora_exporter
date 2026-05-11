@@ -21,7 +21,7 @@ jobs:
 
       - name: Build
         run: |
-          VERSION=$(git describe --tag --abbrev=0)
+          VERSION=$(cat VERSION)
           REVISION=$(git rev-parse --short HEAD)
           GOOS=linux GOARCH=amd64 go build \
             -o dist/sora_exporter_linux_amd64-${VERSION} \
@@ -46,7 +46,7 @@ jobs:
           gzip dist/*
       - name: Release
         run: |
-          VERSION=$(git describe --tag --abbrev=0)
+          VERSION=$(cat VERSION)
           if [[ "${VERSION}" == *"canary"* ]]; then
             ghr -t "${{ secrets.GITHUB_TOKEN }}" \
                 -u "${{ github.repository_owner }}" \
