@@ -8,6 +8,9 @@ sora_average_duration_seconds 706
 # HELP sora_average_setup_time_seconds The average setup time in seconds.
 # TYPE sora_average_setup_time_seconds gauge
 sora_average_setup_time_seconds 0
+# HELP sora_cluster_force_sync_session_resource_total The total number of times this node proactively broadcast its session resource information to the other cluster nodes.
+# TYPE sora_cluster_force_sync_session_resource_total counter
+sora_cluster_force_sync_session_resource_total 7
 # HELP sora_cluster_raft_commit_index The latest committed Raft log index.
 # TYPE sora_cluster_raft_commit_index counter
 sora_cluster_raft_commit_index 10
