@@ -24,7 +24,8 @@ var (
                 "cluster": {
                   "raft_commit_index": 10,
                   "raft_state": "follower",
-                  "raft_term": 3
+                  "raft_term": 3,
+                  "total_force_sync_session_resource": 7
                 },
 		"cluster_relay": [
 			{

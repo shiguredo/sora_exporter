@@ -156,9 +156,10 @@ type erlangVMReport struct {
 }
 
 type soraClusterReport struct {
-	RaftState       string `json:"raft_state"`
-	RaftTerm        int64  `json:"raft_term"`
-	RaftCommitIndex int64  `json:"raft_commit_index"`
+	RaftState                     string `json:"raft_state"`
+	RaftTerm                      int64  `json:"raft_term"`
+	RaftCommitIndex               int64  `json:"raft_commit_index"`
+	TotalForceSyncSessionResource int64  `json:"total_force_sync_session_resource"`
 }
 
 type soraClusterNode struct {

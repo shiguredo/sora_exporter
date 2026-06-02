@@ -16,6 +16,8 @@ var (
 		raftTerm:        newDesc("cluster_raft_term", "The current Raft term."),
 		raftCommitIndex: newDesc("cluster_raft_commit_index", "The latest committed Raft log index."),
 
+		clusterTotalForceSyncSessionResource: newDesc("cluster_force_sync_session_resource_total", "The total number of times session resources were force-synced across the cluster."),
+
 		clusterRelayReceivedBytesTotal:   newDescWithLabel("cluster_relay_received_bytes_total", "The total number of bytes received by the cluster relay.", []string{"node_name"}),
 		clusterRelaySentBytesTotal:       newDescWithLabel("cluster_relay_sent_bytes_total", "The total number of bytes sent by the cluster relay.", []string{"node_name"}),
 		clusterRelayReceivedPacketsTotal: newDescWithLabel("cluster_relay_received_packets_total", "The total number of packets received by the cluster relay.", []string{"node_name"}),
@@ -45,6 +47,8 @@ type SoraClusterMetrics struct {
 	raftTerm        *prometheus.Desc
 	raftCommitIndex *prometheus.Desc
 
+	clusterTotalForceSyncSessionResource *prometheus.Desc
+
 	clusterRelayReceivedBytesTotal   *prometheus.Desc
 	clusterRelaySentBytesTotal       *prometheus.Desc
 	clusterRelayReceivedPacketsTotal *prometheus.Desc
@@ -70,6 +74,7 @@ func (m *SoraClusterMetrics) Describe(ch chan<- *prometheus.Desc) {
 	ch <- m.raftState
 	ch <- m.raftTerm
 	ch <- m.raftCommitIndex
+	ch <- m.clusterTotalForceSyncSessionResource
 	ch <- m.clusterRelayReceivedBytesTotal
 	ch <- m.clusterRelaySentBytesTotal
 	ch <- m.clusterRelayReceivedPacketsTotal
@@ -113,6 +118,7 @@ func (m *SoraClusterMetrics) CollectClusterReport(ch chan<- prometheus.Metric, r
 	ch <- newGauge(m.raftState, 1.0, report.RaftState)
 	ch <- newCounter(m.raftTerm, float64(report.RaftTerm))
 	ch <- newCounter(m.raftCommitIndex, float64(report.RaftCommitIndex))
+	ch <- newCounter(m.clusterTotalForceSyncSessionResource, float64(report.TotalForceSyncSessionResource))
 
 	for _, relayNode := range clusterRelaies {
 		ch <- newCounter(m.clusterRelayReceivedBytesTotal, float64(relayNode.TotalReceivedByteSize), relayNode.NodeName)

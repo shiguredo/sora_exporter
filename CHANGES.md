@@ -9,6 +9,12 @@
 - FIX
   - バグ修正
 
+## develop
+
+- [ADD] クラスターメトリクスに `sora_cluster_force_sync_session_resource_total` を追加する
+  - Sora 2026.1.0 で追加される `GetStatsReport` の `cluster.total_force_sync_session_resource` に対応する
+  - @sile
+
 ## 2025.2.4
 
 - [UPDATE] go のバージョンを 1.26.3 に上げる
