@@ -16,7 +16,7 @@ var (
 		raftTerm:        newDesc("cluster_raft_term", "The current Raft term."),
 		raftCommitIndex: newDesc("cluster_raft_commit_index", "The latest committed Raft log index."),
 
-		forceSyncSessionResourceTotal: newDesc("cluster_force_sync_session_resource_total", "The total number of times session resources were force-synced across the cluster."),
+		forceSyncSessionResourceTotal: newDesc("cluster_force_sync_session_resource_total", "The total number of times this node proactively broadcast its session resource information to the other cluster nodes."),
 
 		clusterRelayReceivedBytesTotal:   newDescWithLabel("cluster_relay_received_bytes_total", "The total number of bytes received by the cluster relay.", []string{"node_name"}),
 		clusterRelaySentBytesTotal:       newDescWithLabel("cluster_relay_sent_bytes_total", "The total number of bytes sent by the cluster relay.", []string{"node_name"}),
