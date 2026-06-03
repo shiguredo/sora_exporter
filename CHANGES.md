@@ -14,6 +14,8 @@
 - [ADD] クラスターメトリクスに `sora_cluster_force_sync_session_resource_total` を追加する
   - Sora 2026.1.0 で追加される `GetStatsReport` の `cluster.total_force_sync_session_resource` に対応する
   - @sile
+- [ADD] canary.py を追加する
+  - @tnamao
 
 ## 2025.2.4
 
