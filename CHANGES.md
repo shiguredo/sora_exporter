@@ -15,9 +15,20 @@
   - Sora 2026.1.0 で追加される `GetStatsReport` の `cluster.total_force_sync_session_resource` に対応する
   - @sile
 - [ADD] canary.py を追加する
+
+## 2025.2.5
+
+**リリース日**: 2026-06-03
+
+- [UPDATE] go のバージョンを 1.26.4 に上げる
+  - @tnamao
+- [UPDATE] 依存パッケージを更新する
+  - prometheus/common 0.67.5 => 0.68.1
   - @tnamao
 
 ## 2025.2.4
+
+**リリース日**: 2026-05-11
 
 - [UPDATE] go のバージョンを 1.26.3 に上げる
   - @tnamao
