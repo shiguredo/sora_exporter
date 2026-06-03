@@ -11,6 +11,14 @@
 
 ## develop
 
+- [CHANGE] GitHub Action のイメージ指定をハッシュに変更する
+  - @tnamao
+- [UPDATE] GitHub Actions のイメージを更新する
+  - actions/checkout v5 => v6.0.3
+  - actions/checkout v6 => v6.0.3
+  - actions/setup-go v6 => v6.4.0
+  - dominikh/staticcheck-action v1 => v1.4.1
+  - @tnamao
 - [ADD] クラスターメトリクスに `sora_cluster_force_sync_session_resource_total` を追加する
   - Sora 2026.1.0 で追加される `GetStatsReport` の `cluster.total_force_sync_session_resource` に対応する
   - @sile
