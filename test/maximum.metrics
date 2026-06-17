@@ -1,3 +1,12 @@
+# HELP sora_auth_webhook_response_time_seconds Response time histogram for auth webhook requests.
+# TYPE sora_auth_webhook_response_time_seconds histogram
+sora_auth_webhook_response_time_seconds_bucket{le="1.25"} 80
+sora_auth_webhook_response_time_seconds_bucket{le="2.5"} 88
+sora_auth_webhook_response_time_seconds_bucket{le="3.75"} 94
+sora_auth_webhook_response_time_seconds_bucket{le="5"} 96
+sora_auth_webhook_response_time_seconds_bucket{le="+Inf"} 189
+sora_auth_webhook_response_time_seconds_sum 12
+sora_auth_webhook_response_time_seconds_count 189
 # HELP sora_auth_webhook_total The total number of auth webhook.
 # TYPE sora_auth_webhook_total counter
 sora_auth_webhook_total{state="failed"} 93
@@ -219,6 +228,15 @@ sora_erlang_vm_wall_clock_total_wallclock_time 994
 # HELP sora_erlang_vm_wall_clock_wallclock_time_since_last_call The number of information about wall clock since last call.
 # TYPE sora_erlang_vm_wall_clock_wallclock_time_since_last_call gauge
 sora_erlang_vm_wall_clock_wallclock_time_since_last_call 9090
+# HELP sora_event_webhook_response_time_seconds Response time histogram for event webhook requests.
+# TYPE sora_event_webhook_response_time_seconds histogram
+sora_event_webhook_response_time_seconds_bucket{le="1.25"} 82
+sora_event_webhook_response_time_seconds_bucket{le="2.5"} 90
+sora_event_webhook_response_time_seconds_bucket{le="3.75"} 92
+sora_event_webhook_response_time_seconds_bucket{le="5"} 97
+sora_event_webhook_response_time_seconds_bucket{le="+Inf"} 191
+sora_event_webhook_response_time_seconds_sum 14
+sora_event_webhook_response_time_seconds_count 191
 # HELP sora_event_webhook_total The total number of event webhook.
 # TYPE sora_event_webhook_total counter
 sora_event_webhook_total{state="failed"} 94
@@ -258,6 +276,15 @@ sora_sctp_sent_bytes_total 111
 # HELP sora_sctp_sent_packets_total The total number of sent SCTP packets.
 # TYPE sora_sctp_sent_packets_total counter
 sora_sctp_sent_packets_total 110
+# HELP sora_session_webhook_response_time_seconds Response time histogram for session webhook requests.
+# TYPE sora_session_webhook_response_time_seconds histogram
+sora_session_webhook_response_time_seconds_bucket{le="1.25"} 81
+sora_session_webhook_response_time_seconds_bucket{le="2.5"} 89
+sora_session_webhook_response_time_seconds_bucket{le="3.75"} 93
+sora_session_webhook_response_time_seconds_bucket{le="5"} 98
+sora_session_webhook_response_time_seconds_bucket{le="+Inf"} 193
+sora_session_webhook_response_time_seconds_sum 13
+sora_session_webhook_response_time_seconds_count 193
 # HELP sora_session_webhook_total The total number of session webhook.
 # TYPE sora_session_webhook_total counter
 sora_session_webhook_total{state="failed"} 95
@@ -284,6 +311,15 @@ sora_srtp_sent_sfu_delay_us_total 123456
 # HELP sora_srtp_sent_packets_total The total number of sent SRTP packets.
 # TYPE sora_srtp_sent_packets_total counter
 sora_srtp_sent_packets_total 106
+# HELP sora_stats_webhook_response_time_seconds Response time histogram for stats webhook requests.
+# TYPE sora_stats_webhook_response_time_seconds histogram
+sora_stats_webhook_response_time_seconds_bucket{le="1.25"} 83
+sora_stats_webhook_response_time_seconds_bucket{le="2.5"} 91
+sora_stats_webhook_response_time_seconds_bucket{le="3.75"} 95
+sora_stats_webhook_response_time_seconds_bucket{le="5"} 100
+sora_stats_webhook_response_time_seconds_bucket{le="+Inf"} 199
+sora_stats_webhook_response_time_seconds_sum 15
+sora_stats_webhook_response_time_seconds_count 199
 # HELP sora_stats_webhook_total The total number of stats webhook.
 # TYPE sora_stats_webhook_total counter
 sora_stats_webhook_total{state="failed"} 99
