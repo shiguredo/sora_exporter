@@ -26,8 +26,9 @@
     - `sora_session_webhook_response_time_seconds`
     - `sora_event_webhook_response_time_seconds`
     - `sora_stats_webhook_response_time_seconds`
-  - `le` の境界値はバケツ境界値（ミリ秒単位）を秒に変換したもので、Sora の `webhook_response_timeout` 設定によって変わる
-  - `_count` は `total_successful_*_webhook + total_failed_*_webhook`、`_sum` は `total_*_webhook_response_time_ms / 1000` で算出する
+  - Sora の統計からの変換ルール:
+    - `le` の境界値は Sora のバケツ境界値（ミリ秒単位）を秒に変換したもので、Sora の `webhook_response_timeout` 設定によって変わる
+    - `_count` は `total_successful_*_webhook + total_failed_*_webhook`、`_sum` は `total_*_webhook_response_time_ms / 1000` で算出する
   - 出力例（`_bucket` / `_sum` / `_count` を含む）:
     ```
     sora_session_webhook_response_time_seconds_bucket{le="1.25"} 950
