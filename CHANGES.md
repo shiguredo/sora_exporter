@@ -21,9 +21,23 @@
   - @tnamao
 - [ADD] ウェブフック応答時間ヒストグラムメトリクスを追加する
   - Sora 2026.1.0 で追加される認証 / セッション / イベント / 統計ウェブフックの応答時間統計に対応する
-  - `sora_auth_webhook_response_time_seconds` / `sora_session_webhook_response_time_seconds` / `sora_event_webhook_response_time_seconds` / `sora_stats_webhook_response_time_seconds` の 4 種のヒストグラムメトリクスを追加する
-  - Sora からのバケツ境界値（ミリ秒単位）を秒に変換して `le` ラベルに使用する
+  - 以下の 4 種のヒストグラムメトリクスを追加する
+    - `sora_auth_webhook_response_time_seconds`
+    - `sora_session_webhook_response_time_seconds`
+    - `sora_event_webhook_response_time_seconds`
+    - `sora_stats_webhook_response_time_seconds`
+  - `le` の境界値はバケツ境界値（ミリ秒単位）を秒に変換したもので、Sora の `webhook_response_timeout` 設定によって変わる
   - `_count` は `total_successful_*_webhook + total_failed_*_webhook`、`_sum` は `total_*_webhook_response_time_ms / 1000` で算出する
+  - 出力例（`_bucket` / `_sum` / `_count` を含む）:
+    ```
+    sora_session_webhook_response_time_seconds_bucket{le="1.25"} 950
+    sora_session_webhook_response_time_seconds_bucket{le="2.5"} 980
+    sora_session_webhook_response_time_seconds_bucket{le="3.75"} 995
+    sora_session_webhook_response_time_seconds_bucket{le="5"} 998
+    sora_session_webhook_response_time_seconds_bucket{le="+Inf"} 1000
+    sora_session_webhook_response_time_seconds_sum 71.234
+    sora_session_webhook_response_time_seconds_count 1000
+    ```
   - @sile
 - [ADD] クラスターメトリクスに `sora_cluster_force_sync_session_resource_total` を追加する
   - Sora 2026.1.0 で追加される `GetStatsReport` の `cluster.total_force_sync_session_resource` に対応する
