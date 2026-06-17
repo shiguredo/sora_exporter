@@ -21,7 +21,7 @@
   - @tnamao
 - [ADD] ウェブフック応答時間ヒストグラムメトリクスを追加する
   - Sora 2026.1.0 で追加される認証 / セッション / イベント / 統計ウェブフックの応答時間統計に対応する
-  - 以下の 4 種のヒストグラムメトリクスを追加する
+  - 以下の 4 種のヒストグラムメトリクスを追加する（Prometheus のヒストグラム形式に従い、各メトリクスには `_bucket{le="..."}` / `_sum` / `_count` のサフィックスが付与された上で出力される）
     - `sora_auth_webhook_response_time_seconds`
     - `sora_session_webhook_response_time_seconds`
     - `sora_event_webhook_response_time_seconds`
