@@ -24,7 +24,8 @@ var (
                 "cluster": {
                   "raft_commit_index": 10,
                   "raft_state": "follower",
-                  "raft_term": 3
+                  "raft_term": 3,
+                  "total_force_sync_session_resource": 7
                 },
 		"cluster_relay": [
 			{
@@ -205,6 +206,34 @@ var (
 		"total_successful_event_webhook": 97,
 		"total_successful_session_webhook": 98,
 		"total_successful_stats_webhook": 100,
+		"total_auth_webhook_response_time_ms": 12000,
+		"auth_webhook_response_time_ms_buckets": [
+			{"upper_bound": 1250, "count": 80},
+			{"upper_bound": 2500, "count": 88},
+			{"upper_bound": 3750, "count": 94},
+			{"upper_bound": 5000, "count": 96}
+		],
+		"total_session_webhook_response_time_ms": 13000,
+		"session_webhook_response_time_ms_buckets": [
+			{"upper_bound": 1250, "count": 81},
+			{"upper_bound": 2500, "count": 89},
+			{"upper_bound": 3750, "count": 93},
+			{"upper_bound": 5000, "count": 98}
+		],
+		"total_event_webhook_response_time_ms": 14000,
+		"event_webhook_response_time_ms_buckets": [
+			{"upper_bound": 1250, "count": 82},
+			{"upper_bound": 2500, "count": 90},
+			{"upper_bound": 3750, "count": 92},
+			{"upper_bound": 5000, "count": 97}
+		],
+		"total_stats_webhook_response_time_ms": 15000,
+		"stats_webhook_response_time_ms_buckets": [
+			{"upper_bound": 1250, "count": 83},
+			{"upper_bound": 2500, "count": 91},
+			{"upper_bound": 3750, "count": 95},
+			{"upper_bound": 5000, "count": 100}
+		],
 		"total_received_sctp": 112,
 		"total_received_sctp_byte_size": 113,
 		"total_received_srtp": 108,

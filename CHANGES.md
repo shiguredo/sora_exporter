@@ -9,6 +9,50 @@
 - FIX
   - バグ修正
 
+## 2026.1.0
+
+**リリース日**: 2026-06-24
+
+- [ADD] ウェブフック応答時間ヒストグラムメトリクスを追加する
+  - Sora 2026.1.0 で追加される認証 / セッション / イベント / 統計ウェブフックの応答時間統計に対応する
+  - 以下の 4 種のヒストグラムメトリクスを追加する（Prometheus のヒストグラム形式に従い、各メトリクスには `_bucket{le="..."}` / `_sum` / `_count` のサフィックスが付与された上で出力される）
+    - `sora_auth_webhook_response_time_seconds`
+    - `sora_session_webhook_response_time_seconds`
+    - `sora_event_webhook_response_time_seconds`
+    - `sora_stats_webhook_response_time_seconds`
+  - Sora の統計からの変換ルール:
+    - `le` の境界値は Sora のバケツ境界値（ミリ秒単位）を秒に変換したもので、Sora の `webhook_response_timeout` 設定によって変わる
+    - `_count` は `total_successful_*_webhook + total_failed_*_webhook`、`_sum` は `total_*_webhook_response_time_ms / 1000` で算出する
+  - 出力例（`_bucket` / `_sum` / `_count` を含む）:
+    ```
+    sora_session_webhook_response_time_seconds_bucket{le="1.25"} 950
+    sora_session_webhook_response_time_seconds_bucket{le="2.5"} 980
+    sora_session_webhook_response_time_seconds_bucket{le="3.75"} 995
+    sora_session_webhook_response_time_seconds_bucket{le="5"} 998
+    sora_session_webhook_response_time_seconds_bucket{le="+Inf"} 1000
+    sora_session_webhook_response_time_seconds_sum 71.234
+    sora_session_webhook_response_time_seconds_count 1000
+    ```
+  - @sile
+- [ADD] クラスターメトリクスに `sora_cluster_force_sync_session_resource_total` を追加する
+  - Sora 2026.1.0 で追加される `GetStatsReport` の `cluster.total_force_sync_session_resource` に対応する
+  - @sile
+
+### misc
+
+- [CHANGE] GitHub Action のイメージ指定をハッシュに変更する
+  - @tnamao
+- [UPDATE] GitHub Actions のイメージを更新する
+  - actions/checkout v5 => v6.0.3
+  - actions/checkout v6 => v6.0.3
+  - actions/setup-go v6 => v6.4.0
+  - dominikh/staticcheck-action v1 => v1.4.1
+  - @tnamao
+- [UPDATE] 依存パッケージを更新する
+  - prometheus/common 0.68.1 => 0.69.0
+  - @tnamao
+- [ADD] canary.py を追加する
+
 ## 2025.2.5
 
 **リリース日**: 2026-06-03

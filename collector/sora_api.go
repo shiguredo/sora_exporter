@@ -30,6 +30,11 @@ type soraConnectionReport struct {
 	TotalReceivedInvalidTurnTCPPacket int64 `json:"total_received_invalid_turn_tcp_packet"`
 }
 
+type webhookResponseTimeBucket struct {
+	UpperBound int64 `json:"upper_bound"`
+	Count      int64 `json:"count"`
+}
+
 type soraWebhookReport struct {
 	TotalAuthWebhookAllowed       int64 `json:"total_auth_webhook_allowed"`
 	TotalAuthWebhookDenied        int64 `json:"total_auth_webhook_denied"`
@@ -44,6 +49,15 @@ type soraWebhookReport struct {
 	TotalSuccessfulStatsWebhook   int64 `json:"total_successful_stats_webhook"`
 	TotalFailedStatsWebhook       int64 `json:"total_failed_stats_webhook"`
 	TotalIgnoredStatsWebhook      int64 `json:"total_ignored_stats_webhook"`
+
+	TotalAuthWebhookResponseTimeMs        int64                        `json:"total_auth_webhook_response_time_ms"`
+	AuthWebhookResponseTimeMsBuckets      []webhookResponseTimeBucket  `json:"auth_webhook_response_time_ms_buckets"`
+	TotalSessionWebhookResponseTimeMs     int64                        `json:"total_session_webhook_response_time_ms"`
+	SessionWebhookResponseTimeMsBuckets   []webhookResponseTimeBucket  `json:"session_webhook_response_time_ms_buckets"`
+	TotalEventWebhookResponseTimeMs       int64                        `json:"total_event_webhook_response_time_ms"`
+	EventWebhookResponseTimeMsBuckets     []webhookResponseTimeBucket  `json:"event_webhook_response_time_ms_buckets"`
+	TotalStatsWebhookResponseTimeMs       int64                        `json:"total_stats_webhook_response_time_ms"`
+	StatsWebhookResponseTimeMsBuckets     []webhookResponseTimeBucket  `json:"stats_webhook_response_time_ms_buckets"`
 }
 
 type soraSrtpReport struct {
@@ -156,9 +170,10 @@ type erlangVMReport struct {
 }
 
 type soraClusterReport struct {
-	RaftState       string `json:"raft_state"`
-	RaftTerm        int64  `json:"raft_term"`
-	RaftCommitIndex int64  `json:"raft_commit_index"`
+	RaftState                     string `json:"raft_state"`
+	RaftTerm                      int64  `json:"raft_term"`
+	RaftCommitIndex               int64  `json:"raft_commit_index"`
+	TotalForceSyncSessionResource int64  `json:"total_force_sync_session_resource"`
 }
 
 type soraClusterNode struct {
