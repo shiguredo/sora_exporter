@@ -5,7 +5,7 @@
 - Completed: {YYYY-MM-DD}
 - Model: Qwen Code
 - Branch: feature/fix-expired-at-parse-error
-- Polished: {YYYY-MM-DD}
+- Polished: 2026-07-23
 
 ## 目的
 
@@ -17,7 +17,7 @@
 
 ## 現状
 
-`collector/license.go:42-52`:
+`collector/license.go:43-53` の `expiredAtToSecondSinceEpoch` がパース失敗時に `0` を返す:
 
 ```go
 func expiredAtToSecondSinceEpoch(expiredAt string) float64 {
@@ -29,15 +29,24 @@ func expiredAtToSecondSinceEpoch(expiredAt string) float64 {
 }
 ```
 
-パース失敗時に `0` を返すが、エラーのログ出力もなく、メトリクスの出力もスキップされない。
+呼び出し元の `LicenseMetrics.Collect`（`license.go:36-41`）は戻り値をそのままメトリクスとして出力するため、パース失敗時に `sora_license_expired_at_timestamp_seconds 0` が出力される。エラーのログ出力もない。
+
+`LicenseMetrics` 構造体には logger フィールドがない。logger は `Collector` 構造体が持っている（`collector.go:23`）。
+
+## 設計方針
+
+`expiredAtToSecondSinceEpoch` の戻り値を `(float64, error)` に変更する。`LicenseMetrics.Collect` でエラーを受け取り、`sora_license_expired_at_timestamp_seconds` の出力をスキップする。ログ出力は `Collector.Collect`（`collector.go:152-154`）から `LicenseMetrics.Collect` を呼び出している箇所で行う（`LicenseMetrics` に logger を追加しない）。
 
 ## 完了条件
 
-- パース失敗時にエラーログが出力される
+- `expiredAtToSecondSinceEpoch` が `(float64, error)` を返す
 - パース失敗時に `sora_license_expired_at_timestamp_seconds` メトリクスの出力がスキップされる
-- パース失敗のテストケースが追加されている
-- 全テストが通る
+- パース失敗時にエラーログが出力される
+- `go test -race -v .` が通る
 
 ## 解決方法
 
-`LicenseMetrics.Collect` 内で `expiredAtToSecondSinceEpoch` がエラーを返すように変更し、エラー時はログ出力してメトリクスをスキップする。
+1. `expiredAtToSecondSinceEpoch` の戻り値を `(float64, error)` に変更し、パース失敗時に `(0, err)` を返す
+2. `LicenseMetrics.Collect` でエラーを受け取り、エラー時はメトリクスをスキップして error を返す
+3. `Collector.Collect`（`collector.go:152-154`）で `LicenseMetrics.Collect` のエラーをログ出力する
+4. `go test -race -v .` で全テストの通過を確認する
