@@ -5,7 +5,7 @@
 - Completed: {YYYY-MM-DD}
 - Model: Qwen Code
 - Branch: feature/fix-average-setup-time-integer-division
-- Polished: {YYYY-MM-DD}
+- Polished: 2026-07-23
 
 ## 目的
 
@@ -23,21 +23,44 @@
 ch <- newGauge(m.averageSetupTimeSec, float64(report.AverageSetupTimeMsec/1000))
 ```
 
-`AverageSetupTimeMsec` は `int64` 型（`collector/sora_api.go:26`）のため、`372/1000 = 0` となる。正しい値は `0.372`。
+`AverageSetupTimeMsec` は `int64` 型（`collector/sora_api.go:27`）のため、`372/1000 = 0` となる。正しい値は `0.372`。
 
-一方、`collector/webhook.go:69` では `float64(report.TotalAuthWebhookResponseTimeMs) / 1000.0` と正しく浮動小数点除算を使っており、コード内で変換手法が不統一。
+一方、`collector/webhook.go:60` では `float64(report.TotalAuthWebhookResponseTimeMs) / 1000.0` と正しく浮動小数点除算を使っており、コード内で変換手法が不統一。
 
-テストフィクスチャ `test/maximum.metrics:14` は `sora_average_setup_time_seconds 0` と期待しており、バグに追従している。`test/minimum.metrics` の入力 12000ms は割り切れるためバグが隠蔽されている。
+### テストフィクスチャへの影響
+
+テストデータ（`main_test.go:23`）の `"average_setup_time_msec": 372` に対し、以下の 7 フィクスチャで期待値が `0`（バグに追従した値）になっている。正しい期待値は `0.372`:
+
+- `test/maximum.metrics:19`
+- `test/sora_client_enabled.metrics:19`
+- `test/sora_cluster_metrics_enabled.metrics:19`
+- `test/sora_connection_error_enabled.metrics:19`
+- `test/sora_erlang_vm_enabled.metrics:19`
+- `test/sora_up_cluster_nodes_failed.metrics:19`
+- `test/sora_up_license_failed.metrics:19`
+
+以下のフィクスチャは更新不要:
+
+- `test/minimum.metrics:10` — 入力 `12000` ms は `12000/1000 = 12` と割り切れるため整数除算でも結果が一致する
+- `test/invalid_config.metrics` — 全 API 失敗のため `sora_average_setup_time_seconds` 自体が出力されない
+- `test/sora_up_stats_report_failed.metrics` — GetStatsReport 失敗のため出力されない
+- `test/sora_up_cluster_nodes_only.metrics` — GetStatsReport 失敗のため出力されない
+
+## 設計方針
+
+`collector/webhook.go:60` の既存パターン（`float64(value) / 1000.0`）に揃え、int64 を先に float64 に変換してから浮動小数点除算を行う。
 
 ## 完了条件
 
 - `collector/connection.go:53` が `float64(report.AverageSetupTimeMsec) / 1000.0` に修正されている
-- テストフィクスチャの期待値が正しい値（`0.372`）に更新されている
-- 割り切れない値（例: 1500ms → 1.5s）のテストケースが追加されている
-- 全テストが通る
+- 上記 7 フィクスチャの期待値が `0.372` に更新されている
+- `go test -race -v .` が通る
 
 ## 解決方法
 
-1. `collector/connection.go:53` を `float64(report.AverageSetupTimeMsec) / 1000.0` に修正する
-2. `test/maximum.metrics` の `sora_average_setup_time_seconds` の期待値を `0.372` に更新する
-3. `test/sora_up_license_failed.metrics`、`test/sora_up_cluster_nodes_failed.metrics` 等、同じテストデータを使うフィクスチャも同様に更新する
+1. `collector/connection.go:53` を以下に修正する:
+   ```go
+   ch <- newGauge(m.averageSetupTimeSec, float64(report.AverageSetupTimeMsec)/1000.0)
+   ```
+2. 上記 7 フィクスチャの `sora_average_setup_time_seconds 0` を `sora_average_setup_time_seconds 0.372` に更新する
+3. `go test -race -v .` で全テストの通過を確認する
