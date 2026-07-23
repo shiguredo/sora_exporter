@@ -5,7 +5,7 @@
 - Completed: {YYYY-MM-DD}
 - Model: Qwen Code
 - Branch: feature/fix-skip-ssl-verify-description
-- Polished: {YYYY-MM-DD}
+- Polished: 2026-07-23
 
 ## 目的
 
@@ -17,7 +17,7 @@
 
 ## 現状
 
-`main.go:67-71`:
+`main.go:67-70`:
 
 ```go
 soraSkipSslVerify = kingpin.Flag(
@@ -28,11 +28,15 @@ soraSkipSslVerify = kingpin.Flag(
 
 フラグ名は `skip-ssl-verify`（SSL 検証をスキップ）だが、説明文は "Flag that **enables** SSL certificate verification" と書かれている。
 
+## 設計方針
+
+説明文をフラグ名と整合する意味に修正する。他のフラグの説明文の文体（"Include metrics about..."、"Address on which to..."）に揃える。
+
 ## 完了条件
 
 - 説明文がフラグ名と整合する意味になっている
-- 全テストが通る
+- `go test -race -v .` が通る
 
 ## 解決方法
 
-説明文を `"Flag that disables SSL certificate verification for the Sora URL"` に修正する。
+`main.go:69` の説明文を `"Flag that disables SSL certificate verification for the Sora URL"` に修正する。
