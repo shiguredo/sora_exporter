@@ -9,6 +9,18 @@
 - FIX
   - バグ修正
 
+## 2026.1.4
+
+**リリース日**: 2026-10-15
+
+- [UPDATE] go のバージョンを 1.26.9 に上げる
+  - @tnamao
+- [UPDATE] 依存パッケージを更新する
+  - prometheus/client_golang 1.24.1 => 1.25.0
+  - prometheus/common 0.71.0 => 0.72.1
+  - prometheus/exporter-toolkit 0.19.0 => 0.20.0
+  - @tnamao
+
 ## 2026.1.3
 
 **リリース日**: 2026-09-03
